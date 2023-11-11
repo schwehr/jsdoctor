@@ -13,13 +13,13 @@ def ProcessComment(comment_text):
     flags.extend(section_flags)
 
   return descriptions, flags
-    
+
 
 def _ProcessCommentSection(section_text):
-  
+
   remaining_text = section_text
   flags = []
-  
+
   matches = list(_MatchFlags(section_text))
   matches.reverse()
 
@@ -29,23 +29,23 @@ def _ProcessCommentSection(section_text):
 
     flag_name = flag_match.group('flag')
     flag_text = remaining_text[flag_match.end():].strip()
-      
+
     flags.insert(0, (flag_name, flag_text))
-    
+
     remaining_text = remaining_text[0:flag_match.start()]
 
   # The description is whatever wasn't part of a flag.
   description = remaining_text
 
   return description, flags
-      
 
-  
+
+
 def _MatchFlags(text):
   return re.finditer(r'(?:\s|\A)(?P<flag>@\w+)\b', text)
-  
+
 def _YieldSections(comment_text):
-  # 
+  #
   assert '\r' not in comment_text, 'Non-UNIX strings not supported for now'
   parts = comment_text.split('\n\n')
 

@@ -18,7 +18,7 @@ def YieldRequires(source):
     match = _REQUIRES_REGEX.match(line)
     if match:
       yield match.group(1)
-  
+
 def ExtractDocumentedSymbols(script):
 
   for comment_match in FindJsDocComments(script):
@@ -28,15 +28,15 @@ def ExtractDocumentedSymbols(script):
     if re.match('\b@fileoverview\b', comment_match.group()):
       # This is a file overview comment.
       pass
-    else: 
+    else:
       identifier_match = FindCommentTarget(script, comment_match.end())
       if not identifier_match:
         raise NoIdentiferFoundError(
         'Found no identifier for comment: ' + identifier_match.group())
 
     yield comment_match, identifier_match
-    
-  
+
+
 def FindJsDocComments(script):
   return re.finditer('/\*\*.*?\*/', script, re.DOTALL)
 
@@ -70,6 +70,6 @@ def ExtractTextFromJsDocComment(comment):
       while line.startswith(' '):
         line = line[1:]
       output_lines.append(line)
-  
+
   return ''.join(output_lines)
 

@@ -32,7 +32,7 @@ class JsDocTestCase(unittest.TestCase):
     self.assertEquals(
       ['@flag', '@flag2', '@flag3', '@flag4'],
       flags)
-    
+
 _SCRIPT = """\
 @flag Thing thing
 

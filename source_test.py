@@ -6,7 +6,7 @@ import symboltypes
 class SourceTestCase(unittest.TestCase):
 
   def testScanSource(self):
-    
+
     test_source = source.ScanScript(_TEST_SCRIPT)
     self.assertEquals(
       set(['goog.aaa', 'goog.bbb']), test_source.provides)
@@ -19,7 +19,7 @@ class SourceTestCase(unittest.TestCase):
     self.assertEquals('goog.aaa.bbb', symbol.identifier)
     self.assertTrue(symbol.static)
     self.assertEquals('goog.aaa', symbol.namespace)
-    self.assertEquals(symboltypes.FUNCTION, symbol.type)    
+    self.assertEquals(symboltypes.FUNCTION, symbol.type)
 
     comment = symbol.comment
     self.assertEquals('Testing testing.\n@return {string} Dog.', comment.text)
@@ -57,7 +57,7 @@ abc.Def.prototype.ghi;
     symbol = list(test_source.symbols)[0]
     self.assertEquals('ghi', symbol.property)
     self.assertFalse(symbol.static)
-    
+
 _TEST_SCRIPT = """
 goog.provide('goog.aaa');
 goog.provide('goog.bbb');

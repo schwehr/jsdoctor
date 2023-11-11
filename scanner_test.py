@@ -44,7 +44,7 @@ goog.require('goog.string');
  * @return {string} The result, as a string.
  */
 """
-    
+
     match = list(scanner.FindJsDocComments(script))[0]
     comment = match.group()
     text = scanner.ExtractTextFromJsDocComment(comment)

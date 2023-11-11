@@ -56,7 +56,7 @@ def _MakeSymbolMap(symbols):
     if identifier in symbol_map:
       duplicate_symbol = symbol_map[identifier]
       msg = 'Symbol duplicated\n%s\n%s' % (symbol, duplicate_symbol)
-      
+
       if _DUPLICATE_SYMBOL_IS_ERROR:
         raise DuplicateSymbolError(msg)
       else:
@@ -64,7 +64,7 @@ def _MakeSymbolMap(symbols):
       continue
 
     symbol_map[identifier] = symbol
-  
+
   return symbol_map
 
 class JsDoctorError(Exception):
@@ -83,7 +83,7 @@ def _MakeNamespaceMap(symbols):
 def _ScanContent(content_pair):
   path, content = content_pair
   return source.ScanScript(content, path)
-  
+
 def _ScanContentInParallel(content_map):
   pool = multiprocessing.Pool(20 * multiprocessing.cpu_count())
   return pool.imap(_ScanContent, content_map.iteritems())
@@ -96,7 +96,7 @@ def _MakeContentMap(paths):
 
     with open(path) as f:
       content = f.read()
-      
+
     content_map[path] = content
 
   return content_map
@@ -114,7 +114,7 @@ def main():
 
   result = _ParseArgs()
   tar_path = result.tar
-  
+
   paths = result.files
   paths = [path for path in paths if _ShouldScanPath(path)]
 
@@ -129,7 +129,7 @@ def main():
   symbol_map = _MakeSymbolMap(symbols)
 
   symbols = symbol_map.values()
-  
+
   namespace_map = _MakeNamespaceMap(symbols)
 
   logging.info('Writing to tar: %s', tar_path)
@@ -143,6 +143,6 @@ def main():
       tar.addfile(info, buf)
   logging.info('Tar written to %s', tar_path)
 
-    
+
 if __name__ == '__main__':
   main()

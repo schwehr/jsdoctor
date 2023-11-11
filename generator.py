@@ -13,7 +13,7 @@ def GenerateHtmlDocs(namespace_map):
 
 def GenerateDocuments(namespace_map):
   for namespace, symbols in namespace_map.iteritems():
-    filename = '%s.html' % namespace    
+    filename = '%s.html' % namespace
     yield filename, _GenerateDocument(namespace, symbols)
 
 def _ProcessString(content):
@@ -33,7 +33,7 @@ def _MakeElement(tagname, content=None):
 
   if content:
     element.appendChild(_MakeTextNode(content))
-  
+
   return element
 
 def _IsStatic(symbol):
@@ -50,10 +50,10 @@ def _GenerateDocument(namespace, symbols):
 
   body =  doc.createElement('body')
   doc.documentElement.appendChild(body)
-  
+
   for elem in _GenerateContent(namespace, symbols):
    body.appendChild(elem)
-    
+
   return doc
 
 def _AddSymbolDescription(node_list, symbol):
@@ -63,7 +63,7 @@ def _AddSymbolDescription(node_list, symbol):
     p = _MakeElement('p')
     node_list.append(p)
     p.appendChild(elem)
-  
+
 
 
 def _MakeLink(text, href):
@@ -92,7 +92,7 @@ def _GetReturnString(flag):
   assert flag.name == '@return'
   type, _ = flags.ParseReturnDescription(flag.text)
   return '{%s}' % type
-  
+
 def _MakeFunctionCodeElement(name, function):
   code = _MakeElement('code')
   code.appendChild(_MakeLink(name, '#' + name))
@@ -103,13 +103,13 @@ def _MakeFunctionCodeElement(name, function):
 
   text_node = _MakeTextNode('(%s)' % param_line)
   code.appendChild(text_node)
-  
+
   return_flag = _GetReturnFlag(function.comment.flags)
   if return_flag:
     code.appendChild(_MakeTextNode(' : '))
     code.appendChild(_MakeTextNode(_GetReturnString(return_flag)))
   return code
-  
+
 def _MakeFunctionSummaryList(functions):
   summary_list = _MakeElement('dl')
 
@@ -122,7 +122,7 @@ def _MakeFunctionSummaryList(functions):
       name = function.identifier
     else:
       name = function.property
-      
+
     code = _MakeFunctionCodeElement(name, function)
     summary_term.appendChild(code)
 
@@ -157,7 +157,7 @@ def _AddFunctionDescription(node_list, function):
         function_interface += ','
       else:
         function_interface += '\n'
-        
+
   function_interface += ')'
 
   # Draw return
@@ -170,7 +170,7 @@ def _AddFunctionDescription(node_list, function):
   # Parameter list
   if param_flags:
     node_list.append(_MakeElement('h4', 'Parameters:'))
-    
+
     param_list = _MakeElement('dl')
     node_list.append(param_list)
     for flag in param_flags:
@@ -179,7 +179,7 @@ def _AddFunctionDescription(node_list, function):
       param_list.appendChild(term)
 
       definition = _MakeElement('dd')
-    
+
       code_type = _MakeElement('code', '{%s}' % type)
       definition.appendChild(code_type)
       definition.appendChild(_MakeTextNode(' '))
@@ -223,7 +223,7 @@ def _GenerateContent(namespace, symbols):
   # Interface
   interface_symbols = _GetSymbolsOfType(
     sorted_symbols, symboltypes.INTERFACE)
-        
+
   if interface_symbols:
     node_list.append(_MakeElement('h2', 'Interface'))
     for interface in interface_symbols:
@@ -255,7 +255,7 @@ def _GenerateContent(namespace, symbols):
   # Enumerations
   enum_symbols = _GetSymbolsOfType(
      sorted_symbols, symboltypes.ENUM)
-  
+
   if enum_symbols:
     node_list.append(_MakeElement('h2', 'Enumerations'))
     for enum_symbol in enum_symbols:
@@ -286,6 +286,6 @@ def _GenerateContent(namespace, symbols):
     node_list.append(_MakeElement('h2', 'Static properties'))
     for property in static_properties:
       _AddSymbolDescription(node_list, property)
-      node_list.append(_MakeElement('hr'))    
+      node_list.append(_MakeElement('hr'))
 
   return node_list

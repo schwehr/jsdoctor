@@ -45,7 +45,7 @@ TYPEDEF_FLAGS = frozenset([
 
 PROPERTY_FLAGS = frozenset([
     '@const',
-    '@define',    
+    '@define',
     '@enum',
     '@struct',
     '@type',
@@ -60,17 +60,17 @@ INTERFACE_FLAGS = frozenset([
 
 COMPILER_FLAGS = frozenset([
     '@nocompile',
-    '@preserveTry',    
+    '@preserveTry',
     ])
 
 # TODO(nanaze): File.
 MISC_FLAGS = frozenset([
-    '@desc', 
+    '@desc',
     '@supported',
     '@hidden',
     '@final',
     '@idGenerator',
-    '@this'    
+    '@this'
     ])
 
 all_flags = set()
@@ -126,11 +126,11 @@ def GetSymbolType(flags):
       flag_type = MaybeParseTypeFromDescription(flag.text)
       if flag_type:
         return flag_type
-          
+
 def MaybeParseTypeFromDescription(desc):
   match = re.match(r'^\s*{(?P<type>.*?)}', desc, re.DOTALL | re.MULTILINE)
   if match:
     return match.group('type')
 
-    
-          
+
+

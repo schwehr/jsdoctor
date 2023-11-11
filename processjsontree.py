@@ -31,7 +31,7 @@ def ProcessJsonTree(json_obj):
       'source': source,
       'ast': ast
     }
-  
+
   return result
 
 def main():

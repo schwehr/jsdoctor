@@ -56,11 +56,11 @@ goog.bar.baz
  * @interface
  */
 goog.bar.baz
-""")      
+""")
 
-    
-      
-    
+
+
+
 
 
 

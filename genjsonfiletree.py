@@ -2,7 +2,7 @@
 
 """Scans a directory tree for .js files and builds a JSON representation.
 
-Scans a directory tree for .js files, and puts the contents into a single JSON 
+Scans a directory tree for .js files, and puts the contents into a single JSON
 object map of path to content.
 
 Ouput is written to stdout.
@@ -49,24 +49,24 @@ def ScanTree(tree_root):
 
 def main():
   logging.basicConfig(level=logging.INFO)
-  
+
   if len(sys.argv) == 1:
     logging.info('Path not specified. Using current directory as path.')
     dir_root = os.getcwd()
-    
+
   elif len(sys.argv) == 2:
     dir_root = sys.argv[1]
 
   else:
     sys.exit(__doc__)
-  
+
   logging.info('Scanning tree. Path: "%s"', dir_root)
 
   tree = ScanTree(dir_root)
   resulting_json = json.dumps(tree)
   sys.stdout.write(resulting_json)
   sys.stdout.flush()
-  
+
 
 if __name__ == '__main__':
   main()

@@ -39,7 +39,7 @@ def _GetSymbolPartsInNamespace(symbol_parts, namespace_parts):
 def GetClosestNamespaceForSymbol(symbol, candidate_namespaces):
   closest_namespace = None
   symbol_parts = GetNamespaceParts(symbol)
-  
+
   max_count = 0
 
   valid_namespaces = filter(

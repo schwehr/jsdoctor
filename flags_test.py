@@ -25,7 +25,7 @@ class FlagTestCase(unittest.TestCase):
       flags.ParseParameterDescription(desc))
 
     self.assertRaises(
-      ValueError, 
+      ValueError,
       lambda: flags.ParseParameterDescription('desc without type'))
 
   def testParseReturnDescription(self):
@@ -36,7 +36,7 @@ class FlagTestCase(unittest.TestCase):
       flags.ParseReturnDescription(desc))
 
     self.assertRaises(
-      ValueError, 
+      ValueError,
       lambda: flags.ParseReturnDescription('desc without type'))
 
   def testMabyeParseTypeFromDescription(self):
@@ -52,7 +52,7 @@ class FlagTestCase(unittest.TestCase):
   def GetFlags(script):
     desc, flags = source._GetDescriptionAndFlags(script)
     return flags
-  
+
   def testGetSymbolType(self):
     self.assertEquals(
       'aaa', flags.GetSymbolType(self.GetFlags("""@const {aaa}""")))
@@ -96,8 +96,8 @@ abc.def;
     symbol = list(test_source.symbols)[0]
     self.assertEquals(flags.PUBLIC, flags.GetVisibility(symbol.comment.flags))
 
-  
-    
+
+
 if __name__ == '__main__':
     unittest.main()
 

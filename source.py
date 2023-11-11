@@ -10,7 +10,7 @@ class Source(object):
   def __init__(self, script, path=None):
     self.script = script
     self.path = path
-    
+
     self.provides = set()
     self.requires = set()
     self.symbols = set()
@@ -56,12 +56,12 @@ class Comment(object):
     self.description_sections = description_sections
     self.flags = flags
 
-    
+
 class Flag(object):
   def __init__(self, name, text):
 
     assert name in flags.ALL_FLAGS, 'Unrecognized flag: ' + name
-    
+
     self.name = name
     self.text = text
 
@@ -91,7 +91,7 @@ def _IsIgnorableIdentifier(identifier_match):
 
 class NamespaceNotFoundError(Exception):
   pass
-  
+
 # TODO(nanaze): In the future this could farm out to a formal parser like
 # Esprima to correctly identify comments. Regexing seems to work OK for now.
 
@@ -101,7 +101,7 @@ def _YieldSymbols(match_pairs, provided_namespaces):
     comment = Comment(comment_text, comment_match.start(), comment_match.end())
 
     if not identifier_match:
-      assert not source.filecomment, '@fileoverview comment made more than once' 
+      assert not source.filecomment, '@fileoverview comment made more than once'
       source.filecomment = comment
       continue
 
@@ -148,9 +148,9 @@ def _YieldSymbols(match_pairs, provided_namespaces):
       symbol.static = False
     else:
       symbol.static = True
-      
+
     yield symbol
-  
+
 
 def ScanScript(script, path=None):
 
@@ -166,5 +166,5 @@ def ScanScript(script, path=None):
   return source
 
 
-    
-    
+
+
