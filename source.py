@@ -119,12 +119,12 @@ def _YieldSymbols(match_pairs, provided_namespaces):
 
     # TODO(nanaze): catch this. properties, make sure not static
     if identifier.startswith('this.'):
-      logging.info('Skipping identifer. Ignoring "this." properties for now. ' + identifier)
+      logging.info('Skipping identifier. Ignoring "this." properties for now. ' + identifier)
       continue
 
     # Ignore symbols that are not part of the provided namespace.
     if not _IsSymbolPartOfProvidedNamespaces(identifier, provided_namespaces):
-      logging.info('Skipping identifer. Not part of provided namespace. ' + identifier)
+      logging.info('Skipping identifier. Not part of provided namespace. ' + identifier)
       continue
 
     symbol = Symbol(identifier, identifier_match.start(), identifier_match.end())

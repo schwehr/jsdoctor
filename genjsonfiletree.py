@@ -5,7 +5,7 @@
 Scans a directory tree for .js files, and puts the contents into a single JSON
 object map of path to content.
 
-Ouput is written to stdout.
+Output is written to stdout.
 
 Usage:
 
