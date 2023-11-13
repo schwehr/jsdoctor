@@ -6,7 +6,7 @@ import flags
 import re
 import symboltypes
 
-class Source(object):
+class Source:
   def __init__(self, script, path=None):
     self.script = script
     self.path = path
@@ -24,7 +24,7 @@ class Source(object):
 
     return source_string
 
-class Symbol(object):
+class Symbol:
   def __init__(self, identifier, start, end):
     self.identifier = identifier
     self.start = start
@@ -45,7 +45,7 @@ class Symbol(object):
 
     return symbol_string
 
-class Comment(object):
+class Comment:
   def __init__(self, text, start, end):
 
     self.text = text
@@ -57,7 +57,7 @@ class Comment(object):
     self.flags = flags
 
 
-class Flag(object):
+class Flag:
   def __init__(self, name, text):
 
     assert name in flags.ALL_FLAGS, 'Unrecognized flag: ' + name
