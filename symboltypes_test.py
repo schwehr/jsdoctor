@@ -13,7 +13,7 @@ def _GetSymbols(script):
 class SymbolTypesTestCase(unittest.TestCase):
   def assertSymbolType(self, type, script):
     symbol = _GetSymbols(script)[0]
-    self.assertEquals(type, symboltypes.DetermineSymbolType(symbol))
+    self.assertEqual(type, symboltypes.DetermineSymbolType(symbol))
 
   def testDetermineSymbolType(self):
     self.assertSymbolType(symboltypes.PROPERTY, """
