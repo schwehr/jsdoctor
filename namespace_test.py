@@ -18,15 +18,15 @@ class NamespaceTestCase(unittest.TestCase):
     closest = namespace.GetClosestNamespaceForSymbol(
       'aaa.bbb.ccc',
       set(['aaa.bbb', 'aaa.bbb.ccc.ddd']))
-    self.assertEquals('aaa.bbb', closest)
+    self.assertEqual('aaa.bbb', closest)
 
     closest = namespace.GetClosestNamespaceForSymbol(
       'goog.string.startsWith',
       set(['goog.string', 'goog.string.Unicode']))
-    self.assertEquals('goog.string', closest)
+    self.assertEqual('goog.string', closest)
 
   def testGetNamespaceParts(self):
-    self.assertEquals(
+    self.assertEqual(
       ['goog', 'string', 'startsWith'],
       namespace.GetNamespaceParts('goog.string.startsWith'))
 
@@ -47,7 +47,7 @@ class NamespaceTestCase(unittest.TestCase):
         'aaa.bbb.foo'))
 
   def testGetPrototypeProperty(self):
-    self.assertEquals(
+    self.assertEqual(
       'foo', namespace.GetPrototypeProperty('bar.prototype.foo'))
     self.assertRaises(AssertionError, lambda: namespace.GetPrototypeProperty('bar'))
 

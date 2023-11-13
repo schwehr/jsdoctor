@@ -9,18 +9,18 @@ class FlagTestCase(unittest.TestCase):
   def testParseParamDescription(self):
 
     desc = '{!bbb|ccc?} aaa This \nis the desc.  '
-    self.assertEquals(
+    self.assertEqual(
       ('aaa', '!bbb|ccc?', 'This \nis the desc.'),
       flags.ParseParameterDescription(desc))
 
     desc = '{...*} var_args The items to substitute into the pattern.'
-    self.assertEquals(
+    self.assertEqual(
       ('var_args', '...*', 'The items to substitute into the pattern.'),
       flags.ParseParameterDescription(desc))
 
 
     desc = '{string} aaa'
-    self.assertEquals(
+    self.assertEqual(
       ('aaa', 'string', ''),
       flags.ParseParameterDescription(desc))
 
@@ -31,7 +31,7 @@ class FlagTestCase(unittest.TestCase):
   def testParseReturnDescription(self):
 
     desc = '  {!bbb|ccc?} This \nis the desc.   '
-    self.assertEquals(
+    self.assertEqual(
       ('!bbb|ccc?', 'This \nis the desc.'),
       flags.ParseReturnDescription(desc))
 
@@ -40,11 +40,11 @@ class FlagTestCase(unittest.TestCase):
       lambda: flags.ParseReturnDescription('desc without type'))
 
   def testMabyeParseTypeFromDescription(self):
-    self.assertEquals(
+    self.assertEqual(
       'aaa',
       flags.MaybeParseTypeFromDescription('  {aaa} bbb ccc'))
 
-    self.assertEquals(
+    self.assertEqual(
       None,
       flags.MaybeParseTypeFromDescription('aaa bbb ccc'))
 
@@ -54,13 +54,13 @@ class FlagTestCase(unittest.TestCase):
     return flags
 
   def testGetSymbolType(self):
-    self.assertEquals(
+    self.assertEqual(
       'aaa', flags.GetSymbolType(self.GetFlags("""@const {aaa}""")))
-    self.assertEquals(
+    self.assertEqual(
       'bbb', flags.GetSymbolType(self.GetFlags("""@private {bbb}""")))
-    self.assertEquals(
+    self.assertEqual(
       'ccc', flags.GetSymbolType(self.GetFlags("""@protected {ccc}""")))
-    self.assertEquals(
+    self.assertEqual(
       'ddd', flags.GetSymbolType(self.GetFlags("""@const {ddd}""")))
 
   def testGetVisibility(self):
@@ -73,7 +73,7 @@ goog.provide('abc');
 abc.def;
 """)
     symbol = list(test_source.symbols)[0]
-    self.assertEquals(flags.PRIVATE, flags.GetVisibility(symbol.comment.flags))
+    self.assertEqual(flags.PRIVATE, flags.GetVisibility(symbol.comment.flags))
 
     test_source = source.ScanScript("""\
 goog.provide('abc');
@@ -84,7 +84,7 @@ goog.provide('abc');
 abc.def;
 """)
     symbol = list(test_source.symbols)[0]
-    self.assertEquals(flags.PROTECTED, flags.GetVisibility(symbol.comment.flags))
+    self.assertEqual(flags.PROTECTED, flags.GetVisibility(symbol.comment.flags))
 
     test_source = source.ScanScript("""\
 goog.provide('abc');
@@ -94,7 +94,7 @@ goog.provide('abc');
 abc.def;
 """)
     symbol = list(test_source.symbols)[0]
-    self.assertEquals(flags.PUBLIC, flags.GetVisibility(symbol.comment.flags))
+    self.assertEqual(flags.PUBLIC, flags.GetVisibility(symbol.comment.flags))
 
 
 

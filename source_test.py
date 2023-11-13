@@ -8,41 +8,41 @@ class SourceTestCase(unittest.TestCase):
   def testScanSource(self):
 
     test_source = source.ScanScript(_TEST_SCRIPT)
-    self.assertEquals(
+    self.assertEqual(
       set(['goog.aaa', 'goog.bbb']), test_source.provides)
-    self.assertEquals(
+    self.assertEqual(
       set(['goog.ccc', 'goog.ddd']), test_source.requires)
 
-    self.assertEquals(1, len(test_source.symbols))
+    self.assertEqual(1, len(test_source.symbols))
 
     symbol = list(test_source.symbols)[0]
-    self.assertEquals('goog.aaa.bbb', symbol.identifier)
+    self.assertEqual('goog.aaa.bbb', symbol.identifier)
     self.assertTrue(symbol.static)
-    self.assertEquals('goog.aaa', symbol.namespace)
-    self.assertEquals(symboltypes.FUNCTION, symbol.type)
+    self.assertEqual('goog.aaa', symbol.namespace)
+    self.assertEqual(symboltypes.FUNCTION, symbol.type)
 
     comment = symbol.comment
-    self.assertEquals('Testing testing.\n@return {string} Dog.', comment.text)
+    self.assertEqual('Testing testing.\n@return {string} Dog.', comment.text)
 
-    self.assertEquals(['Testing testing.'], comment.description_sections)
+    self.assertEqual(['Testing testing.'], comment.description_sections)
 
-    self.assertEquals(1, len(comment.flags))
+    self.assertEqual(1, len(comment.flags))
 
     flag = comment.flags[0]
-    self.assertEquals('@return', flag.name)
-    self.assertEquals('{string} Dog.', flag.text)
+    self.assertEqual('@return', flag.name)
+    self.assertEqual('{string} Dog.', flag.text)
 
   def testIsIgnorableIdentifier(self):
     match = scanner.FindCommentTarget('  aaa.bbb = 3');
-    self.assertEquals('aaa.bbb', match.group())
+    self.assertEqual('aaa.bbb', match.group())
     self.assertFalse(source._IsIgnorableIdentifier(match))
 
     match = scanner.FindCommentTarget('  aaa.bbb(3)');
-    self.assertEquals('aaa.bbb', match.group())
+    self.assertEqual('aaa.bbb', match.group())
     self.assertTrue(source._IsIgnorableIdentifier(match))
 
     match = scanner.FindCommentTarget('  aaa.bbb[3])');
-    self.assertEquals('aaa.bbb', match.group())
+    self.assertEqual('aaa.bbb', match.group())
     self.assertTrue(source._IsIgnorableIdentifier(match))
 
   def testScanPrototypeProperty(self):
@@ -55,7 +55,7 @@ goog.provide('abc.Def');
 abc.Def.prototype.ghi;
 """)
     symbol = list(test_source.symbols)[0]
-    self.assertEquals('ghi', symbol.property)
+    self.assertEqual('ghi', symbol.property)
     self.assertFalse(symbol.static)
 
 _TEST_SCRIPT = """

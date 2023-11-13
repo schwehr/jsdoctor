@@ -14,27 +14,27 @@ goog.require('goog.string');
     provides = list(scanner.YieldProvides(source))
     requires = list(scanner.YieldRequires(source))
 
-    self.assertEquals(['goog.dom', 'goog.style'], provides)
-    self.assertEquals(['goog.array', 'goog.string'], requires)
+    self.assertEqual(['goog.dom', 'goog.style'], provides)
+    self.assertEqual(['goog.array', 'goog.string'], requires)
 
 
   def testFindDocComments(self):
     matches = list(scanner.FindJsDocComments(_TEST_SCRIPT))
-    self.assertEquals(1, len(matches))
+    self.assertEqual(1, len(matches))
 
     match = matches[0]
-    self.assertEquals(10, match.start())
-    self.assertEquals(34, match.end())
+    self.assertEqual(10, match.start())
+    self.assertEqual(34, match.end())
 
   def testFindIdentifier(self):
     match = list(scanner.FindJsDocComments(_TEST_SCRIPT))[0]
     identifier_match = scanner.FindCommentTarget(match.string, match.end())
-    self.assertEquals('goog.bar.baz', identifier_match.group())
+    self.assertEqual('goog.bar.baz', identifier_match.group())
 
   def testFindWeirdIdentifier(self):
     script = '     \n   \n $aa$.b$b.cc$   '
     identifier_match = scanner.FindCommentTarget(script)
-    self.assertEquals('$aa$.b$b.cc$', identifier_match.group())
+    self.assertEqual('$aa$.b$b.cc$', identifier_match.group())
 
   def testExtractText(self):
     script = """
@@ -48,7 +48,7 @@ goog.require('goog.string');
     match = list(scanner.FindJsDocComments(script))[0]
     comment = match.group()
     text = scanner.ExtractTextFromJsDocComment(comment)
-    self.assertEquals('Slaughterhouse five.\n\n' +
+    self.assertEqual('Slaughterhouse five.\n\n' +
                       '@return {string} The result, as a string.',
                       text)
 
@@ -71,19 +71,19 @@ goog.style.test
 
     pairs = list(scanner.ExtractDocumentedSymbols(script))
 
-    self.assertEquals(2, len(pairs))
+    self.assertEqual(2, len(pairs))
 
     comment_match, symbol_match = pairs[0]
-    self.assertEquals(
+    self.assertEqual(
       '/**\n * Test goog dom.\n *\n * One two three.\n */',
       comment_match.group())
-    self.assertEquals('goog.dom.test', symbol_match.group())
+    self.assertEqual('goog.dom.test', symbol_match.group())
 
     comment_match, symbol_match = pairs[1]
-    self.assertEquals(
+    self.assertEqual(
       '/**\n * Test goog style.\n *\n * Four five six.\n */',
       comment_match.group())
-    self.assertEquals('goog.style.test', symbol_match.group())
+    self.assertEqual('goog.style.test', symbol_match.group())
 
 
   def testOddIdentifier(self):
@@ -101,12 +101,12 @@ qux =
     match = list(scanner.FindJsDocComments(test_script))[0]
     identifier_match = scanner.FindCommentTarget(match.string, match.end())
     symbol = scanner.StripWhitespace(identifier_match.group())
-    self.assertEquals('goog.bar.baz.qux', symbol)
+    self.assertEqual('goog.bar.baz.qux', symbol)
 
   def testCast(self):
 
     identifier_match = scanner.FindCommentTarget('   (aaa)')
-    self.assertEquals('(', identifier_match.group())
+    self.assertEqual('(', identifier_match.group())
 
 _TEST_SCRIPT = """\
 var = 2;
