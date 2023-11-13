@@ -17,7 +17,7 @@ class Source:
     self.filecomment = None
 
   def __str__(self):
-    source_string = super(Source, self).__str__()
+    source_string = super().__str__()
 
     if self.path:
       source_string += ' ' + self.path
@@ -36,7 +36,7 @@ class Symbol:
     self.type = None
 
   def __str__(self):
-    symbol_string = super(Symbol, self).__str__()
+    symbol_string = super().__str__()
 
     symbol_string += ' ' + self.identifier
 
