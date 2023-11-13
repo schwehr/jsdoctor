@@ -31,7 +31,7 @@ def ExtractDocumentedSymbols(script):
     else:
       identifier_match = FindCommentTarget(script, comment_match.end())
       if not identifier_match:
-        raise NoIdentiferFoundError(
+        raise NoIdentifierFoundError(
         'Found no identifier for comment: ' + identifier_match.group())
 
     yield comment_match, identifier_match
