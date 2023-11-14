@@ -1,7 +1,10 @@
-import linkify
 import unittest
 
+from jsdoctor import linkify
+
+
 class LinkifyTestCase(unittest.TestCase):
+
   def testWebRegEx(self):
     match = linkify._WEB_URL_RE.search('aaa http://google.com bbb')
     self.assertEqual('http://google.com', match.group(0))

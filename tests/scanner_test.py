@@ -1,5 +1,7 @@
-import scanner
 import unittest
+
+from jsdoctor import scanner
+
 
 class ScannerTestCase(unittest.TestCase):
 

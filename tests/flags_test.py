@@ -1,8 +1,7 @@
-
-import flags
 import unittest
-import re
-import source
+
+from jsdoctor import flags
+from jsdoctor import source
 
 class FlagTestCase(unittest.TestCase):
 

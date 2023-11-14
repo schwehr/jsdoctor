@@ -1,5 +1,7 @@
-import namespace
 import unittest
+
+from jsdoctor import namespace
+
 
 class NamespaceTestCase(unittest.TestCase):
 

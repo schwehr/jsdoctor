@@ -1,7 +1,9 @@
-import scanner
-import source
 import unittest
-import symboltypes
+
+from jsdoctor import scanner
+from jsdoctor import source
+from jsdoctor import symboltypes
+
 
 class SourceTestCase(unittest.TestCase):
 
