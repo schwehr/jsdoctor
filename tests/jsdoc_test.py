@@ -1,5 +1,7 @@
-import jsdoc
 import unittest
+
+from jsdoctor import jsdoc
+
 
 class JsDocTestCase(unittest.TestCase):
 

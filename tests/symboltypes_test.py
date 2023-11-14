@@ -1,7 +1,9 @@
-import symboltypes
-import scanner
-import source
 import unittest
+
+from jsdoctor import scanner
+from jsdoctor import source
+from jsdoctor import symboltypes
+
 
 def _GetFirstSymbol(script):
   return _GetSymbols(script)[0]

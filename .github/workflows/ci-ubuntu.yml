@@ -8,8 +8,8 @@ jobs:
       matrix:
         python-version: [
             "3.10",
-            # "3.11",
-            # "3.12",
+            "3.11",
+            "3.12",
         ]
     steps:
       - name: Set up Python
@@ -23,4 +23,4 @@ jobs:
           pip install html5lib
       - name: Test
         run: |
-          python -m unittest discover --pattern="*test.py" --start-directory .
+          python -m unittest discover -v --pattern="*test.py" --start-directory tests
