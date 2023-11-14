@@ -7,6 +7,7 @@ class LinkifyTestCase(unittest.TestCase):
 
   def testWebRegEx(self):
     match = linkify._WEB_URL_RE.search('aaa http://google.com bbb')
+    self.assertIsNotNone(match)
     self.assertEqual('http://google.com', match.group(0))
 
   def testLinkifyWebUrls(self):
