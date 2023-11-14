@@ -1,10 +1,11 @@
-import scanner
-import namespace
 import logging
-import jsdoc
-import flags
 import re
-import symboltypes
+
+from . import scanner
+from . import namespace
+from . import jsdoc
+from . import flags
+from . import symboltypes
 
 class Source:
   def __init__(self, script, path=None):
