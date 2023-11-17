@@ -19,7 +19,6 @@ goog.require('goog.string');
     self.assertEqual(['goog.dom', 'goog.style'], provides)
     self.assertEqual(['goog.array', 'goog.string'], requires)
 
-
   def testFindDocComments(self):
     matches = list(scanner.FindJsDocComments(_TEST_SCRIPT))
     self.assertEqual(1, len(matches))
@@ -87,7 +86,6 @@ goog.style.test
       comment_match.group())
     self.assertEqual('goog.style.test', symbol_match.group())
 
-
   def testOddIdentifier(self):
     test_script = """\
 /**
@@ -120,9 +118,5 @@ goog.bar.baz
 """
 
 
-
 if __name__ == '__main__':
     unittest.main()
-
-
-

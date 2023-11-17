@@ -6,6 +6,7 @@ from . import symboltypes
 from . import flags
 from . import linkify
 
+
 def GenerateHtmlDocs(namespace_map):
   for filepath, document in GenerateDocuments(namespace_map):
     content = document.documentElement.toxml('utf-8')

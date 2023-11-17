@@ -17,15 +17,14 @@ class FlagTestCase(unittest.TestCase):
       ('var_args', '...*', 'The items to substitute into the pattern.'),
       flags.ParseParameterDescription(desc))
 
-
     desc = '{string} aaa'
     self.assertEqual(
       ('aaa', 'string', ''),
       flags.ParseParameterDescription(desc))
 
     self.assertRaises(
-      ValueError,
-      lambda: flags.ParseParameterDescription('desc without type'))
+      ValueError, lambda: flags.ParseParameterDescription('desc without type')
+    )
 
   def testParseReturnDescription(self):
 
@@ -35,8 +34,8 @@ class FlagTestCase(unittest.TestCase):
       flags.ParseReturnDescription(desc))
 
     self.assertRaises(
-      ValueError,
-      lambda: flags.ParseReturnDescription('desc without type'))
+      ValueError, lambda: flags.ParseReturnDescription('desc without type')
+    )
 
   def testMabyeParseTypeFromDescription(self):
     self.assertEqual(
@@ -96,9 +95,5 @@ abc.def;
     self.assertEqual(flags.PUBLIC, flags.GetVisibility(symbol.comment.flags))
 
 
-
 if __name__ == '__main__':
     unittest.main()
-
-
-

@@ -131,6 +131,3 @@ def MaybeParseTypeFromDescription(desc):
   match = re.match(r'^\s*{(?P<type>.*?)}', desc, re.DOTALL | re.MULTILINE)
   if match:
     return match.group('type')
-
-
-

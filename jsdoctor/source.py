@@ -1,10 +1,10 @@
 import logging
 import re
 
-from . import scanner
+from . import flags
 from . import namespace
 from . import jsdoc
-from . import flags
+from . import scanner
 from . import symboltypes
 
 class Source:
@@ -165,7 +165,3 @@ def ScanScript(script, path=None):
     source.symbols.add(symbol)
 
   return source
-
-
-
-

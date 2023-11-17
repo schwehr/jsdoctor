@@ -40,7 +40,6 @@ def _ProcessCommentSection(section_text):
   return description, flags
 
 
-
 def _MatchFlags(text):
   return re.finditer(r'(?:\s|\A)(?P<flag>@\w+)\b', text)
 

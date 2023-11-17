@@ -1,5 +1,6 @@
 import re
 
+
 class NoIdentifierFoundError(Exception):
   pass
 
@@ -72,4 +73,3 @@ def ExtractTextFromJsDocComment(comment):
       output_lines.append(line)
 
   return ''.join(output_lines)
-
