@@ -2,9 +2,9 @@ from xml.dom import minidom
 
 import html5lib
 
-from . import symboltypes
 from . import flags
 from . import linkify
+from . import symboltypes
 
 
 def GenerateHtmlDocs(namespace_map):
