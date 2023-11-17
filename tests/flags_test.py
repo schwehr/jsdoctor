@@ -23,7 +23,7 @@ class FlagTestCase(unittest.TestCase):
       flags.ParseParameterDescription(desc))
 
     self.assertRaises(
-      ValueError, lambda: flags.ParseParameterDescription('desc without type')
+        ValueError, lambda: flags.ParseParameterDescription('desc without type')
     )
 
   def testParseReturnDescription(self):
@@ -34,7 +34,7 @@ class FlagTestCase(unittest.TestCase):
       flags.ParseReturnDescription(desc))
 
     self.assertRaises(
-      ValueError, lambda: flags.ParseReturnDescription('desc without type')
+        ValueError, lambda: flags.ParseReturnDescription('desc without type')
     )
 
   def testMabyeParseTypeFromDescription(self):
