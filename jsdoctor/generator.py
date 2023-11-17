@@ -12,22 +12,27 @@ def GenerateHtmlDocs(namespace_map):
     content = document.documentElement.toxml('utf-8')
     yield filepath, content
 
+
 def GenerateDocuments(namespace_map):
   for namespace, symbols in namespace_map.iteritems():
     filename = '%s.html' % namespace
     yield filename, _GenerateDocument(namespace, symbols)
 
+
 def _ProcessString(content):
   content = linkify.LinkifyWebUrls(content)
   return html5lib.parseFragment(content, treebuilder='dom')
+
 
 def _MakeTextNode(content):
   text = minidom.Text()
   text.data = content
   return text
 
+
 def _MakeHeader(content=None):
   return _MakeElement('h2', content)
+
 
 def _MakeElement(tagname, content=None):
   element = minidom.Element(tagname)
@@ -37,14 +42,18 @@ def _MakeElement(tagname, content=None):
 
   return element
 
+
 def _IsStatic(symbol):
   return bool(symbol.static)
+
 
 def _IsNotStatic(symbol):
   return not _IsStatic(symbol)
 
+
 def _GetSymbolsOfType(symbols, type):
   return [symbol for symbol in symbols if symbol.type == type]
+
 
 def _GenerateDocument(namespace, symbols):
   doc = minidom.getDOMImplementation().createDocument(None, 'html', None)
@@ -53,9 +62,10 @@ def _GenerateDocument(namespace, symbols):
   doc.documentElement.appendChild(body)
 
   for elem in _GenerateContent(namespace, symbols):
-   body.appendChild(elem)
+    body.appendChild(elem)
 
   return doc
+
 
 def _AddSymbolDescription(node_list, symbol):
   node_list.append(_MakeElement('h3', symbol.identifier))
@@ -66,11 +76,11 @@ def _AddSymbolDescription(node_list, symbol):
     p.appendChild(elem)
 
 
-
 def _MakeLink(text, href):
   a = _MakeElement('a', text)
   a.setAttribute('href', href)
   return a
+
 
 def _YieldParamFlags(flags):
   for flag in flags:
@@ -82,6 +92,7 @@ def _GetParamString(flag):
   name, type, _ = flags.ParseParameterDescription(flag.text)
   return '{%s} %s' % (type, name)
 
+
 def _GetReturnFlag(flags):
   return_flags = filter(lambda flag: flag.name == '@return', flags)
   assert(len(return_flags) <= 1, 'There should not be more than one @return flag.')
@@ -89,10 +100,12 @@ def _GetReturnFlag(flags):
   if return_flags:
     return return_flags[0]
 
+
 def _GetReturnString(flag):
   assert flag.name == '@return'
   type, _ = flags.ParseReturnDescription(flag.text)
   return '{%s}' % type
+
 
 def _MakeFunctionCodeElement(name, function):
   code = _MakeElement('code')
@@ -110,6 +123,7 @@ def _MakeFunctionCodeElement(name, function):
     code.appendChild(_MakeTextNode(' : '))
     code.appendChild(_MakeTextNode(_GetReturnString(return_flag)))
   return code
+
 
 def _MakeFunctionSummaryList(functions):
   summary_list = _MakeElement('dl')
@@ -135,6 +149,7 @@ def _MakeFunctionSummaryList(functions):
       summary_definition.appendChild(_ProcessString(desc))
 
   return summary_list
+
 
 def _AddFunctionDescription(node_list, function):
   header = _MakeElement('h3', function.identifier)
@@ -203,6 +218,7 @@ def _AddFunctionDescription(node_list, function):
     section_paragraph = _MakeElement('p')
     section_paragraph.appendChild(_ProcessString(section))
     node_list.append(section_paragraph)
+
 
 def _GenerateContent(namespace, symbols):
 
