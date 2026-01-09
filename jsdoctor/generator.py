@@ -90,7 +90,7 @@ def _YieldParamFlags(flags):
 def _GetParamString(flag):
   assert flag.name == '@param'
   name, type, _ = flags.ParseParameterDescription(flag.text)
-  return '{%s} %s' % (type, name)
+  return f'{{{type}}} {name}'
 
 
 def _GetReturnFlag(flags):

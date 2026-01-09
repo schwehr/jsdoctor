@@ -10,7 +10,7 @@ def _GetFirstSymbol(script):
 
 def _GetSymbols(script):
   match_pairs = scanner.ExtractDocumentedSymbols(script)
-  return list(source._YieldSymbols(match_pairs, set(['goog'])))
+  return list(source._YieldSymbols(match_pairs, {'goog'}))
 
 class SymbolTypesTestCase(unittest.TestCase):
   def assertSymbolType(self, type, script):

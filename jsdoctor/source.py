@@ -80,7 +80,7 @@ def _IsSymbolPartOfProvidedNamespaces(symbol, provided_namespaces):
 def _IsIgnorableIdentifier(identifier_match):
 
   # Find the first non-whitespace character after the identifier.
-  regex = re.compile('[\S]')
+  regex = re.compile(r'[\S]')
   match = regex.search(identifier_match.string, pos=identifier_match.end())
   if match:
     first_character = match.group()

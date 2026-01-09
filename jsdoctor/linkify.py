@@ -1,16 +1,16 @@
 import re
 
-_WEB_URL_RE = re.compile('https?://[^\s]*')
+_WEB_URL_RE = re.compile(r'https?://[^\s]*')
 
 def _ReplaceWebUrl(url_match):
   url = url_match.group(0)
-  link = '<a href="%s">%s</a>' % (url, url)
+  link = f'<a href="{url}">{url}</a>'
   return link
 
 def LinkifyWebUrls(content):
   return _WEB_URL_RE.sub(_ReplaceWebUrl, content)
 
-_SYMBOL_RE = re.compile('(\w+(?:\.\w+)*)(#\w+)?')
+_SYMBOL_RE = re.compile(r'(\w+(?:\.\w+)*)(#\w+)?')
 
 def _ReplaceSymbol(match, symbols):
   full_match = match.group(0)
@@ -23,7 +23,7 @@ def _ReplaceSymbol(match, symbols):
     if hash_portion:
       href + hash_portion
 
-    return '<a href="%s">%s</a>' % (href, full_match)
+    return f'<a href="{href}">{full_match}</a>'
 
   return full_match
 

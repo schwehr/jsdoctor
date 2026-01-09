@@ -34,8 +34,7 @@ _IGNORED_IDENTIFIERS = frozenset([
 
 def _GetSymbolsFromSources(sources):
   for s in sources:
-    for symbol in s.symbols:
-      yield symbol
+    yield from s.symbols
 
 # TODO(nanaze): Make this a flag
 _DUPLICATE_SYMBOL_IS_ERROR = False
@@ -55,7 +54,7 @@ def _MakeSymbolMap(symbols):
 
     if identifier in symbol_map:
       duplicate_symbol = symbol_map[identifier]
-      msg = 'Symbol duplicated\n%s\n%s' % (symbol, duplicate_symbol)
+      msg = f'Symbol duplicated\n{symbol}\n{duplicate_symbol}'
 
       if _DUPLICATE_SYMBOL_IS_ERROR:
         raise DuplicateSymbolError(msg)

@@ -11,9 +11,9 @@ class SourceTestCase(unittest.TestCase):
 
     test_source = source.ScanScript(_TEST_SCRIPT)
     self.assertEqual(
-      set(['goog.aaa', 'goog.bbb']), test_source.provides)
+      {'goog.aaa', 'goog.bbb'}, test_source.provides)
     self.assertEqual(
-      set(['goog.ccc', 'goog.ddd']), test_source.requires)
+      {'goog.ccc', 'goog.ddd'}, test_source.requires)
 
     self.assertEqual(1, len(test_source.symbols))
 

@@ -26,7 +26,7 @@ class LinkifyTestCase(unittest.TestCase):
   def testLinkifySymbols(self):
     self.assertEqual(
         'aaa <a href="goog.dom.html">goog.dom#cars</a> bb.cc',
-        linkify.LinkifySymbols('aaa goog.dom#cars bb.cc', set(['goog.dom'])))
+        linkify.LinkifySymbols('aaa goog.dom#cars bb.cc', {'goog.dom'}))
 
 if __name__ == '__main__':
     unittest.main()

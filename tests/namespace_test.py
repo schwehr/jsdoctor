@@ -14,17 +14,17 @@ class NamespaceTestCase(unittest.TestCase):
   def testNearestNamespace(self):
     closest = namespace.GetClosestNamespaceForSymbol(
       'aaa.bbb.ccc',
-      set(['aaa.bbb.ccc.ddd', 'aaa.bbb.ccc.eee']))
+      {'aaa.bbb.ccc.ddd', 'aaa.bbb.ccc.eee'})
     self.assertIsNone(closest)
 
     closest = namespace.GetClosestNamespaceForSymbol(
       'aaa.bbb.ccc',
-      set(['aaa.bbb', 'aaa.bbb.ccc.ddd']))
+      {'aaa.bbb', 'aaa.bbb.ccc.ddd'})
     self.assertEqual('aaa.bbb', closest)
 
     closest = namespace.GetClosestNamespaceForSymbol(
       'goog.string.startsWith',
-      set(['goog.string', 'goog.string.Unicode']))
+      {'goog.string', 'goog.string.Unicode'})
     self.assertEqual('goog.string', closest)
 
   def testGetNamespaceParts(self):
