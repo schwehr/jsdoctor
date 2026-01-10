@@ -71,7 +71,9 @@ goog.provide('abc');
 abc.def;
 """)
     symbol = list(test_source.symbols)[0]
-    self.assertEqual(flags.PRIVATE, flags.GetVisibility(symbol.comment.flags))
+    comment = symbol.comment
+    assert comment is not None  # For pytype.
+    self.assertEqual(flags.PRIVATE, flags.GetVisibility(comment.flags))
 
     test_source = source.ScanScript("""\
 goog.provide('abc');

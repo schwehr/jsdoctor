@@ -24,6 +24,7 @@ class SourceTestCase(unittest.TestCase):
     self.assertEqual(symboltypes.FUNCTION, symbol.type)
 
     comment = symbol.comment
+    assert comment is not None  # For pytype.
     self.assertEqual('Testing testing.\n@return {string} Dog.', comment.text)
 
     self.assertEqual(['Testing testing.'], comment.description_sections)

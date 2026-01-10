@@ -1,13 +1,24 @@
+from __future__ import annotations
+
 import logging
 import re
 
 from . import flags
-from . import namespace
 from . import jsdoc
+from . import namespace
 from . import scanner
 from . import symboltypes
 
+
 class Source:
+
+  script: str
+  path: str | None
+  provides: set[str]
+  requires: set[str]
+  symbols: set[Symbol]
+  filecomment: Comment | None
+
   def __init__(self, script, path=None):
     self.script = script
     self.path = path
@@ -25,7 +36,18 @@ class Source:
 
     return source_string
 
+
 class Symbol:
+
+  identifier: str
+  start: int
+  end: int
+  source: Source | None
+  comment: Comment | None
+  namespace: str | None
+  property: str | None
+  type: str | None
+
   def __init__(self, identifier, start, end):
     self.identifier = identifier
     self.start = start
@@ -46,7 +68,15 @@ class Symbol:
 
     return symbol_string
 
+
 class Comment:
+
+  text: str
+  start: int
+  end: int
+  flags: list[Flag]
+  description_sections: list[str]
+
   def __init__(self, text, start, end):
 
     self.text = text
@@ -59,6 +89,10 @@ class Comment:
 
 
 class Flag:
+
+  name: str
+  text: str
+
   def __init__(self, name, text):
 
     assert name in flags.ALL_FLAGS, 'Unrecognized flag: ' + name
@@ -66,16 +100,19 @@ class Flag:
     self.name = name
     self.text = text
 
+
 def _GetDescriptionAndFlags(text):
   description_sections, flag_pairs = jsdoc.ProcessComment(text)
   flags = [Flag(name, text) for name, text in flag_pairs]
   return description_sections, flags
+
 
 def _IsSymbolPartOfProvidedNamespaces(symbol, provided_namespaces):
   for ns in provided_namespaces:
     if namespace.IsSymbolPartOfNamespace(symbol, ns):
       return True
   return False
+
 
 def _IsIgnorableIdentifier(identifier_match):
 
@@ -90,21 +127,23 @@ def _IsIgnorableIdentifier(identifier_match):
 
   return False
 
+
 class NamespaceNotFoundError(Exception):
   pass
 
+
 # TODO(nanaze): In the future this could farm out to a formal parser like
 # Esprima to correctly identify comments. Regexing seems to work OK for now.
-
 def _YieldSymbols(match_pairs, provided_namespaces):
   for comment_match, identifier_match in match_pairs:
     comment_text = scanner.ExtractTextFromJsDocComment(comment_match.group())
     comment = Comment(comment_text, comment_match.start(), comment_match.end())
 
-    if not identifier_match:
-      assert not source.filecomment, '@fileoverview comment made more than once'
-      source.filecomment = comment
-      continue
+    # TODO(schwehr): What was this supposed to do?
+    # if not identifier_match:
+    #   assert not source.filecomment, '@fileoverview comment made more than once'
+    #   source.filecomment = comment
+    #   continue
 
     if _IsIgnorableIdentifier(identifier_match):
       # This is JsDoc on a method call, most likely a type cast of a return value.
@@ -153,7 +192,7 @@ def _YieldSymbols(match_pairs, provided_namespaces):
     yield symbol
 
 
-def ScanScript(script, path=None):
+def ScanScript(script: str, path: str | None = None):
 
   source = Source(script, path)
   source.provides.update(set(scanner.YieldProvides(script)))

@@ -1,28 +1,37 @@
-def IsPrototypeProperty(namespace):
+from typing import Iterable
+
+
+def IsPrototypeProperty(namespace: str) -> bool:
   parts = GetNamespaceParts(namespace)
   return len(parts) >= 3 and parts[-2] == 'prototype'
 
-def GetNamesapceFromParts(parts):
+
+def GetNamesapceFromParts(parts: list[str]) -> str:
   return '.'.join(parts)
 
-def GetNamespaceParts(namespace):
+
+def GetNamespaceParts(namespace: str) -> list[str]:
   # TODO(nanaze): Memoize. This is idempotent and hit a lot.
   return namespace.split('.')
 
-def GetPrototypeProperty(namespace):
+
+def GetPrototypeProperty(namespace: str) -> str:
   assert IsPrototypeProperty(namespace)
   parts = namespace.split('.')
   return parts[-1]
 
-def IsSymbolPartOfNamespace(symbol, namespace):
+
+def IsSymbolPartOfNamespace(symbol: str, namespace: str) -> bool:
   namespace_parts = GetNamespaceParts(namespace)
   symbol_parts = GetNamespaceParts(symbol)
 
-  return (
-    namespace_parts ==
-    symbol_parts[0:len(namespace_parts)])
+  return namespace_parts == symbol_parts[0:len(namespace_parts)]
 
-def _GetSymbolPartsInNamespace(symbol_parts, namespace_parts):
+
+def _GetSymbolPartsInNamespace(
+    symbol_parts: Iterable[str],
+    namespace_parts: Iterable[str]
+  ) -> int:
   # A symbol can't be shorter than its namespace.
   if len(symbol_parts) < len(namespace_parts):
     return 0

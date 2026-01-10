@@ -56,7 +56,9 @@ def _GetSymbolsOfType(symbols, type):
 
 
 def _GenerateDocument(namespace, symbols):
-  doc = minidom.getDOMImplementation().createDocument(None, 'html', None)
+  dom = minidom.getDOMImplementation()
+  assert dom is not None  # For pytype.
+  doc = dom.createDocument(None, 'html', None)
 
   body =  doc.createElement('body')
   doc.documentElement.appendChild(body)
@@ -94,7 +96,7 @@ def _GetParamString(flag):
 
 
 def _GetReturnFlag(flags):
-  return_flags = filter(lambda flag: flag.name == '@return', flags)
+  return_flags = list(filter(lambda flag: flag.name == '@return', flags))
   assert(len(return_flags) <= 1, 'There should not be more than one @return flag.')
 
   if return_flags:

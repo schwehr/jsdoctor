@@ -1,6 +1,8 @@
 import re
+from typing import Any, Iterator
 
-def ProcessComment(comment_text):
+
+def ProcessComment(comment_text: str):
   descriptions = []
   flags = []
 
@@ -15,8 +17,7 @@ def ProcessComment(comment_text):
   return descriptions, flags
 
 
-def _ProcessCommentSection(section_text):
-
+def _ProcessCommentSection(section_text: str):
   remaining_text = section_text
   flags = []
 
@@ -40,10 +41,11 @@ def _ProcessCommentSection(section_text):
   return description, flags
 
 
-def _MatchFlags(text):
+def _MatchFlags(text: str) -> Iterator[re.Match]:
   return re.finditer(r'(?:\s|\A)(?P<flag>@\w+)\b', text)
 
-def _YieldSections(comment_text):
+
+def _YieldSections(comment_text: str) -> Iterator[str]:
   #
   assert '\r' not in comment_text, 'Non-UNIX strings not supported for now'
   parts = comment_text.split('\n\n')
