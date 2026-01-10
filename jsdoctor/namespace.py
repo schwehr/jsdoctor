@@ -1,4 +1,4 @@
-from typing import Iterable
+from typing import Sequence
 
 
 def IsPrototypeProperty(namespace: str) -> bool:
@@ -29,8 +29,8 @@ def IsSymbolPartOfNamespace(symbol: str, namespace: str) -> bool:
 
 
 def _GetSymbolPartsInNamespace(
-    symbol_parts: Iterable[str],
-    namespace_parts: Iterable[str]
+    symbol_parts: Sequence[str],
+    namespace_parts: Sequence[str]
   ) -> int:
   # A symbol can't be shorter than its namespace.
   if len(symbol_parts) < len(namespace_parts):
