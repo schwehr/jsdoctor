@@ -42,7 +42,7 @@ def FindJsDocComments(script):
   return re.finditer(r'/\*\*.*?\*/', script, re.DOTALL)
 
 def FindCommentTarget(script, pos=0):
-  # Find an opening parethesis or an identifier.
+  # Find an opening parenthesis or an identifier.
   # \w and $ should cover all valid identifiers.
   identifier_regex = re.compile(r'\(|(?:[$\w]+\s*\.\s*)*[$\w]+')
   return identifier_regex.search(script, pos=pos)
