@@ -1,18 +1,20 @@
 import re
 
-
-class NoIdentifierFoundError(Exception):
-  pass
-
 _BASE_REGEX_STRING = '^\\s*goog\\.%s\\(\\s*[\'"](.+)[\'"]\\s*\\)'
 _PROVIDE_REGEX = re.compile(_BASE_REGEX_STRING % 'provide')
 _REQUIRES_REGEX = re.compile(_BASE_REGEX_STRING % 'require')
 
-def YieldProvides(source):
+
+class NoIdentifierFoundError(Exception):
+  pass
+
+
+def YieldProvides(source: str):
   for line in source.splitlines():
     match = _PROVIDE_REGEX.match(line)
     if match:
       yield match.group(1)
+
 
 def YieldRequires(source):
   for line in source.splitlines():
@@ -20,8 +22,8 @@ def YieldRequires(source):
     if match:
       yield match.group(1)
 
-def ExtractDocumentedSymbols(script):
 
+def ExtractDocumentedSymbols(script):
   for comment_match in FindJsDocComments(script):
 
     identifier_match = None

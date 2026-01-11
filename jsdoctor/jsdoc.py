@@ -19,7 +19,7 @@ def ProcessComment(comment_text: str):
 
 def _ProcessCommentSection(section_text: str):
   remaining_text = section_text
-  flags = []
+  flags: list[tuple[str, str]] = []
 
   matches = list(_MatchFlags(section_text))
   matches.reverse()

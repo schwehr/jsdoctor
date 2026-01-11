@@ -28,7 +28,7 @@ class Source:
     self.symbols = set()
     self.filecomment = None
 
-  def __str__(self):
+  def __str__(self) -> str:
     source_string = super().__str__()
 
     if self.path:
@@ -58,7 +58,7 @@ class Symbol:
     self.property = None
     self.type = None
 
-  def __str__(self):
+  def __str__(self) -> str:
     symbol_string = super().__str__()
 
     symbol_string += ' ' + self.identifier
@@ -107,7 +107,7 @@ def _GetDescriptionAndFlags(text):
   return description_sections, flags
 
 
-def _IsSymbolPartOfProvidedNamespaces(symbol, provided_namespaces):
+def _IsSymbolPartOfProvidedNamespaces(symbol, provided_namespaces) -> bool:
   for ns in provided_namespaces:
     if namespace.IsSymbolPartOfNamespace(symbol, ns):
       return True
@@ -192,8 +192,7 @@ def _YieldSymbols(match_pairs, provided_namespaces):
     yield symbol
 
 
-def ScanScript(script: str, path: str | None = None):
-
+def ScanScript(script: str, path: str | None = None) -> Source:
   source = Source(script, path)
   source.provides.update(set(scanner.YieldProvides(script)))
   source.requires.update(set(scanner.YieldRequires(script)))

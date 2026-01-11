@@ -1,14 +1,13 @@
 """Wrappers around esprima"""
 
-import StringIO
+import codecs
+import logging
+import multiprocessing
 import os
 import subprocess
-import logging
-import codecs
-import multiprocessing
 
 
-def GetParseInputPath():
+def GetParseInputPath() -> str:
   dir = os.path.dirname(__file__)
   return os.path.join(dir, 'node/parseinput.js')
 
@@ -37,6 +36,3 @@ def parse(source):
     raise Exception('Esprima parsing failed.')
 
   return out
-
-
-

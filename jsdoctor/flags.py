@@ -73,7 +73,7 @@ MISC_FLAGS = frozenset([
     '@this'
     ])
 
-all_flags = set()
+all_flags: set[str] = set()
 all_flags.update(MISC_FLAGS)
 all_flags.update(BASE_FLAGS)
 all_flags.update(COMPILER_FLAGS)
