@@ -1,40 +1,41 @@
 from xml.dom import minidom
 
 import html5lib
+from typing import Any, Iterable, Iterator
 
 from . import flags
 from . import linkify
 from . import symboltypes
 
 
-def GenerateHtmlDocs(namespace_map):
+def GenerateHtmlDocs(namespace_map: dict[str, list[Any]]) -> Iterator[tuple[str, bytes]]:
   for filepath, document in GenerateDocuments(namespace_map):
     content = document.documentElement.toxml('utf-8')
     yield filepath, content
 
 
-def GenerateDocuments(namespace_map):
-  for namespace, symbols in namespace_map.iteritems():
+def GenerateDocuments(namespace_map: dict[str, list[Any]]) -> Iterator[tuple[str, minidom.Document]]:
+  for namespace, symbols in namespace_map.items():
     filename = '%s.html' % namespace
     yield filename, _GenerateDocument(namespace, symbols)
 
 
-def _ProcessString(content):
+def _ProcessString(content: str) -> minidom.DocumentFragment:
   content = linkify.LinkifyWebUrls(content)
   return html5lib.parseFragment(content, treebuilder='dom')
 
 
-def _MakeTextNode(content):
+def _MakeTextNode(content: str) -> minidom.Text:
   text = minidom.Text()
   text.data = content
   return text
 
 
-def _MakeHeader(content=None):
+def _MakeHeader(content: str | None = None) -> minidom.Element:
   return _MakeElement('h2', content)
 
 
-def _MakeElement(tagname, content=None):
+def _MakeElement(tagname: str, content: str | None = None) -> minidom.Element:
   element = minidom.Element(tagname)
 
   if content:
@@ -43,19 +44,19 @@ def _MakeElement(tagname, content=None):
   return element
 
 
-def _IsStatic(symbol):
+def _IsStatic(symbol: Any) -> bool:
   return bool(symbol.static)
 
 
-def _IsNotStatic(symbol):
+def _IsNotStatic(symbol: Any) -> bool:
   return not _IsStatic(symbol)
 
 
-def _GetSymbolsOfType(symbols, type):
-  return [symbol for symbol in symbols if symbol.type == type]
+def _GetSymbolsOfType(symbols: Iterable[Any], symbol_type: Any) -> list[Any]:
+  return [symbol for symbol in symbols if symbol.type == symbol_type]
 
 
-def _GenerateDocument(namespace, symbols):
+def _GenerateDocument(namespace: str, symbols: list[Any]) -> minidom.Document:
   dom = minidom.getDOMImplementation()
   assert dom is not None  # For pytype.
   doc = dom.createDocument(None, 'html', None)
@@ -69,7 +70,7 @@ def _GenerateDocument(namespace, symbols):
   return doc
 
 
-def _AddSymbolDescription(node_list, symbol):
+def _AddSymbolDescription(node_list: minidom.NodeList, symbol: Any) -> None:
   node_list.append(_MakeElement('h3', symbol.identifier))
   for section in symbol.comment.description_sections:
     elem = _ProcessString(section)
@@ -78,38 +79,38 @@ def _AddSymbolDescription(node_list, symbol):
     p.appendChild(elem)
 
 
-def _MakeLink(text, href):
+def _MakeLink(text: str, href: str) -> minidom.Element:
   a = _MakeElement('a', text)
   a.setAttribute('href', href)
   return a
 
 
-def _YieldParamFlags(flags):
+def _YieldParamFlags(flags: Iterable[Any]) -> Iterator[Any]:
   for flag in flags:
     if flag.name == '@param':
       yield flag
 
-def _GetParamString(flag):
+def _GetParamString(flag: Any) -> str:
   assert flag.name == '@param'
   name, type, _ = flags.ParseParameterDescription(flag.text)
   return f'{{{type}}} {name}'
 
 
-def _GetReturnFlag(flags):
+def _GetReturnFlag(flags: Iterable[Any]) -> Any | None:
   return_flags = list(filter(lambda flag: flag.name == '@return', flags))
-  assert(len(return_flags) <= 1, 'There should not be more than one @return flag.')
+  assert len(return_flags) <= 1, 'There should not be more than one @return flag.'
 
   if return_flags:
     return return_flags[0]
 
 
-def _GetReturnString(flag):
+def _GetReturnString(flag: Any) -> str:
   assert flag.name == '@return'
   type, _ = flags.ParseReturnDescription(flag.text)
   return '{%s}' % type
 
 
-def _MakeFunctionCodeElement(name, function):
+def _MakeFunctionCodeElement(name: str, function: Any) -> minidom.Element:
   code = _MakeElement('code')
   code.appendChild(_MakeLink(name, '#' + name))
 
@@ -127,7 +128,7 @@ def _MakeFunctionCodeElement(name, function):
   return code
 
 
-def _MakeFunctionSummaryList(functions):
+def _MakeFunctionSummaryList(functions: Iterable[Any]) -> minidom.Element:
   summary_list = _MakeElement('dl')
 
   for function in functions:
@@ -153,7 +154,7 @@ def _MakeFunctionSummaryList(functions):
   return summary_list
 
 
-def _AddFunctionDescription(node_list, function):
+def _AddFunctionDescription(node_list: minidom.NodeList, function: Any) -> None:
   header = _MakeElement('h3', function.identifier)
   header.setAttribute('id', function.identifier)
   node_list.append(header)
@@ -222,7 +223,7 @@ def _AddFunctionDescription(node_list, function):
     node_list.append(section_paragraph)
 
 
-def _GenerateContent(namespace, symbols):
+def _GenerateContent(namespace: str, symbols: list[Any]) -> minidom.NodeList:
 
   node_list = minidom.NodeList()
 
@@ -248,25 +249,25 @@ def _GenerateContent(namespace, symbols):
     for interface in interface_symbols:
       _AddSymbolDescription(node_list, interface)
 
-  instance_methods = filter(_IsNotStatic,
-      _GetSymbolsOfType(sorted_symbols, symboltypes.FUNCTION))
+  instance_methods = list(filter(_IsNotStatic,
+      _GetSymbolsOfType(sorted_symbols, symboltypes.FUNCTION)))
 
-  instance_properties = filter(_IsNotStatic,
-      _GetSymbolsOfType(sorted_symbols, symboltypes.PROPERTY))
+  instance_properties = list(filter(_IsNotStatic,
+      _GetSymbolsOfType(sorted_symbols, symboltypes.PROPERTY)))
 
-  static_functions = filter(_IsStatic,
-      _GetSymbolsOfType(sorted_symbols, symboltypes.FUNCTION))
+  static_functions = list(filter(_IsStatic,
+      _GetSymbolsOfType(sorted_symbols, symboltypes.FUNCTION)))
 
-  public_instance_methods = filter(
+  public_instance_methods = list(filter(
       lambda m: flags.GetVisibility(m.comment.flags) == flags.PUBLIC,
-      instance_methods)
+      instance_methods))
   if public_instance_methods:
     node_list.append(_MakeElement('h2', 'Public instance method summary'))
     node_list.append(_MakeFunctionSummaryList(public_instance_methods))
 
-  public_static_methods = filter(
+  public_static_methods = list(filter(
       lambda m: flags.GetVisibility(m.comment.flags) == flags.PUBLIC,
-      static_functions)
+      static_functions))
   if static_functions:
     node_list.append(_MakeElement('h2', 'Public static method summary'))
     node_list.append(_MakeFunctionSummaryList(public_static_methods))
@@ -299,8 +300,8 @@ def _GenerateContent(namespace, symbols):
       _AddFunctionDescription(node_list, function)
       node_list.append(_MakeElement('hr'))
 
-  static_properties = filter(_IsStatic,
-      _GetSymbolsOfType(sorted_symbols, symboltypes.PROPERTY))
+  static_properties = list(filter(_IsStatic,
+      _GetSymbolsOfType(sorted_symbols, symboltypes.PROPERTY)))
   if static_properties:
     node_list.append(_MakeElement('h2', 'Static properties'))
     for property in static_properties:

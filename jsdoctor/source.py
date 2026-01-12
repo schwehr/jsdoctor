@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import re
+from typing import Iterable, Iterator
 
 from . import flags
 from . import jsdoc
@@ -19,7 +20,7 @@ class Source:
   symbols: set[Symbol]
   filecomment: Comment | None
 
-  def __init__(self, script, path=None):
+  def __init__(self, script: str, path: str | None = None):
     self.script = script
     self.path = path
 
@@ -47,8 +48,9 @@ class Symbol:
   namespace: str | None
   property: str | None
   type: str | None
+  static: bool | None
 
-  def __init__(self, identifier, start, end):
+  def __init__(self, identifier: str, start: int, end: int) -> None:
     self.identifier = identifier
     self.start = start
     self.end = end
@@ -57,6 +59,7 @@ class Symbol:
     self.namespace = None
     self.property = None
     self.type = None
+    self.static = None
 
   def __str__(self) -> str:
     symbol_string = super().__str__()
@@ -77,7 +80,7 @@ class Comment:
   flags: list[Flag]
   description_sections: list[str]
 
-  def __init__(self, text, start, end):
+  def __init__(self, text: str, start: int, end: int) -> None:
 
     self.text = text
     self.start = start
@@ -93,7 +96,7 @@ class Flag:
   name: str
   text: str
 
-  def __init__(self, name, text):
+  def __init__(self, name: str, text: str):
 
     assert name in flags.ALL_FLAGS, 'Unrecognized flag: ' + name
 
@@ -101,20 +104,20 @@ class Flag:
     self.text = text
 
 
-def _GetDescriptionAndFlags(text):
+def _GetDescriptionAndFlags(text: str) -> tuple[list[str], list[Flag]]:
   description_sections, flag_pairs = jsdoc.ProcessComment(text)
   flags = [Flag(name, text) for name, text in flag_pairs]
   return description_sections, flags
 
 
-def _IsSymbolPartOfProvidedNamespaces(symbol, provided_namespaces) -> bool:
+def _IsSymbolPartOfProvidedNamespaces(symbol: str, provided_namespaces: set[str]) -> bool:
   for ns in provided_namespaces:
     if namespace.IsSymbolPartOfNamespace(symbol, ns):
       return True
   return False
 
 
-def _IsIgnorableIdentifier(identifier_match):
+def _IsIgnorableIdentifier(identifier_match: re.Match) -> bool:
 
   # Find the first non-whitespace character after the identifier.
   regex = re.compile(r'[\S]')
@@ -134,7 +137,10 @@ class NamespaceNotFoundError(Exception):
 
 # TODO(nanaze): In the future this could farm out to a formal parser like
 # Esprima to correctly identify comments. Regexing seems to work OK for now.
-def _YieldSymbols(match_pairs, provided_namespaces):
+def _YieldSymbols(
+    match_pairs: Iterable[tuple[re.Match, re.Match]],
+    provided_namespaces: set[str],
+) -> Iterator[Symbol]:
   for comment_match, identifier_match in match_pairs:
     comment_text = scanner.ExtractTextFromJsDocComment(comment_match.group())
     comment = Comment(comment_text, comment_match.start(), comment_match.end())

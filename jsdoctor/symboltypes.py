@@ -1,17 +1,25 @@
+from __future__ import annotations
+import typing
+
+if typing.TYPE_CHECKING:
+  from . import source
+
 CONSTRUCTOR = 'constructor'
 INTERFACE = 'interface'
 ENUM = 'enum'
 FUNCTION = 'function'
 PROPERTY = 'property'
 
-def _CommentHasFlag(comment, flag_name):
+
+def _CommentHasFlag(comment: source.Comment, flag_name: str) -> bool:
   assert flag_name.startswith('@'), 'flag name should start with @'
   for flag in comment.flags:
     if flag.name == flag_name:
       return True
   return False
 
-def DetermineSymbolType(symbol):
+
+def DetermineSymbolType(symbol: source.Symbol) -> str:
   comment = symbol.comment
   assert comment, 'Expected to have comment'
 

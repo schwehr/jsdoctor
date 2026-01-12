@@ -1,4 +1,5 @@
 import re
+from typing import Iterator
 
 _BASE_REGEX_STRING = '^\\s*goog\\.%s\\(\\s*[\'"](.+)[\'"]\\s*\\)'
 _PROVIDE_REGEX = re.compile(_BASE_REGEX_STRING % 'provide')
@@ -9,14 +10,14 @@ class NoIdentifierFoundError(Exception):
   pass
 
 
-def YieldProvides(source: str):
+def YieldProvides(source: str) -> Iterator[str]:
   for line in source.splitlines():
     match = _PROVIDE_REGEX.match(line)
     if match:
       yield match.group(1)
 
 
-def YieldRequires(source):
+def YieldRequires(source: str) -> Iterator[str]:
   for line in source.splitlines():
     match = _REQUIRES_REGEX.match(line)
     if match:
@@ -35,7 +36,7 @@ def ExtractDocumentedSymbols(script):
       identifier_match = FindCommentTarget(script, comment_match.end())
       if not identifier_match:
         raise NoIdentifierFoundError(
-        'Found no identifier for comment: ' + identifier_match.group())
+        'Found no identifier for comment: ' + comment_match.group())
 
     yield comment_match, identifier_match
 
@@ -43,16 +44,19 @@ def ExtractDocumentedSymbols(script):
 def FindJsDocComments(script):
   return re.finditer(r'/\*\*.*?\*/', script, re.DOTALL)
 
+
 def FindCommentTarget(script, pos=0):
   # Find an opening parenthesis or an identifier.
   # \w and $ should cover all valid identifiers.
   identifier_regex = re.compile(r'\(|(?:[$\w]+\s*\.\s*)*[$\w]+')
   return identifier_regex.search(script, pos=pos)
 
-def StripWhitespace(original_string):
+
+def StripWhitespace(original_string: str) -> str:
   return re.sub(r'\s*', '', original_string)
 
-def ExtractTextFromJsDocComment(comment):
+
+def ExtractTextFromJsDocComment(comment: str) -> str:
   comment = comment.strip()
 
   # Strip the leading "/**"

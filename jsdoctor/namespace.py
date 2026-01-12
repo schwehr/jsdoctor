@@ -1,4 +1,4 @@
-from typing import Sequence
+from typing import Iterable, Sequence
 
 
 def IsPrototypeProperty(namespace: str) -> bool:
@@ -45,14 +45,17 @@ def _GetSymbolPartsInNamespace(
 
   return count
 
-def GetClosestNamespaceForSymbol(symbol, candidate_namespaces):
+def GetClosestNamespaceForSymbol(
+    symbol: str,
+    candidate_namespaces: Iterable[str]
+) -> str | None:
   closest_namespace = None
   symbol_parts = GetNamespaceParts(symbol)
 
   max_count = 0
 
-  valid_namespaces = filter(
-    lambda ns: IsSymbolPartOfNamespace(symbol, ns), candidate_namespaces)
+  valid_namespaces = list(filter(
+    lambda ns: IsSymbolPartOfNamespace(symbol, ns), candidate_namespaces))
 
   for ns in valid_namespaces:
     namespace_parts = GetNamespaceParts(ns)

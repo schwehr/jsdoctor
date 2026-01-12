@@ -1,4 +1,5 @@
 import re
+from typing import Any, Iterable
 
 BASE_FLAGS = frozenset([
     '@provideGoog'
@@ -90,7 +91,7 @@ all_flags: frozenset[str] = frozenset(
 ALL_FLAGS = frozenset(all_flags)
 
 
-def ParseParameterDescription(desc):
+def ParseParameterDescription(desc: str) -> tuple[str, str, str]:
   match = re.match(r'^\s*\{(?P<type>.*?)\}\s+(?P<name>\w+)(?P<desc>.*)$', desc, re.DOTALL | re.MULTILINE)
   if not match:
     raise ValueError('Could not parse flag description: %s' % desc)
@@ -98,7 +99,7 @@ def ParseParameterDescription(desc):
           match.group('type').strip(),
           match.group('desc').strip())
 
-def ParseReturnDescription(desc):
+def ParseReturnDescription(desc: str) -> tuple[str, str]:
   match = re.match(r'^\s*{(?P<type>.*?)\}(?P<desc>.*)$', desc, re.DOTALL | re.MULTILINE)
   if not match:
     raise ValueError('Could not parse flag description: %s' % desc)
@@ -109,7 +110,7 @@ PUBLIC = 'public'
 PROTECTED = 'protected'
 PRIVATE = 'private'
 
-def GetVisibility(flags):
+def GetVisibility(flags: Iterable[Any]) -> str:
   """Returns one of PUBLIC, PROTECTED, or PRIVATE."""
 
   flag_names = [flag.name for flag in flags]
@@ -121,14 +122,14 @@ def GetVisibility(flags):
 
   return PUBLIC
 
-def GetSymbolType(flags):
+def GetSymbolType(flags: Iterable[Any]) -> str | None:
   for flag in flags:
     if flag.name in ['@type', '@const', '@protected', '@private']:
       flag_type = MaybeParseTypeFromDescription(flag.text)
       if flag_type:
         return flag_type
 
-def MaybeParseTypeFromDescription(desc):
+def MaybeParseTypeFromDescription(desc: str) -> str | None:
   match = re.match(r'^\s*{(?P<type>.*?)}', desc, re.DOTALL | re.MULTILINE)
   if match:
     return match.group('type')

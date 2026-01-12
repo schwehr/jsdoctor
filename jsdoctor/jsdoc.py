@@ -1,8 +1,8 @@
 import re
-from typing import Any, Iterator
+from typing import Iterator
 
 
-def ProcessComment(comment_text: str):
+def ProcessComment(comment_text: str) -> tuple[list[str], list[tuple[str, str]]]:
   descriptions = []
   flags = []
 
@@ -17,7 +17,7 @@ def ProcessComment(comment_text: str):
   return descriptions, flags
 
 
-def _ProcessCommentSection(section_text: str):
+def _ProcessCommentSection(section_text: str) -> tuple[str, list[tuple[str, str]]]:
   remaining_text = section_text
   flags: list[tuple[str, str]] = []
 
