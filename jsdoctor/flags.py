@@ -73,18 +73,19 @@ MISC_FLAGS = frozenset([
     '@this'
     ])
 
-all_flags: set[str] = set()
-all_flags.update(MISC_FLAGS)
-all_flags.update(BASE_FLAGS)
-all_flags.update(COMPILER_FLAGS)
-all_flags.update(JSDOC_FLAGS)
-all_flags.update(FILE_FLAGS)
-all_flags.update(FUNCTION_FLAGS)
-all_flags.update(INTERFACE_FLAGS)
-all_flags.update(INSTANTIABLE_FLAGS)
-all_flags.update(PROPERTY_FLAGS)
-all_flags.update(TYPEDEF_FLAGS)
-all_flags.update(VISIBILITY_FLAGS)
+all_flags: frozenset[str] = frozenset(
+  MISC_FLAGS
+  | BASE_FLAGS
+  | COMPILER_FLAGS
+  | JSDOC_FLAGS
+  | FILE_FLAGS
+  | FUNCTION_FLAGS
+  | INTERFACE_FLAGS
+  | INSTANTIABLE_FLAGS
+  | PROPERTY_FLAGS
+  | TYPEDEF_FLAGS
+  | VISIBILITY_FLAGS
+)
 
 ALL_FLAGS = frozenset(all_flags)
 
