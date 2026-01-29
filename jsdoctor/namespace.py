@@ -6,7 +6,7 @@ def IsPrototypeProperty(namespace: str) -> bool:
   return len(parts) >= 3 and parts[-2] == 'prototype'
 
 
-def GetNamesapceFromParts(parts: list[str]) -> str:
+def GetNamespaceFromParts(parts: list[str]) -> str:
   return '.'.join(parts)
 
 
