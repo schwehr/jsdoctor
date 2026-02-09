@@ -11,7 +11,6 @@ def GetNamespaceFromParts(parts: list[str]) -> str:
 
 
 def GetNamespaceParts(namespace: str) -> list[str]:
-  # TODO(nanaze): Memoize. This is idempotent and hit a lot.
   return namespace.split('.')
 
 
@@ -31,7 +30,7 @@ def IsSymbolPartOfNamespace(symbol: str, namespace: str) -> bool:
 def _GetSymbolPartsInNamespace(
     symbol_parts: Sequence[str],
     namespace_parts: Sequence[str]
-  ) -> int:
+) -> int:
   # A symbol can't be shorter than its namespace.
   if len(symbol_parts) < len(namespace_parts):
     return 0
@@ -44,6 +43,7 @@ def _GetSymbolPartsInNamespace(
     count += 1
 
   return count
+
 
 def GetClosestNamespaceForSymbol(
     symbol: str,
