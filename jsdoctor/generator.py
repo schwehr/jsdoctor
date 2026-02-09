@@ -1,20 +1,24 @@
-from xml.dom import minidom
-
-import html5lib
 from typing import Any, Iterable, Iterator
+
+from xml.dom import minidom
+import html5lib
 
 from . import flags
 from . import linkify
 from . import symboltypes
 
 
-def GenerateHtmlDocs(namespace_map: dict[str, list[Any]]) -> Iterator[tuple[str, bytes]]:
+def GenerateHtmlDocs(
+    namespace_map: dict[str, list[Any]]
+) -> Iterator[tuple[str, bytes]]:
   for filepath, document in GenerateDocuments(namespace_map):
     content = document.documentElement.toxml('utf-8')
     yield filepath, content
 
 
-def GenerateDocuments(namespace_map: dict[str, list[Any]]) -> Iterator[tuple[str, minidom.Document]]:
+def GenerateDocuments(
+    namespace_map: dict[str, list[Any]]
+) -> Iterator[tuple[str, minidom.Document]]:
   for namespace, symbols in namespace_map.items():
     filename = '%s.html' % namespace
     yield filename, _GenerateDocument(namespace, symbols)
@@ -98,7 +102,7 @@ def _GetParamString(flag: Any) -> str:
 
 def _GetReturnFlag(flags: Iterable[Any]) -> Any | None:
   return_flags = list(filter(lambda flag: flag.name == '@return', flags))
-  assert len(return_flags) <= 1, 'There should not be more than one @return flag.'
+  assert len(return_flags) <= 1, 'There should not be more than 1 @return flag.'
 
   if return_flags:
     return return_flags[0]
@@ -159,14 +163,14 @@ def _AddFunctionDescription(node_list: minidom.NodeList, function: Any) -> None:
   header.setAttribute('id', function.identifier)
   node_list.append(header)
 
-  # Draw function signature
+  # Draw function signature.
   param_flags = list(_YieldParamFlags(function.comment.flags))
 
   function_interface = ''
   function_interface += flags.GetVisibility(function.comment.flags) + ' '
   function_interface += '%s(' % function.identifier
 
-  # Draw parameters
+  # Draw parameters.
   if param_flags:
     for index, flag in enumerate(param_flags):
       function_interface += '\n  %s' % _GetParamString(flag)
@@ -179,14 +183,14 @@ def _AddFunctionDescription(node_list: minidom.NodeList, function: Any) -> None:
 
   function_interface += ')'
 
-  # Draw return
+  # Draw return.
   return_flag = _GetReturnFlag(function.comment.flags)
   if return_flag:
     function_interface += ' : ' + _GetReturnString(return_flag)
 
   node_list.append(_MakeElement('pre', function_interface))
 
-  # Parameter list
+  # Parameter list.
   if param_flags:
     node_list.append(_MakeElement('h4', 'Parameters:'))
 
@@ -216,7 +220,7 @@ def _AddFunctionDescription(node_list: minidom.NodeList, function: Any) -> None:
     return_paragraph.appendChild(_MakeTextNode(' '))
     return_paragraph.appendChild(_ProcessString(desc))
 
-  # Add description paragraphs
+  # Add description paragraphs.
   for section in function.comment.description_sections:
     section_paragraph = _MakeElement('p')
     section_paragraph.appendChild(_ProcessString(section))
@@ -224,14 +228,13 @@ def _AddFunctionDescription(node_list: minidom.NodeList, function: Any) -> None:
 
 
 def _GenerateContent(namespace: str, symbols: list[Any]) -> minidom.NodeList:
-
   node_list = minidom.NodeList()
 
   node_list.append(_MakeElement('h1', namespace))
 
   sorted_symbols = sorted(symbols, key= lambda symbol: symbol.identifier)
 
-  # Constructor
+  # Constructor.
   constructor_symbols = _GetSymbolsOfType(
     sorted_symbols, symboltypes.CONSTRUCTOR)
 
@@ -240,7 +243,7 @@ def _GenerateContent(namespace: str, symbols: list[Any]) -> minidom.NodeList:
     for constructor in constructor_symbols:
       _AddSymbolDescription(node_list, constructor)
 
-  # Interface
+  # Interface.
   interface_symbols = _GetSymbolsOfType(
     sorted_symbols, symboltypes.INTERFACE)
 
@@ -272,9 +275,8 @@ def _GenerateContent(namespace: str, symbols: list[Any]) -> minidom.NodeList:
     node_list.append(_MakeElement('h2', 'Public static method summary'))
     node_list.append(_MakeFunctionSummaryList(public_static_methods))
 
-  # Enumerations
-  enum_symbols = _GetSymbolsOfType(
-     sorted_symbols, symboltypes.ENUM)
+  # Enumerations.
+  enum_symbols = _GetSymbolsOfType(sorted_symbols, symboltypes.ENUM)
 
   if enum_symbols:
     node_list.append(_MakeElement('h2', 'Enumerations'))
