@@ -7,3 +7,25 @@ requires-python = ">=3.7"
 dependencies = [
     "html5lib>=1.1",
 ]
+
+[tool.ty]
+
+[[tool.ty.overrides]]
+include = ["jsdoctor.py", "processjsontree.py"]
+[tool.ty.overrides.rules]
+unresolved-import = "ignore"
+
+[[tool.ty.overrides]]
+include = ["jsdoctor.py"]
+[tool.ty.overrides.rules]
+invalid-argument-type = "ignore"
+
+[[tool.ty.overrides]]
+include = ["jsdoctor/generator.py", "processjsontree.py", "tests/flags_test.py", "tests/linkify_test.py"]
+[tool.ty.overrides.rules]
+unresolved-attribute = "ignore"
+
+[[tool.ty.overrides]]
+include = ["jsdoctor/generator.py"]
+[tool.ty.overrides.rules]
+unresolved-import = "ignore"

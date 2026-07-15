@@ -26,6 +26,10 @@ jobs:
         run: uv sync --all-extras --dev
         env:
           UV_PYTHON: ${{ matrix.python-version }}
+      - name: Type check with ty
+        run: uvx ty check .
+        env:
+          UV_PYTHON: ${{ matrix.python-version }}
       - name: Test
         run: |
           uv run python -m unittest discover -v --pattern="*test.py" --start-directory tests

@@ -11,3 +11,7 @@ repos:
     rev: v1.27.0
     hooks:
     -   id: zizmor
+-   repo: https://github.com/allganize/ty-pre-commit
+    rev: v0.0.59
+    hooks:
+    -   id: ty-check
