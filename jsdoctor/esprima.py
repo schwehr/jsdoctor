@@ -5,7 +5,7 @@ import logging
 import multiprocessing
 import os
 import subprocess
-from typing import Iterable, List
+from typing import Iterable
 
 
 def GetParseInputPath() -> str:
@@ -20,7 +20,7 @@ def _CreateEsprimaProcess() -> subprocess.Popen:
       stdout=subprocess.PIPE)
   return proc
 
-def MultiParse(sources: Iterable[str]) -> List[bytes]:
+def MultiParse(sources: Iterable[str]) -> list[bytes]:
   pool = multiprocessing.Pool()
   results = pool.map(parse, sources)
   return results
