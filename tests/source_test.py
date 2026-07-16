@@ -6,50 +6,46 @@ from jsdoctor import symboltypes
 
 
 class SourceTestCase(unittest.TestCase):
+    def testScanSource(self):
+        test_source = source.ScanScript(_TEST_SCRIPT)
+        self.assertEqual({"goog.aaa", "goog.bbb"}, test_source.provides)
+        self.assertEqual({"goog.ccc", "goog.ddd"}, test_source.requires)
 
-  def testScanSource(self):
+        self.assertEqual(1, len(test_source.symbols))
 
-    test_source = source.ScanScript(_TEST_SCRIPT)
-    self.assertEqual(
-      {'goog.aaa', 'goog.bbb'}, test_source.provides)
-    self.assertEqual(
-      {'goog.ccc', 'goog.ddd'}, test_source.requires)
+        symbol = list(test_source.symbols)[0]
+        self.assertEqual("goog.aaa.bbb", symbol.identifier)
+        self.assertTrue(symbol.static)
+        self.assertEqual("goog.aaa", symbol.namespace)
+        self.assertEqual(symboltypes.FUNCTION, symbol.type)
 
-    self.assertEqual(1, len(test_source.symbols))
+        comment = symbol.comment
+        assert comment is not None  # For pytype.
+        self.assertEqual("Testing testing.\n@return {string} Dog.", comment.text)
 
-    symbol = list(test_source.symbols)[0]
-    self.assertEqual('goog.aaa.bbb', symbol.identifier)
-    self.assertTrue(symbol.static)
-    self.assertEqual('goog.aaa', symbol.namespace)
-    self.assertEqual(symboltypes.FUNCTION, symbol.type)
+        self.assertEqual(["Testing testing."], comment.description_sections)
 
-    comment = symbol.comment
-    assert comment is not None  # For pytype.
-    self.assertEqual('Testing testing.\n@return {string} Dog.', comment.text)
+        self.assertEqual(1, len(comment.flags))
 
-    self.assertEqual(['Testing testing.'], comment.description_sections)
+        flag = comment.flags[0]
+        self.assertEqual("@return", flag.name)
+        self.assertEqual("{string} Dog.", flag.text)
 
-    self.assertEqual(1, len(comment.flags))
+    def testIsIgnorableIdentifier(self):
+        match = scanner.FindCommentTarget("  aaa.bbb = 3")
+        self.assertEqual("aaa.bbb", match.group())
+        self.assertFalse(source._IsIgnorableIdentifier(match))
 
-    flag = comment.flags[0]
-    self.assertEqual('@return', flag.name)
-    self.assertEqual('{string} Dog.', flag.text)
+        match = scanner.FindCommentTarget("  aaa.bbb(3)")
+        self.assertEqual("aaa.bbb", match.group())
+        self.assertTrue(source._IsIgnorableIdentifier(match))
 
-  def testIsIgnorableIdentifier(self):
-    match = scanner.FindCommentTarget('  aaa.bbb = 3');
-    self.assertEqual('aaa.bbb', match.group())
-    self.assertFalse(source._IsIgnorableIdentifier(match))
+        match = scanner.FindCommentTarget("  aaa.bbb[3])")
+        self.assertEqual("aaa.bbb", match.group())
+        self.assertTrue(source._IsIgnorableIdentifier(match))
 
-    match = scanner.FindCommentTarget('  aaa.bbb(3)');
-    self.assertEqual('aaa.bbb', match.group())
-    self.assertTrue(source._IsIgnorableIdentifier(match))
-
-    match = scanner.FindCommentTarget('  aaa.bbb[3])');
-    self.assertEqual('aaa.bbb', match.group())
-    self.assertTrue(source._IsIgnorableIdentifier(match))
-
-  def testScanPrototypeProperty(self):
-    test_source = source.ScanScript("""\
+    def testScanPrototypeProperty(self):
+        test_source = source.ScanScript("""\
 goog.provide('abc.Def');
 
 /**
@@ -57,9 +53,10 @@ goog.provide('abc.Def');
  */
 abc.Def.prototype.ghi;
 """)
-    symbol = list(test_source.symbols)[0]
-    self.assertEqual('ghi', symbol.property)
-    self.assertFalse(symbol.static)
+        symbol = list(test_source.symbols)[0]
+        self.assertEqual("ghi", symbol.property)
+        self.assertFalse(symbol.static)
+
 
 _TEST_SCRIPT = """
 goog.provide('goog.aaa');
@@ -75,5 +72,5 @@ goog.require('goog.ddd');
 goog.aaa.bbb;
 """
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

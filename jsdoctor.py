@@ -13,135 +13,142 @@ import tarfile
 
 
 def _ShouldScanPath(path):
-  _, filename = os.path.split(path)
+    _, filename = os.path.split(path)
 
-  if not filename.endswith('.js'):
-    return False
+    if not filename.endswith(".js"):
+        return False
 
-  if filename == 'deps.js':
-    return False
+    if filename == "deps.js":
+        return False
 
-  if filename.endswith('_test.js'):
-    return False
+    if filename.endswith("_test.js"):
+        return False
 
-  return True
+    return True
 
-_IGNORED_IDENTIFIERS = frozenset([
-  'goog.provide',
-  'goog.require',
-  'goog.setTestOnly'
-  ])
+
+_IGNORED_IDENTIFIERS = frozenset(["goog.provide", "goog.require", "goog.setTestOnly"])
+
 
 def _GetSymbolsFromSources(sources):
-  for s in sources:
-    yield from s.symbols
+    for s in sources:
+        yield from s.symbols
+
 
 # TODO(nanaze): Make this a flag
 _DUPLICATE_SYMBOL_IS_ERROR = False
 
+
 def _MakeSymbolMap(symbols):
-  symbol_map = {}
+    symbol_map = {}
 
-  for symbol in symbols:
-    identifier = symbol.identifier
+    for symbol in symbols:
+        identifier = symbol.identifier
 
-    if identifier in _IGNORED_IDENTIFIERS:
-      continue
+        if identifier in _IGNORED_IDENTIFIERS:
+            continue
 
-    if identifier.startswith('this.'):
-      logging.info('Skipping "this" identifier ' + identifier)
-      continue
+        if identifier.startswith("this."):
+            logging.info('Skipping "this" identifier ' + identifier)
+            continue
 
-    if identifier in symbol_map:
-      duplicate_symbol = symbol_map[identifier]
-      msg = f'Symbol duplicated\n{symbol}\n{duplicate_symbol}'
+        if identifier in symbol_map:
+            duplicate_symbol = symbol_map[identifier]
+            msg = f"Symbol duplicated\n{symbol}\n{duplicate_symbol}"
 
-      if _DUPLICATE_SYMBOL_IS_ERROR:
-        raise DuplicateSymbolError(msg)
-      else:
-        logging.warning(msg)
-      continue
+            if _DUPLICATE_SYMBOL_IS_ERROR:
+                raise DuplicateSymbolError(msg)
+            else:
+                logging.warning(msg)
+            continue
 
-    symbol_map[identifier] = symbol
+        symbol_map[identifier] = symbol
 
-  return symbol_map
+    return symbol_map
+
 
 class JsDoctorError(Exception):
-  pass
+    pass
+
 
 class DuplicateSymbolError(JsDoctorError):
-  pass
+    pass
 
 
 def _MakeNamespaceMap(symbols):
-  namespace_map = collections.defaultdict(set)
-  for symbol in symbols:
-    namespace_map[symbol.namespace].add(symbol)
-  return namespace_map
+    namespace_map = collections.defaultdict(set)
+    for symbol in symbols:
+        namespace_map[symbol.namespace].add(symbol)
+    return namespace_map
+
 
 def _ScanContent(content_pair):
-  path, content = content_pair
-  return source.ScanScript(content, path)
+    path, content = content_pair
+    return source.ScanScript(content, path)
+
 
 def _ScanContentInParallel(content_map):
-  pool = multiprocessing.Pool(20 * multiprocessing.cpu_count())
-  return pool.imap(_ScanContent, content_map.iteritems())
+    pool = multiprocessing.Pool(20 * multiprocessing.cpu_count())
+    return pool.imap(_ScanContent, content_map.iteritems())
+
 
 def _MakeContentMap(paths):
-  content_map = dict()
-  for path in paths:
-    if path in content_map:
-      raise JsDoctorError('Path already added: %s', path)
+    content_map = dict()
+    for path in paths:
+        if path in content_map:
+            raise JsDoctorError("Path already added: %s", path)
 
-    with open(path) as f:
-      content = f.read()
+        with open(path) as f:
+            content = f.read()
 
-    content_map[path] = content
+        content_map[path] = content
 
-  return content_map
+    return content_map
+
 
 def _ParseArgs():
-  parser = argparse.ArgumentParser(description='Generates HTML docs for JsDoc')
-  parser.add_argument('--tar', help='Path to tar file', required=True)
-  parser.add_argument('files', help='Paths to files', nargs='*')
-  return parser.parse_args()
+    parser = argparse.ArgumentParser(description="Generates HTML docs for JsDoc")
+    parser.add_argument("--tar", help="Path to tar file", required=True)
+    parser.add_argument("files", help="Paths to files", nargs="*")
+    return parser.parse_args()
+
 
 def main():
-  logging.basicConfig(
-      level=logging.INFO,
-      format='%(levelname)s:%(module)s:%(lineno)d: %(message)s')
+    logging.basicConfig(
+        level=logging.INFO, format="%(levelname)s:%(module)s:%(lineno)d: %(message)s"
+    )
 
-  result = _ParseArgs()
-  tar_path = result.tar
+    result = _ParseArgs()
+    tar_path = result.tar
 
-  paths = result.files
-  paths = [path for path in paths if _ShouldScanPath(path)]
+    paths = result.files
+    paths = [path for path in paths if _ShouldScanPath(path)]
 
-  logging.info('Found %s paths.', len(paths))
-  logging.info('Reading file contents.')
-  content_map = _MakeContentMap(paths)
+    logging.info("Found %s paths.", len(paths))
+    logging.info("Reading file contents.")
+    content_map = _MakeContentMap(paths)
 
-  sources = _ScanContentInParallel(content_map)
-  symbols = _GetSymbolsFromSources(sources)
+    sources = _ScanContentInParallel(content_map)
+    symbols = _GetSymbolsFromSources(sources)
 
-  # This could instead be just a dupe check
-  symbol_map = _MakeSymbolMap(symbols)
+    # This could instead be just a dupe check
+    symbol_map = _MakeSymbolMap(symbols)
 
-  symbols = symbol_map.values()
+    symbols = symbol_map.values()
 
-  namespace_map = _MakeNamespaceMap(symbols)
+    namespace_map = _MakeNamespaceMap(symbols)
 
-  logging.info('Writing to tar: %s', tar_path)
-  with tarfile.open(name=tar_path, mode='w') as tar:
-    for path, content in generator.GenerateHtmlDocs(namespace_map):
-      logging.info('Writing doc to tar: %s', path)
-      # Add each path to the tar
-      info = tarfile.TarInfo(name=path)
-      info.size = len(content)
-      buf = StringIO.StringIO(content)
-      tar.addfile(info, buf)
-  logging.info('Tar written to %s', tar_path)
+    logging.info("Writing to tar: %s", tar_path)
+    with tarfile.open(name=tar_path, mode="w") as tar:
+        for path, content in generator.GenerateHtmlDocs(namespace_map):
+            logging.info("Writing doc to tar: %s", path)
+            # Add each path to the tar
+            info = tarfile.TarInfo(name=path)
+            info.size = len(content)
+            buf = StringIO.StringIO(content)
+            tar.addfile(info, buf)
+    logging.info("Tar written to %s", tar_path)
 
 
-if __name__ == '__main__':
-  main()
+if __name__ == "__main__":
+    main()

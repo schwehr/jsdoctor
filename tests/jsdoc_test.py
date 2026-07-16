@@ -4,36 +4,38 @@ from jsdoctor import jsdoc
 
 
 class JsDocTestCase(unittest.TestCase):
+    def testProcessComment(self):
+        descriptions, flags = jsdoc.ProcessComment(_SCRIPT)
 
-  def testProcessComment(self):
-    descriptions, flags = jsdoc.ProcessComment(_SCRIPT)
+        self.assertEqual(
+            [
+                ("@flag", "Thing thing"),
+                ("@flag2", "More thing."),
+                ("@flag3", "More thing and\nmore thing."),
+                ("@flag4", "One last thing."),
+            ],
+            flags,
+        )
 
-    self.assertEqual([
-      ('@flag', 'Thing thing'),
-      ('@flag2', 'More thing.'),
-      ('@flag3', 'More thing and\nmore thing.'),
-      ('@flag4', 'One last thing.')],
-      flags)
+        self.assertEqual(["This is a comment.", "End of thing."], descriptions)
 
-    self.assertEqual(
-      ['This is a comment.', 'End of thing.'],
-      descriptions)
+    def testSplitSections(self):
+        parts = list(jsdoc._YieldSections(_SCRIPT))
+        self.assertEqual(
+            [
+                "@flag Thing thing",
+                "This is a comment.",
+                "@flag2 More thing.\n@flag3 More thing and\nmore thing.",
+                "End of thing.\n@flag4 One last thing.",
+            ],
+            parts,
+        )
 
-  def testSplitSections(self):
-    parts = list(jsdoc._YieldSections(_SCRIPT))
-    self.assertEqual(
-      ['@flag Thing thing',
-       'This is a comment.',
-       '@flag2 More thing.\n@flag3 More thing and\nmore thing.',
-       'End of thing.\n@flag4 One last thing.'],
-       parts)
+    def testMatchFlags(self):
+        matches = jsdoc._MatchFlags(_SCRIPT)
+        flags = [match.group("flag") for match in matches]
+        self.assertEqual(["@flag", "@flag2", "@flag3", "@flag4"], flags)
 
-  def testMatchFlags(self):
-    matches = jsdoc._MatchFlags(_SCRIPT)
-    flags = [match.group('flag') for match in matches]
-    self.assertEqual(
-      ['@flag', '@flag2', '@flag3', '@flag4'],
-      flags)
 
 _SCRIPT = """\
 @flag Thing thing
@@ -49,5 +51,5 @@ End of thing.
 @flag4 One last thing.
 """
 
-if __name__ == '__main__':
-  unittest.main()
+if __name__ == "__main__":
+    unittest.main()

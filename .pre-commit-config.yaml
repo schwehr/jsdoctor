@@ -1,10 +1,10 @@
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v6.0.0
     hooks:
     -   id: trailing-whitespace
 -   repo: https://github.com/codespell-project/codespell
-    rev: v2.2.6
+    rev: v2.4.3
     hooks:
     -   id: codespell
 -   repo: https://github.com/zizmorcore/zizmor-pre-commit
@@ -12,6 +12,10 @@ repos:
     hooks:
     -   id: zizmor
 -   repo: https://github.com/allganize/ty-pre-commit
-    rev: v0.0.59
+    rev: v0.0.60
     hooks:
     -   id: ty-check
+-   repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.21
+    hooks:
+    -   id: ruff-format
