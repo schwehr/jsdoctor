@@ -1,135 +1,129 @@
 import re
 from typing import Any, Iterable
 
-BASE_FLAGS = frozenset([
-    '@provideGoog'
-    ])
+BASE_FLAGS = frozenset(["@provideGoog"])
 
-JSDOC_FLAGS = frozenset([
-    '@suppress'
-    ])
+JSDOC_FLAGS = frozenset(["@suppress"])
 
-FILE_FLAGS = frozenset([
-    '@author',
-    '@fileoverview',
-    '@see',
-    '@license',
-    '@visibility'
-    ])
+FILE_FLAGS = frozenset(["@author", "@fileoverview", "@see", "@license", "@visibility"])
 
-FUNCTION_FLAGS = frozenset([
-    '@param',
-    '@return',
-    '@template',
-    '@deprecated',
-    '@throws',
-    '@see',
-    '@override',
-    ])
+FUNCTION_FLAGS = frozenset(
+    [
+        "@param",
+        "@return",
+        "@template",
+        "@deprecated",
+        "@throws",
+        "@see",
+        "@override",
+    ]
+)
 
-VISIBILITY_FLAGS = frozenset([
-    # Everything public by default
-    '@protected',
-    '@private'
-    ])
+VISIBILITY_FLAGS = frozenset(
+    [
+        # Everything public by default
+        "@protected",
+        "@private",
+    ]
+)
 
-INSTANTIABLE_FLAGS = frozenset([
-    '@constructor',
-    '@extends',
-    '@implements',
-    '@see',
-    ])
+INSTANTIABLE_FLAGS = frozenset(
+    [
+        "@constructor",
+        "@extends",
+        "@implements",
+        "@see",
+    ]
+)
 
-TYPEDEF_FLAGS = frozenset([
-    '@typedef'
-    ])
+TYPEDEF_FLAGS = frozenset(["@typedef"])
 
-PROPERTY_FLAGS = frozenset([
-    '@const',
-    '@define',
-    '@enum',
-    '@struct',
-    '@type',
-    '@inheritDoc',
-    '@export'
-    ])
+PROPERTY_FLAGS = frozenset(
+    ["@const", "@define", "@enum", "@struct", "@type", "@inheritDoc", "@export"]
+)
 
-INTERFACE_FLAGS = frozenset([
-    '@interface',
-    '@extends'
-    ])
+INTERFACE_FLAGS = frozenset(["@interface", "@extends"])
 
-COMPILER_FLAGS = frozenset([
-    '@nocompile',
-    '@preserveTry',
-    ])
+COMPILER_FLAGS = frozenset(
+    [
+        "@nocompile",
+        "@preserveTry",
+    ]
+)
 
 # TODO(nanaze): File.
-MISC_FLAGS = frozenset([
-    '@desc',
-    '@supported',
-    '@hidden',
-    '@final',
-    '@idGenerator',
-    '@this'
-    ])
+MISC_FLAGS = frozenset(
+    ["@desc", "@supported", "@hidden", "@final", "@idGenerator", "@this"]
+)
 
 all_flags: frozenset[str] = frozenset(
-  MISC_FLAGS
-  | BASE_FLAGS
-  | COMPILER_FLAGS
-  | JSDOC_FLAGS
-  | FILE_FLAGS
-  | FUNCTION_FLAGS
-  | INTERFACE_FLAGS
-  | INSTANTIABLE_FLAGS
-  | PROPERTY_FLAGS
-  | TYPEDEF_FLAGS
-  | VISIBILITY_FLAGS
+    MISC_FLAGS
+    | BASE_FLAGS
+    | COMPILER_FLAGS
+    | JSDOC_FLAGS
+    | FILE_FLAGS
+    | FUNCTION_FLAGS
+    | INTERFACE_FLAGS
+    | INSTANTIABLE_FLAGS
+    | PROPERTY_FLAGS
+    | TYPEDEF_FLAGS
+    | VISIBILITY_FLAGS
 )
 
 ALL_FLAGS = frozenset(all_flags)
 
 
 def ParseParameterDescription(desc: str) -> tuple[str, str, str]:
-  match = re.match(r'^\s*\{(?P<type>.*?)\}\s+(?P<name>\w+)(?P<desc>.*)$', desc, re.DOTALL | re.MULTILINE)
-  if not match:
-    raise ValueError('Could not parse flag description: %s' % desc)
-  return (match.group('name').strip(),
-          match.group('type').strip(),
-          match.group('desc').strip())
+    match = re.match(
+        r"^\s*\{(?P<type>.*?)\}\s+(?P<name>\w+)(?P<desc>.*)$",
+        desc,
+        re.DOTALL | re.MULTILINE,
+    )
+    if not match:
+        raise ValueError("Could not parse flag description: %s" % desc)
+    return (
+        match.group("name").strip(),
+        match.group("type").strip(),
+        match.group("desc").strip(),
+    )
+
 
 def ParseReturnDescription(desc: str) -> tuple[str, str]:
-  match = re.match(r'^\s*{(?P<type>.*?)\}(?P<desc>.*)$', desc, re.DOTALL | re.MULTILINE)
-  if not match:
-    raise ValueError('Could not parse flag description: %s' % desc)
-  return (match.group('type').strip(),
-          match.group('desc').strip())
+    match = re.match(
+        r"^\s*{(?P<type>.*?)\}(?P<desc>.*)$", desc, re.DOTALL | re.MULTILINE
+    )
+    if not match:
+        raise ValueError("Could not parse flag description: %s" % desc)
+    return (match.group("type").strip(), match.group("desc").strip())
 
-PUBLIC = 'public'
-PROTECTED = 'protected'
-PRIVATE = 'private'
+
+PUBLIC = "public"
+PROTECTED = "protected"
+PRIVATE = "private"
+
 
 def GetVisibility(flags: Iterable[Any]) -> str:
-  """Returns one of PUBLIC, PROTECTED, or PRIVATE."""
+    """Returns one of PUBLIC, PROTECTED, or PRIVATE."""
 
-  flag_names = [flag.name for flag in flags]
-  if '@private' in flag_names:
-    return PRIVATE
+    flag_names = [flag.name for flag in flags]
+    if "@private" in flag_names:
+        return PRIVATE
 
-  if '@protected' in flag_names:
-    return PROTECTED
+    if "@protected" in flag_names:
+        return PROTECTED
 
-  return PUBLIC
+    return PUBLIC
+
 
 def GetSymbolType(flags: Iterable[Any]) -> str | None:
-  for flag in flags:
-    if flag.name in ['@type', '@const', '@protected', '@private']:
-      flag_type = MaybeParseTypeFromDescription(flag.text)
-      if flag_type:
-        return flag_type
+    for flag in flags:
+        if flag.name in ["@type", "@const", "@protected", "@private"]:
+            flag_type = MaybeParseTypeFromDescription(flag.text)
+            if flag_type:
+                return flag_type
+
 
 def MaybeParseTypeFromDescription(desc: str) -> str | None:
-  match = re.match(r'^\s*{(?P<type>.*?)}', desc, re.DOTALL | re.MULTILINE)
-  if match:
-    return match.group('type')
+    match = re.match(r"^\s*{(?P<type>.*?)}", desc, re.DOTALL | re.MULTILINE)
+    if match:
+        return match.group("type")

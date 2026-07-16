@@ -23,7 +23,7 @@ These are explicit decisions made to keep the codebase small and simple:
 
   * Support Closure-style JSDoc. And that's it -- no generalization for different JSDoc dialects for the sake
   * Fail fast with errors, not warnings -- if parser or doc generator sees a problem, it pukes, as there's something
-    with your code.  Writing a test to verify that docs build on each checkin/commit is encouraged.
+    with your code.  Writing a test to verify that docs build on each commit is encouraged.
 
 Current state
 ---
