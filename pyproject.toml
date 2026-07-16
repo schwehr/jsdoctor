@@ -29,3 +29,11 @@ unresolved-attribute = "ignore"
 include = ["jsdoctor/generator.py"]
 [tool.ty.overrides.rules]
 unresolved-import = "ignore"
+
+[dependency-groups]
+dev = [
+    "coverage>=7.2.7",
+]
+
+[tool.coverage.report]
+fail_under = 95
