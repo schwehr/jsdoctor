@@ -1,5 +1,5 @@
 import re
-from typing import Iterator
+from typing import Iterator, Match
 
 _BASE_REGEX_STRING = "^\\s*goog\\.%s\\(\\s*['\"](.+)['\"]\\s*\\)"
 _PROVIDE_REGEX = re.compile(_BASE_REGEX_STRING % "provide")
@@ -24,7 +24,9 @@ def YieldRequires(source: str) -> Iterator[str]:
             yield match.group(1)
 
 
-def ExtractDocumentedSymbols(script):
+def ExtractDocumentedSymbols(
+    script: str,
+) -> Iterator[tuple[Match[str], Match[str] | None]]:
     for comment_match in FindJsDocComments(script):
         identifier_match = None
 
@@ -41,11 +43,11 @@ def ExtractDocumentedSymbols(script):
         yield comment_match, identifier_match
 
 
-def FindJsDocComments(script):
+def FindJsDocComments(script: str) -> Iterator[Match[str]]:
     return re.finditer(r"/\*\*.*?\*/", script, re.DOTALL)
 
 
-def FindCommentTarget(script, pos=0):
+def FindCommentTarget(script: str, pos: int = 0) -> Match[str] | None:
     # Find an opening parenthesis or an identifier.
     # \w and $ should cover all valid identifiers.
     identifier_regex = re.compile(r"\(|(?:[$\w]+\s*\.\s*)*[$\w]+")

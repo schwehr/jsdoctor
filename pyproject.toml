@@ -29,3 +29,9 @@ unresolved-attribute = "ignore"
 include = ["jsdoctor/generator.py"]
 [tool.ty.overrides.rules]
 unresolved-import = "ignore"
+
+[[tool.ty.overrides]]
+include = ["jsdoctor/source.py", "tests/scanner_test.py", "tests/source_test.py", "tests/symboltypes_test.py"]
+[tool.ty.overrides.rules]
+invalid-argument-type = "ignore"
+unresolved-attribute = "ignore"
