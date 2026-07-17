@@ -35,3 +35,11 @@ include = ["jsdoctor/source.py", "tests/scanner_test.py", "tests/source_test.py"
 [tool.ty.overrides.rules]
 invalid-argument-type = "ignore"
 unresolved-attribute = "ignore"
+
+[dependency-groups]
+dev = [
+    "coverage>=7.15.2",
+]
+
+[tool.coverage.report]
+fail_under = 10
