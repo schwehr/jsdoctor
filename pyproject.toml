@@ -3,7 +3,7 @@ name = "jsdoctor"
 version = "0.1.0"
 description = "Simple Python tool to extract Closure-style JSDoc from Closure-style codebases"
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.13"
 dependencies = [
     "html5lib>=1.1",
 ]
