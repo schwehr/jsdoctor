@@ -18,13 +18,16 @@ $ genjsonfiletree.py path/to/dir
 Scans the given directory.
 """
 
+from __future__ import annotations
+
 import os
 import json
 import logging
 import sys
+from typing import Iterator
 
 
-def _YieldPaths(root):
+def _YieldPaths(root: str) -> Iterator[tuple[str, str]]:
     for dir_root, dirs, files in os.walk(root):
         for file_path in files:
             abspath = os.path.join(dir_root, file_path)
@@ -33,15 +36,15 @@ def _YieldPaths(root):
             yield relpath, abspath
 
 
-def _YieldJsPaths(root):
+def _YieldJsPaths(root: str) -> Iterator[tuple[str, str]]:
     for relpath, abspath in _YieldPaths(root):
         _, ext = os.path.splitext(abspath)
         if ext == ".js":
             yield relpath, abspath
 
 
-def ScanTree(tree_root):
-    tree = dict()
+def ScanTree(tree_root: str) -> dict[str, str]:
+    tree: dict[str, str] = dict()
 
     for relpath, abspath in _YieldJsPaths(tree_root):
         logging.info("Reading file: %s", relpath)
@@ -51,7 +54,7 @@ def ScanTree(tree_root):
     return tree
 
 
-def main():
+def main() -> None:
     logging.basicConfig(level=logging.INFO)
 
     if len(sys.argv) == 1:
