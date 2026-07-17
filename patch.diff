@@ -1,0 +1,34 @@
+--- genjsonfiletree.py
++++ genjsonfiletree.py
+@@ -22,10 +22,10 @@
+ import json
+ import logging
+ import sys
+-from typing import Dict, Iterator, Tuple
++from typing import Iterator
+
+
+-def _YieldPaths(root: str) -> Iterator[Tuple[str, str]]:
++def _YieldPaths(root: str) -> Iterator[tuple[str, str]]:
+     for dir_root, dirs, files in os.walk(root):
+         for file_path in files:
+             abspath = os.path.join(dir_root, file_path)
+@@ -34,15 +34,15 @@
+             yield relpath, abspath
+
+
+-def _YieldJsPaths(root: str) -> Iterator[Tuple[str, str]]:
++def _YieldJsPaths(root: str) -> Iterator[tuple[str, str]]:
+     for relpath, abspath in _YieldPaths(root):
+         _, ext = os.path.splitext(abspath)
+         if ext == ".js":
+             yield relpath, abspath
+
+
+-def ScanTree(tree_root: str) -> Dict[str, str]:
+-    tree: Dict[str, str] = dict()
++def ScanTree(tree_root: str) -> dict[str, str]:
++    tree: dict[str, str] = dict()
+
+     for relpath, abspath in _YieldJsPaths(tree_root):
+         logging.info("Reading file: %s", relpath)

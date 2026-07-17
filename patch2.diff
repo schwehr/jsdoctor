@@ -1,0 +1,11 @@
+--- genjsonfiletree.py
++++ genjsonfiletree.py
+@@ -19,6 +19,8 @@
+ Scans the given directory.
+ """
+
++from __future__ import annotations
++
+ import os
+ import json
+ import logging
