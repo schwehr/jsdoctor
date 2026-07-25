@@ -50,3 +50,10 @@ python_files = ["*_test.py"]
 [tool.coverage.report]
 fail_under = 10
 
+[[tool.uv.index]]
+name = "pypi"
+url = "https://pypi.org/simple"
+default = true
+
+
+
