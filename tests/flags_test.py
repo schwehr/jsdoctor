@@ -89,7 +89,3 @@ abc.def;
 """)
         symbol = list(test_source.symbols)[0]
         self.assertEqual(flags.PUBLIC, flags.GetVisibility(symbol.comment.flags))
-
-
-if __name__ == "__main__":
-    unittest.main()

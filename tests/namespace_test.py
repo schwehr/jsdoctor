@@ -54,7 +54,3 @@ class NamespaceTestCase(unittest.TestCase):
         self.assertEqual(
             1, namespace._GetSymbolPartsInNamespace(["aaa", "bbb"], ["aaa", "ccc"])
         )
-
-
-if __name__ == "__main__":
-    unittest.main()

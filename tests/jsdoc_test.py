@@ -50,6 +50,3 @@ more thing.
 End of thing.
 @flag4 One last thing.
 """
-
-if __name__ == "__main__":
-    unittest.main()

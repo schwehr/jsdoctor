@@ -1,4 +1,5 @@
 import unittest
+import unittest.mock
 
 from jsdoctor import scanner
 from jsdoctor import source
@@ -57,6 +58,98 @@ abc.Def.prototype.ghi;
         self.assertEqual("ghi", symbol.property)
         self.assertFalse(symbol.static)
 
+    def testNamespaceNotFoundError(self):
+        match_pairs = scanner.ExtractDocumentedSymbols("/** Test. */\ngoog.aaa.bbb;")
+        with unittest.mock.patch.object(
+            source.namespace, "GetClosestNamespaceForSymbol", return_value=None
+        ):
+            with self.assertRaises(source.NamespaceNotFoundError):
+                list(source._YieldSymbols(match_pairs, {"goog.aaa"}))
+
+    def testSkipSymbolNotPartOfProvidedNamespace(self):
+        test_source = source.ScanScript("""\
+goog.provide('goog.aaa');
+
+/**
+ * Symbol not in provided namespace.
+ */
+other.namespace.Symbol;
+
+/**
+ * Symbol in provided namespace.
+ */
+goog.aaa.bbb;
+""")
+        self.assertEqual(1, len(test_source.symbols))
+        symbol = list(test_source.symbols)[0]
+        self.assertEqual("goog.aaa.bbb", symbol.identifier)
+
+    def testSkipThisProperties(self):
+        test_source = source.ScanScript("""\
+goog.provide('goog.aaa');
+
+/**
+ * Property on this.
+ */
+this.foo = 1;
+
+/**
+ * Symbol in provided namespace.
+ */
+goog.aaa.bbb;
+""")
+        self.assertEqual(1, len(test_source.symbols))
+        symbol = list(test_source.symbols)[0]
+        self.assertEqual("goog.aaa.bbb", symbol.identifier)
+
+    def testSkipParenthetical(self):
+        test_source = source.ScanScript("""\
+goog.provide('goog.aaa');
+
+/**
+ * Type cast on parenthetical.
+ */
+(x + y);
+
+/**
+ * Symbol in provided namespace.
+ */
+goog.aaa.bbb;
+""")
+        self.assertEqual(1, len(test_source.symbols))
+        symbol = list(test_source.symbols)[0]
+        self.assertEqual("goog.aaa.bbb", symbol.identifier)
+
+    def testSkipIgnorableIdentifier(self):
+        test_source = source.ScanScript("""\
+goog.provide('goog.aaa');
+
+/**
+ * Type cast on method call.
+ */
+goog.aaa.ccc(3);
+
+/**
+ * Symbol in provided namespace.
+ */
+goog.aaa.bbb;
+""")
+        self.assertEqual(1, len(test_source.symbols))
+        symbol = list(test_source.symbols)[0]
+        self.assertEqual("goog.aaa.bbb", symbol.identifier)
+
+    def testSymbolStr(self):
+        sym = source.Symbol("foo.bar", 0, 10)
+        self.assertIn("foo.bar", str(sym))
+        src = source.Source("var x = 1;", path="path/to/file.js")
+        sym.source = src
+        self.assertIn("foo.bar", str(sym))
+        self.assertIn("path/to/file.js", str(sym))
+
+    def testSourceStr(self):
+        src = source.Source("var x = 1;", path="path/to/file.js")
+        self.assertIn("path/to/file.js", str(src))
+
 
 _TEST_SCRIPT = """
 goog.provide('goog.aaa');
@@ -71,6 +164,3 @@ goog.require('goog.ddd');
  */
 goog.aaa.bbb;
 """
-
-if __name__ == "__main__":
-    unittest.main()

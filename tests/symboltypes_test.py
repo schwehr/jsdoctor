@@ -5,10 +5,6 @@ from jsdoctor import source
 from jsdoctor import symboltypes
 
 
-def _GetFirstSymbol(script):
-    return _GetSymbols(script)[0]
-
-
 def _GetSymbols(script):
     match_pairs = scanner.ExtractDocumentedSymbols(script)
     return list(source._YieldSymbols(match_pairs, {"goog"}))
@@ -79,7 +75,3 @@ goog.bar.baz
 goog.bar.baz
 """,
         )
-
-
-if __name__ == "__main__":
-    unittest.main()
