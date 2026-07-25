@@ -54,6 +54,3 @@ fail_under = 10
 name = "pypi"
 url = "https://pypi.org/simple"
 default = true
-
-
-
