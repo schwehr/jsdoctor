@@ -39,7 +39,14 @@ unresolved-attribute = "ignore"
 [dependency-groups]
 dev = [
     "coverage>=7.15.2",
+    "pytest>=8.0.0",
 ]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+python_files = ["*_test.py"]
 
 [tool.coverage.report]
 fail_under = 10
+

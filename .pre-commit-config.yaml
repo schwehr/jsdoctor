@@ -19,3 +19,12 @@ repos:
     rev: v0.15.21
     hooks:
     -   id: ruff-format
+-   repo: local
+    hooks:
+    -   id: pytest
+        name: pytest
+        entry: uv run pytest
+        language: system
+        pass_filenames: false
+        always_run: true
+
