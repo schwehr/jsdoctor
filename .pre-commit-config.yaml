@@ -23,6 +23,11 @@ repos:
     rev: v0.15.21
     hooks:
     -   id: ruff-format
+-   repo: https://github.com/facebook/pyrefly-pre-commit
+    rev: v1.1.1
+    hooks:
+    -   id: pyrefly-check
+
 -   repo: local
     hooks:
     -   id: pytest
