@@ -30,9 +30,10 @@ def ExtractDocumentedSymbols(
     for comment_match in FindJsDocComments(script):
         identifier_match = None
 
-        if re.match("\b@fileoverview\b", comment_match.group()):
+        if re.search(r"@fileoverview\b", comment_match.group()):
             # This is a file overview comment.
             pass
+
         else:
             identifier_match = FindCommentTarget(script, comment_match.end())
             if not identifier_match:

@@ -108,6 +108,18 @@ qux =
         identifier_match = scanner.FindCommentTarget("   (aaa)")
         self.assertEqual("(", identifier_match.group())
 
+    def testFileOverviewComment(self):
+        script = "/**\n * @fileoverview Description of file.\n */"
+        pairs = list(scanner.ExtractDocumentedSymbols(script))
+        self.assertEqual(1, len(pairs))
+        comment_match, identifier_match = pairs[0]
+        self.assertIsNone(identifier_match)
+
+    def testNoIdentifierFoundError(self):
+        script = "/**\n * Comment with no target.\n */\n"
+        with self.assertRaises(scanner.NoIdentifierFoundError):
+            list(scanner.ExtractDocumentedSymbols(script))
+
 
 _TEST_SCRIPT = """\
 var = 2;
