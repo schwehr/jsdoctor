@@ -12,6 +12,7 @@ def GenerateHtmlDocs(
     namespace_map: dict[str, list[Any]],
 ) -> Iterator[tuple[str, bytes]]:
     for filepath, document in GenerateDocuments(namespace_map):
+        assert document.documentElement is not None
         content = document.documentElement.toxml("utf-8")
         yield filepath, content
 
@@ -66,6 +67,7 @@ def _GenerateDocument(namespace: str, symbols: list[Any]) -> minidom.Document:
     doc = dom.createDocument(None, "html", None)
 
     body = doc.createElement("body")
+    assert doc.documentElement is not None
     doc.documentElement.appendChild(body)
 
     for elem in _GenerateContent(namespace, symbols):

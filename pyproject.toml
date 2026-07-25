@@ -54,3 +54,8 @@ fail_under = 10
 name = "pypi"
 url = "https://pypi.org/simple"
 default = true
+
+[tool.pyrefly]
+project-includes = ["jsdoctor"]
+project-excludes = ["jsdoctor.py", "processjsontree.py"]
+ignore-missing-imports = ["*"]

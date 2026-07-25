@@ -133,10 +133,12 @@ class NamespaceNotFoundError(Exception):
 # TODO(nanaze): In the future this could farm out to a formal parser like
 # Esprima to correctly identify comments. Regexing seems to work OK for now.
 def _YieldSymbols(
-    match_pairs: Iterable[tuple[re.Match, re.Match]],
+    match_pairs: Iterable[tuple[re.Match[str], re.Match[str] | None]],
     provided_namespaces: set[str],
 ) -> Iterator[Symbol]:
     for comment_match, identifier_match in match_pairs:
+        if not identifier_match:
+            continue
         comment_text = scanner.ExtractTextFromJsDocComment(comment_match.group())
         comment = Comment(comment_text, comment_match.start(), comment_match.end())
 
