@@ -2,7 +2,6 @@
 
 import collections
 import logging
-import sys
 import os
 import multiprocessing
 import source
