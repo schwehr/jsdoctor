@@ -2,7 +2,6 @@
 
 """Process a JSON file tree."""
 
-import os
 import json
 import logging
 import sys
