@@ -76,9 +76,7 @@ def ExtractTextFromJsDocComment(comment: str) -> str:
     for line in lines:
         line = line.lstrip()
         if line.startswith("*"):
-            line = line[1:]
-            while line.startswith(" "):
-                line = line[1:]
+            line = line[1:].lstrip(" ")
             output_lines.append(line)
 
     return "".join(output_lines)
