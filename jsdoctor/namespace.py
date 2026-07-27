@@ -23,21 +23,13 @@ def IsSymbolPartOfNamespace(symbol: str, namespace: str) -> bool:
     return namespace_parts == symbol_parts[0 : len(namespace_parts)]
 
 
-def _GetSymbolPartsInNamespace(
-    symbol_parts: Sequence[str], namespace_parts: Sequence[str]
-) -> int:
-    # A symbol can't be shorter than its namespace.
-    if len(symbol_parts) < len(namespace_parts):
-        return 0
+def _GetSymbolPartsInNamespace(symbol: str, namespace: str) -> tuple[str, list[str]]:
+    assert IsSymbolPartOfNamespace(symbol, namespace)
 
-    count = 0
-    while count < len(namespace_parts):
-        if symbol_parts[count] != namespace_parts[count]:
-            return count
+    symbol_parts = GetNamespaceParts(symbol)
+    namespace_parts = GetNamespaceParts(namespace)
 
-        count += 1
-
-    return count
+    return symbol_parts[len(namespace_parts) - 1], symbol_parts[len(namespace_parts) :]
 
 
 def GetClosestNamespaceForSymbol(
@@ -54,7 +46,15 @@ def GetClosestNamespaceForSymbol(
 
     for ns in valid_namespaces:
         namespace_parts = GetNamespaceParts(ns)
-        count = _GetSymbolPartsInNamespace(symbol_parts, namespace_parts)
+
+        if len(symbol_parts) < len(namespace_parts):
+            count = 0
+        else:
+            count = 0
+            while count < len(namespace_parts):
+                if symbol_parts[count] != namespace_parts[count]:
+                    break
+                count += 1
 
         if count > max_count:
             closest_namespace = ns
