@@ -49,8 +49,20 @@ class NamespaceTestCase(unittest.TestCase):
 
     def testGetSymbolPartsInNamespace(self):
         self.assertEqual(
-            0, namespace._GetSymbolPartsInNamespace(["aaa"], ["aaa", "bbb"])
+            ("bbb", ["ccc", "ddd"]),
+            namespace._GetSymbolPartsInNamespace("aaa.bbb.ccc.ddd", "aaa.bbb"),
         )
         self.assertEqual(
-            1, namespace._GetSymbolPartsInNamespace(["aaa", "bbb"], ["aaa", "ccc"])
+            ("aaa", ["bbb"]), namespace._GetSymbolPartsInNamespace("aaa.bbb", "aaa")
+        )
+        self.assertEqual(
+            ("bbb", []), namespace._GetSymbolPartsInNamespace("aaa.bbb", "aaa.bbb")
+        )
+        self.assertRaises(
+            AssertionError,
+            lambda: namespace._GetSymbolPartsInNamespace("aaa.bbb", "aaa.bbb.ccc"),
+        )
+        self.assertRaises(
+            AssertionError,
+            lambda: namespace._GetSymbolPartsInNamespace("aaa.bbb", "ccc.ddd"),
         )
