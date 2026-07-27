@@ -87,6 +87,14 @@ goog.style.test
         )
         self.assertEqual("goog.style.test", symbol_match.group())
 
+    def testStripWhitespace(self):
+        self.assertEqual("nospaces", scanner.StripWhitespace("nospaces"))
+        self.assertEqual("leading", scanner.StripWhitespace("  leading"))
+        self.assertEqual("trailing", scanner.StripWhitespace("trailing  "))
+        self.assertEqual("both", scanner.StripWhitespace("  both  "))
+        self.assertEqual("tabs", scanner.StripWhitespace("\t\ttabs\t\t"))
+        self.assertEqual("", scanner.StripWhitespace("   \t  "))
+
     def testOddIdentifier(self):
         test_script = """\
 /**
