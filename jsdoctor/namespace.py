@@ -48,16 +48,12 @@ def GetClosestNamespaceForSymbol(
 
     max_count = 0
 
-    valid_namespaces = list(
-        filter(lambda ns: IsSymbolPartOfNamespace(symbol, ns), candidate_namespaces)
-    )
-
-    for ns in valid_namespaces:
+    for ns in candidate_namespaces:
         namespace_parts = GetNamespaceParts(ns)
-        count = _GetSymbolPartsInNamespace(symbol_parts, namespace_parts)
-
-        if count > max_count:
-            closest_namespace = ns
-            max_count = count
+        if namespace_parts == symbol_parts[0 : len(namespace_parts)]:
+            count = len(namespace_parts)
+            if count > max_count:
+                closest_namespace = ns
+                max_count = count
 
     return closest_namespace
