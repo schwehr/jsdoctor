@@ -63,3 +63,6 @@ ignore-missing-imports = ["*"]
 
 [tool.pylint.main]
 init-hook = "import sys; sys.path.append('.')"
+
+[tool.codespell]
+ignore-words-list = "astroid"
