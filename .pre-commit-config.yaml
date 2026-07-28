@@ -38,7 +38,8 @@ repos:
           - pytest-benchmark
           - pytest-cov
 
-  - repo: local
+  - repo: https://github.com/christophmeissner/pytest-pre-commit
+    rev: 1.0.0
     hooks:
       - id: pytest
         name: pytest
