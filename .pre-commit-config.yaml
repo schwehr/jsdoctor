@@ -1,5 +1,5 @@
 repos:
--   repo: https://github.com/pre-commit/pre-commit-hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
       - id: trailing-whitespace
@@ -7,45 +7,53 @@ repos:
       - id: check-yaml
       - id: check-toml
       - id: check-added-large-files
--   repo: https://github.com/codespell-project/codespell
+
+  - repo: https://github.com/codespell-project/codespell
     rev: v2.4.3
     hooks:
-    -   id: codespell
--   repo: https://github.com/zizmorcore/zizmor-pre-commit
-    rev: v1.27.0
-    hooks:
-    -   id: zizmor
--   repo: https://github.com/allganize/ty-pre-commit
-    rev: v0.0.60
-    hooks:
-    -   id: ty-check
--   repo: https://github.com/astral-sh/ruff-pre-commit
+      - id: codespell
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.15.21
     hooks:
-    -   id: ruff-format
--   repo: https://github.com/facebook/pyrefly-pre-commit
+      - id: ruff-format
+
+  - repo: https://github.com/allganize/ty-pre-commit
+    rev: v0.0.60
+    hooks:
+      - id: ty-check
+
+  - repo: https://github.com/facebook/pyrefly-pre-commit
     rev: 14025642291adc2db2f9d9fa398e98699ef3fafc
     hooks:
-    -   id: pyrefly-check
--   repo: https://github.com/PyCQA/bandit
-    rev: 1.8.3
-    hooks:
-    -   id: bandit
-        args: ["-c", "pyproject.toml"]
--   repo: local
-    hooks:
-    -   id: pylint
-        name: pylint
-        entry: uv run pylint
-        language: system
-        types: [python]
+      - id: pyrefly-check
 
-
--   repo: local
+  - repo: https://github.com/PyCQA/pylint
+    rev: v4.0.6
     hooks:
-    -   id: pytest
+      - id: pylint
+        additional_dependencies:
+          - pylint-pytest
+          - pytest
+          - pytest-benchmark
+          - pytest-cov
+
+  - repo: local
+    hooks:
+      - id: pytest
         name: pytest
         entry: uv run pytest
         language: system
         pass_filenames: false
         always_run: true
+
+  - repo: https://github.com/zizmorcore/zizmor-pre-commit
+    rev: v1.27.0
+    hooks:
+      - id: zizmor
+
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.8.3
+    hooks:
+      - id: bandit
+        args: ["-c", "pyproject.toml"]
