@@ -4,7 +4,7 @@ import codecs
 import logging
 import multiprocessing
 import os
-import subprocess
+import subprocess  # nosec B404
 from typing import Iterable
 
 
@@ -14,7 +14,7 @@ def GetParseInputPath() -> str:
 
 
 def _CreateEsprimaProcess() -> subprocess.Popen:
-    proc = subprocess.Popen(
+    proc = subprocess.Popen(  # nosec B603
         [GetParseInputPath()],
         stdin=subprocess.PIPE,
         stderr=subprocess.PIPE,

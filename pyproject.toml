@@ -38,6 +38,7 @@ unresolved-attribute = "ignore"
 
 [dependency-groups]
 dev = [
+    "bandit>=1.9.4",
     "coverage>=7.15.2",
     "pylint>=4.0.6",
     "pytest>=8.0.0",
@@ -94,3 +95,7 @@ disable = [
 
 [tool.codespell]
 ignore-words-list = "astroid"
+
+[tool.bandit]
+exclude_dirs = [".venv"]
+skips = ["B101", "B408"]
