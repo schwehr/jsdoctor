@@ -26,6 +26,11 @@ jobs:
         run: uv sync --all-extras --dev
         env:
           UV_PYTHON: ${{ matrix.python-version }}
+      - name: Run pre-commit
+        if: matrix.python-version == '3.14'
+        run: uvx pre-commit run --all-files
+        env:
+          UV_PYTHON: ${{ matrix.python-version }}
       - name: Type check with ty
         run: uvx ty check .
         env:
