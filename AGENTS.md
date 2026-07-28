@@ -130,9 +130,10 @@ static analysis:
   ```bash
   uv run codespell
   ```
-- **Static Analysis & Security Scanning (`semgrep`)**: Enforces static analysis
-  and security rules.
+- **Static Analysis & Security Scanning (`semgrep`, `bandit`)**: Enforces static
+  analysis and security rules.
   ```bash
+  uv run bandit -c pyproject.toml -r .
   uv run semgrep scan --config p/default
   ```
 - **Pre-commit Hooks**: Enforces standards prior to commits. Must be installed
