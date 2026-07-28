@@ -90,7 +90,6 @@ disable = [
     "unspecified-encoding",
     "unused-variable",
     "use-dict-literal",
-    "wrong-import-order",
 ]
 
 [tool.codespell]

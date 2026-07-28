@@ -1,14 +1,16 @@
 #!/usr/bin/env python
 
+import argparse
 import collections
 import logging
-import os
 import multiprocessing
-import source
-import argparse
-import generator
-import StringIO
+import os
 import tarfile
+
+import StringIO
+
+import generator
+import source
 
 
 def _ShouldScanPath(path):
