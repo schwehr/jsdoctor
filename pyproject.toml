@@ -39,6 +39,7 @@ unresolved-attribute = "ignore"
 [dependency-groups]
 dev = [
     "coverage>=7.15.2",
+    "pylint>=4.0.6",
     "pytest>=8.0.0",
 ]
 
@@ -59,3 +60,6 @@ default = true
 project-includes = ["jsdoctor"]
 project-excludes = ["jsdoctor.py", "processjsontree.py"]
 ignore-missing-imports = ["*"]
+
+[tool.pylint.main]
+init-hook = "import sys; sys.path.append('.')"

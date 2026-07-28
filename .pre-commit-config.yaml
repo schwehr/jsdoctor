@@ -27,6 +27,13 @@ repos:
     rev: 14025642291adc2db2f9d9fa398e98699ef3fafc
     hooks:
     -   id: pyrefly-check
+-   repo: local
+    hooks:
+    -   id: pylint
+        name: pylint
+        entry: uv run pylint
+        language: system
+        types: [python]
 
 
 -   repo: local
