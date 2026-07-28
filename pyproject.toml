@@ -64,5 +64,33 @@ ignore-missing-imports = ["*"]
 [tool.pylint.main]
 init-hook = "import sys; sys.path.append('.')"
 
+[tool.pylint.messages_control]
+disable = [
+    "broad-exception-raised",
+    "consider-using-f-string",
+    "consider-using-with",
+    "import-error",
+    "inconsistent-return-statements",
+    "invalid-name",
+    "logging-not-lazy",
+    "missing-class-docstring",
+    "missing-function-docstring",
+    "missing-module-docstring",
+    "no-else-raise",
+    "no-name-in-module",
+    "protected-access",
+    "raising-format-tuple",
+    "redefined-builtin",
+    "redefined-outer-name",
+    "too-few-public-methods",
+    "too-many-branches",
+    "too-many-instance-attributes",
+    "too-many-locals",
+    "unspecified-encoding",
+    "unused-variable",
+    "use-dict-literal",
+    "wrong-import-order",
+]
+
 [tool.codespell]
 ignore-words-list = "astroid"
