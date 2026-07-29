@@ -89,8 +89,8 @@ def _ScanContent(content_pair):
 
 
 def _ScanContentInParallel(content_map):
-    pool = multiprocessing.Pool(20 * multiprocessing.cpu_count())
-    return pool.imap(_ScanContent, content_map.iteritems())
+    with multiprocessing.Pool(20 * multiprocessing.cpu_count()) as pool:
+        return list(pool.imap(_ScanContent, content_map.items()))
 
 
 def _MakeContentMap(paths):
