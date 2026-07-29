@@ -89,7 +89,6 @@ disable = [
     "too-many-locals",
     "unspecified-encoding",
     "unused-variable",
-    "use-dict-literal",
 ]
 
 [tool.codespell]

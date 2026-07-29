@@ -44,7 +44,7 @@ def _YieldJsPaths(root: str) -> Iterator[tuple[str, str]]:
 
 
 def ScanTree(tree_root: str) -> dict[str, str]:
-    tree: dict[str, str] = dict()
+    tree: dict[str, str] = {}
 
     for relpath, abspath in _YieldJsPaths(tree_root):
         logging.info("Reading file: %s", relpath)
