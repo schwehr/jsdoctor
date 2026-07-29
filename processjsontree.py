@@ -25,7 +25,7 @@ def ProcessJsonTree(json_obj):
 
     results = zip(paths, sources, asts)
 
-    result = dict()
+    result = {}
     for path, source, ast in results:
         result[path] = {"source": source, "ast": ast}
 

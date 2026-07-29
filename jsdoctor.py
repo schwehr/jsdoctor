@@ -94,7 +94,7 @@ def _ScanContentInParallel(content_map):
 
 
 def _MakeContentMap(paths):
-    content_map = dict()
+    content_map = {}
     for path in paths:
         if path in content_map:
             raise JsDoctorError("Path already added: %s", path)
