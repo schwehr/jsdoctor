@@ -13,31 +13,25 @@ def GetParseInputPath() -> str:
     return os.path.join(dir, "node/parseinput.js")
 
 
-def _CreateEsprimaProcess() -> subprocess.Popen:
-    proc = subprocess.Popen(  # nosec B603
+def MultiParse(sources: Iterable[str]) -> list[bytes]:
+    with multiprocessing.Pool() as pool:
+        results = pool.map(parse, sources)
+        return results
+
+
+def parse(source: str) -> bytes:
+    with subprocess.Popen(  # nosec B603
         [GetParseInputPath()],
         stdin=subprocess.PIPE,
         stderr=subprocess.PIPE,
         stdout=subprocess.PIPE,
-    )
-    return proc
+    ) as proc:
+        encoded_source, unused_length = codecs.getencoder("utf8")(source)
+        out, err = proc.communicate(encoded_source)
 
+        if proc.returncode != 0:
+            logging.error("Error while parsing.")
+            logging.error(err)
+            raise Exception("Esprima parsing failed.")
 
-def MultiParse(sources: Iterable[str]) -> list[bytes]:
-    pool = multiprocessing.Pool()
-    results = pool.map(parse, sources)
-    return results
-
-
-def parse(source: str) -> bytes:
-    proc = _CreateEsprimaProcess()
-
-    encoded_source, unused_length = codecs.getencoder("utf8")(source)
-    out, err = proc.communicate(encoded_source)
-
-    if proc.returncode != 0:
-        logging.error("Error while parsing.")
-        logging.error(err)
-        raise Exception("Esprima parsing failed.")
-
-    return out
+        return out
