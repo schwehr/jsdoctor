@@ -120,7 +120,7 @@ qux =
         script = "/**\n * @fileoverview Description of file.\n */"
         pairs = list(scanner.ExtractDocumentedSymbols(script))
         self.assertEqual(1, len(pairs))
-        comment_match, identifier_match = pairs[0]
+        _, identifier_match = pairs[0]
         self.assertIsNone(identifier_match)
 
     def testNoIdentifierFoundError(self):

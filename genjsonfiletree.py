@@ -28,7 +28,7 @@ from typing import Iterator
 
 
 def _YieldPaths(root: str) -> Iterator[tuple[str, str]]:
-    for dir_root, dirs, files in os.walk(root):
+    for dir_root, _, files in os.walk(root):
         for file_path in files:
             abspath = os.path.join(dir_root, file_path)
             relpath = os.path.relpath(abspath, root)
