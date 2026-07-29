@@ -21,7 +21,7 @@ def GenerateDocuments(
     namespace_map: dict[str, list[Any]],
 ) -> Iterator[tuple[str, minidom.Document]]:
     for namespace, symbols in namespace_map.items():
-        filename = "%s.html" % namespace
+        filename = f"{namespace}.html"
         yield filename, _GenerateDocument(namespace, symbols)
 
 
@@ -125,7 +125,7 @@ def _MakeFunctionCodeElement(name: str, function: Any) -> minidom.Element:
     param_strings = [_GetParamString(flag) for flag in param_flags]
     param_line = ", ".join(param_strings)
 
-    text_node = _MakeTextNode("(%s)" % param_line)
+    text_node = _MakeTextNode(f"({param_line})")
     code.appendChild(text_node)
 
     return_flag = _GetReturnFlag(function.comment.flags)
@@ -170,12 +170,12 @@ def _AddFunctionDescription(node_list: minidom.NodeList, function: Any) -> None:
 
     function_interface = ""
     function_interface += flags.GetVisibility(function.comment.flags) + " "
-    function_interface += "%s(" % function.identifier
+    function_interface += f"{function.identifier}("
 
     # Draw parameters.
     if param_flags:
         for index, flag in enumerate(param_flags):
-            function_interface += "\n  %s" % _GetParamString(flag)
+            function_interface += f"\n  {_GetParamString(flag)}"
 
             # If this is not the last parameter, draw a comma.
             if index != (len(param_flags) - 1):
