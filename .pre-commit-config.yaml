@@ -22,6 +22,9 @@ repos:
     rev: v0.0.60
     hooks:
       - id: ty-check
+        additional_dependencies:
+          - html5lib
+          - pytest
 
   - repo: https://github.com/facebook/pyrefly-pre-commit
     rev: 14025642291adc2db2f9d9fa398e98699ef3fafc
