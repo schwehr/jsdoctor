@@ -80,7 +80,7 @@ def ParseParameterDescription(desc: str) -> tuple[str, str, str]:
         re.DOTALL | re.MULTILINE,
     )
     if not match:
-        raise ValueError("Could not parse flag description: %s" % desc)
+        raise ValueError(f"Could not parse flag description: {desc}")
     return (
         match.group("name").strip(),
         match.group("type").strip(),
@@ -93,7 +93,7 @@ def ParseReturnDescription(desc: str) -> tuple[str, str]:
         r"^\s*{(?P<type>.*?)\}(?P<desc>.*)$", desc, re.DOTALL | re.MULTILINE
     )
     if not match:
-        raise ValueError("Could not parse flag description: %s" % desc)
+        raise ValueError(f"Could not parse flag description: {desc}")
     return (match.group("type").strip(), match.group("desc").strip())
 
 

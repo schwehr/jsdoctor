@@ -23,7 +23,7 @@ def _ReplaceSymbol(match: re.Match[str], symbols: Iterable[str]) -> str:
     # hash_portion = match.group(2)
 
     if symbol_portion in symbols:
-        href = "%s.html" % symbol_portion
+        href = f"{symbol_portion}.html"
 
         # TODO(schwehr): This did not do anything..
         # if hash_portion:
