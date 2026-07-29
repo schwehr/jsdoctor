@@ -42,7 +42,7 @@ class FlagTestCase(unittest.TestCase):
 
     @staticmethod
     def GetFlags(script):
-        desc, flags = source._GetDescriptionAndFlags(script)
+        _, flags = source._GetDescriptionAndFlags(script)
         return flags
 
     def testGetSymbolType(self):

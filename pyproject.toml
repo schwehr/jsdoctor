@@ -88,7 +88,6 @@ disable = [
     "too-many-instance-attributes",
     "too-many-locals",
     "unspecified-encoding",
-    "unused-variable",
 ]
 
 [tool.codespell]
