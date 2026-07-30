@@ -5,7 +5,7 @@
 import json
 import logging
 import sys
-import esprima
+from jsdoctor import esprima
 
 
 def ProcessJsonTree(json_obj):

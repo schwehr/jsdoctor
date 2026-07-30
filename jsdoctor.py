@@ -7,10 +7,9 @@ import multiprocessing
 import os
 import tarfile
 
-import StringIO
+import io
 
-import generator
-import source
+from jsdoctor import generator, source
 
 
 def _ShouldScanPath(path):
@@ -146,7 +145,7 @@ def main():
             # Add each path to the tar
             info = tarfile.TarInfo(name=path)
             info.size = len(content)
-            buf = StringIO.StringIO(content)
+            buf = io.BytesIO(content)
             tar.addfile(info, buf)
     logging.info("Tar written to %s", tar_path)
 
