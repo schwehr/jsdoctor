@@ -49,7 +49,7 @@ def _MakeSymbolMap(symbols):
             continue
 
         if identifier.startswith("this."):
-            logging.info('Skipping "this" identifier ' + identifier)
+            logging.info('Skipping "this" identifier %s', identifier)
             continue
 
         if identifier in symbol_map:

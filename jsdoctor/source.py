@@ -163,15 +163,16 @@ def _YieldSymbols(
         # TODO(nanaze): catch this. properties, make sure not static
         if identifier.startswith("this."):
             logging.info(
-                'Skipping identifier. Ignoring "this." properties for now. '
-                + identifier
+                'Skipping identifier. Ignoring "this." properties for now. %s',
+                identifier,
             )
             continue
 
         # Ignore symbols that are not part of the provided namespace.
         if not _IsSymbolPartOfProvidedNamespaces(identifier, provided_namespaces):
             logging.info(
-                "Skipping identifier. Not part of provided namespace. " + identifier
+                "Skipping identifier. Not part of provided namespace. %s",
+                identifier,
             )
             continue
 
