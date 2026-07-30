@@ -75,7 +75,6 @@ disable = [
     "missing-class-docstring",
     "missing-function-docstring",
     "missing-module-docstring",
-    "no-else-raise",
     "no-name-in-module",
     "protected-access",
     "raising-format-tuple",
