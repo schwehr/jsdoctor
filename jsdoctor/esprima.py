@@ -14,8 +14,8 @@ def GetParseInputPath() -> str:
     Returns:
         Path string to parseinput.js script.
     """
-    dir = os.path.dirname(__file__)
-    return os.path.join(dir, "node/parseinput.js")
+    module_dir = os.path.dirname(__file__)
+    return os.path.join(module_dir, "node/parseinput.js")
 
 
 def MultiParse(sources: Iterable[str]) -> list[bytes]:

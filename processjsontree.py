@@ -44,8 +44,8 @@ def ProcessJsonTree(json_obj):
 def main():
     """Reads JSON file tree from stdin, parses sources via Esprima, and writes JSON to stdout."""
     logging.basicConfig(level=logging.INFO)
-    input = sys.stdin.read()
-    obj = json.loads(input)
+    input_data = sys.stdin.read()
+    obj = json.loads(input_data)
     result = ProcessJsonTree(obj)
     sys.stdout.write(json.dumps(result))
 
