@@ -8,15 +8,18 @@ dependencies = [
     "html5lib>=1.1",
 ]
 
+[project.scripts]
+jsdoctor = "jsdoctor.cli:main"
+
 [tool.ty]
 
 [[tool.ty.overrides]]
-include = ["jsdoctor.py", "processjsontree.py"]
+include = ["jsdoctor/cli.py", "processjsontree.py"]
 [tool.ty.overrides.rules]
 unresolved-import = "ignore"
 
 [[tool.ty.overrides]]
-include = ["jsdoctor.py"]
+include = ["jsdoctor/cli.py"]
 [tool.ty.overrides.rules]
 invalid-argument-type = "ignore"
 
@@ -59,7 +62,7 @@ default = true
 
 [tool.pyrefly]
 project-includes = ["jsdoctor"]
-project-excludes = ["jsdoctor.py", "processjsontree.py"]
+project-excludes = ["jsdoctor/cli.py", "processjsontree.py"]
 ignore-missing-imports = ["*"]
 
 [tool.pylint.main]
@@ -69,9 +72,7 @@ init-hook = "import sys; sys.path.append('.')"
 disable = [
     "broad-exception-raised",
     "invalid-name",
-    "no-name-in-module",
     "protected-access",
-    "raising-format-tuple",
     "redefined-builtin",
     "redefined-outer-name",
     "too-few-public-methods",

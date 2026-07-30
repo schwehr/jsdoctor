@@ -4,13 +4,9 @@ from __future__ import annotations
 
 import logging
 import re
-from typing import Iterable, Iterator
+from collections.abc import Iterable, Iterator
 
-from . import flags
-from . import jsdoc
-from . import namespace
-from . import scanner
-from . import symboltypes
+from . import flags, jsdoc, namespace, scanner, symboltypes
 
 
 class Source:

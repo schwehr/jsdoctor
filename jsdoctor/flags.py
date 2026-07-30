@@ -1,7 +1,8 @@
 """Definitions and sets for supported JSDoc flags."""
 
 import re
-from typing import Any, Iterable
+from collections.abc import Iterable
+from typing import Any
 
 BASE_FLAGS = frozenset(["@provideGoog"])
 

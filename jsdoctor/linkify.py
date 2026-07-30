@@ -1,7 +1,7 @@
 """Utility functions for linking URLs and symbol references in text."""
 
 import re
-from typing import Iterable
+from collections.abc import Iterable
 
 _WEB_URL_RE = re.compile(r"https?://[^\s]*")
 

@@ -1,17 +1,16 @@
 """HTML document generator for namespace API reference documentation."""
 
-from typing import Any, Iterable, Iterator
-
+from collections.abc import Iterable, Iterator, Mapping
+from typing import Any
 from xml.dom import minidom
+
 import html5lib
 
-from . import flags
-from . import linkify
-from . import symboltypes
+from . import flags, linkify, symboltypes
 
 
 def GenerateHtmlDocs(
-    namespace_map: dict[str, list[Any]],
+    namespace_map: Mapping[str, Iterable[Any]],
 ) -> Iterator[tuple[str, bytes]]:
     """Generates HTML document filename and bytes pairs for each namespace.
 
@@ -28,7 +27,7 @@ def GenerateHtmlDocs(
 
 
 def GenerateDocuments(
-    namespace_map: dict[str, list[Any]],
+    namespace_map: Mapping[str, Iterable[Any]],
 ) -> Iterator[tuple[str, minidom.Document]]:
     """Generates DOM documents for each namespace in namespace_map.
 
@@ -79,7 +78,7 @@ def _GetSymbolsOfType(symbols: Iterable[Any], symbol_type: Any) -> list[Any]:
     return [symbol for symbol in symbols if symbol.type == symbol_type]
 
 
-def _GenerateDocument(namespace: str, symbols: list[Any]) -> minidom.Document:
+def _GenerateDocument(namespace: str, symbols: Iterable[Any]) -> minidom.Document:
     dom = minidom.getDOMImplementation()
     assert dom is not None  # For pytype.
     doc = dom.createDocument(None, "html", None)
@@ -249,7 +248,7 @@ def _AddFunctionDescription(node_list: minidom.NodeList, function: Any) -> None:
         node_list.append(section_paragraph)
 
 
-def _GenerateContent(namespace: str, symbols: list[Any]) -> minidom.NodeList:
+def _GenerateContent(namespace: str, symbols: Iterable[Any]) -> minidom.NodeList:
     node_list = minidom.NodeList()
 
     node_list.append(_MakeElement("h1", namespace))

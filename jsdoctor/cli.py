@@ -3,12 +3,11 @@
 
 import argparse
 import collections
+import io
 import logging
 import multiprocessing
 import os
 import tarfile
-
-import io
 
 from jsdoctor import generator, source
 
@@ -97,7 +96,7 @@ def _MakeContentMap(paths):
     content_map = {}
     for path in paths:
         if path in content_map:
-            raise JsDoctorError("Path already added: %s", path)
+            raise JsDoctorError(f"Path already added: {path}")
 
         with open(path) as f:
             content = f.read()
