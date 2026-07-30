@@ -33,7 +33,7 @@ def ProcessJsonTree(json_obj):
         and len(asts) == source_count
     )
 
-    results = zip(paths, sources, asts)
+    results = zip(paths, sources, asts, strict=False)
 
     result = {}
     for path, source, ast in results:
@@ -43,7 +43,10 @@ def ProcessJsonTree(json_obj):
 
 
 def main():
-    """Reads JSON file tree from stdin, parses sources via Esprima, and writes JSON to stdout."""
+    """Reads JSON file tree from stdin, parses sources via Esprima,
+
+    and writes JSON to stdout.
+    """
     logging.basicConfig(level=logging.INFO)
     input_data = sys.stdin.read()
     obj = json.loads(input_data)

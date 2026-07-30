@@ -49,7 +49,7 @@ def parse(source: str) -> bytes:
         stderr=subprocess.PIPE,
         stdout=subprocess.PIPE,
     ) as proc:
-        encoded_source, unused_length = codecs.getencoder("utf8")(source)
+        encoded_source, _unused_length = codecs.getencoder("utf8")(source)
         out, err = proc.communicate(encoded_source)
 
         if proc.returncode != 0:
