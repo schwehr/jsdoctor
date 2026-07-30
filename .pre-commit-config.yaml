@@ -36,6 +36,9 @@ repos:
     hooks:
       - id: pylint
         additional_dependencies:
+          - "."
+          - esprima
+          - html5lib
           - pylint-pytest
           - pytest
           - pytest-benchmark
