@@ -181,6 +181,7 @@ def _make_function_summary_list(functions: Iterable[Any]) -> minidom.Element:
     return summary_list
 
 
+# pylint: disable=too-many-locals
 def _add_function_description(node_list: minidom.NodeList, function: Any) -> None:
     header = _make_element("h3", function.identifier)
     header.setAttribute("id", function.identifier)
@@ -250,7 +251,10 @@ def _add_function_description(node_list: minidom.NodeList, function: Any) -> Non
         node_list.append(section_paragraph)
 
 
-# pylint: disable=too-many-branches
+# pylint: enable=too-many-locals
+
+
+# pylint: disable=too-many-branches,too-many-locals
 def _generate_content(namespace: str, symbols: Iterable[Any]) -> minidom.NodeList:
     node_list = minidom.NodeList()
 
@@ -349,4 +353,4 @@ def _generate_content(namespace: str, symbols: Iterable[Any]) -> minidom.NodeLis
     return node_list
 
 
-# pylint: enable=too-many-branches
+# pylint: enable=too-many-branches,too-many-locals
