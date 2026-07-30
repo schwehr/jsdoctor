@@ -1,0 +1,9 @@
+[MAIN]
+init-hook=import sys; sys.path.append('.')
+
+[MESSAGES CONTROL]
+disable=
+    too-many-locals,
+
+[DESIGN]
+max-attributes=10
