@@ -1,3 +1,5 @@
+"""Tests for the jsdoctor.jsdoc module."""
+
 import unittest
 
 from jsdoctor import jsdoc

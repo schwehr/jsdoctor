@@ -1,3 +1,5 @@
+"""Tests for the jsdoctor.scanner module."""
+
 import unittest
 
 from jsdoctor import scanner

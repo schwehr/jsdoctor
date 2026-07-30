@@ -1,3 +1,5 @@
+"""Utility functions for linking URLs and symbol references in text."""
+
 import re
 from typing import Iterable
 

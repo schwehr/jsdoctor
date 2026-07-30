@@ -1,3 +1,5 @@
+"""Tests for the jsdoctor.symboltypes module."""
+
 import unittest
 
 from jsdoctor import scanner

@@ -1,3 +1,5 @@
+"""Data structures and source parsing orchestration for JavaScript files."""
+
 from __future__ import annotations
 
 import logging

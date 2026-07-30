@@ -1,3 +1,5 @@
+"""Tests for the jsdoctor.namespace module."""
+
 import unittest
 
 from jsdoctor import namespace

@@ -1,3 +1,5 @@
+"""Tests for the jsdoctor.linkify module."""
+
 import unittest
 
 from jsdoctor import linkify

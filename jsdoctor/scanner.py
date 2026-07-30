@@ -1,3 +1,5 @@
+"""Regular expression scanners for JSDoc comments and Closure declarations."""
+
 import re
 from typing import Iterator, Match
 

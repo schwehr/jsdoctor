@@ -1,3 +1,5 @@
+"""Tests for the jsdoctor.source module."""
+
 import unittest
 import unittest.mock
 

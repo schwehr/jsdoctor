@@ -1,3 +1,5 @@
+"""HTML document generator for namespace API reference documentation."""
+
 from typing import Any, Iterable, Iterator
 
 from xml.dom import minidom

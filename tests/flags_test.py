@@ -1,3 +1,5 @@
+"""Tests for the jsdoctor.flags module."""
+
 import unittest
 
 from jsdoctor import flags

@@ -1,3 +1,5 @@
+"""Classification logic for determining JavaScript symbol types."""
+
 from __future__ import annotations
 import typing
 

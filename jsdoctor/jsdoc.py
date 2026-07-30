@@ -1,3 +1,5 @@
+"""Parsing and sectioning logic for JSDoc comment blocks."""
+
 import re
 from typing import Iterator
 

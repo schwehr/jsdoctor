@@ -1,3 +1,5 @@
+"""Helper functions for namespace parsing and membership checks."""
+
 from typing import Iterable, Sequence
 
 

@@ -1,3 +1,5 @@
+"""Definitions and sets for supported JSDoc flags."""
+
 import re
 from typing import Any, Iterable
 
