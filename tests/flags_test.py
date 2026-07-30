@@ -49,8 +49,8 @@ class FlagTestCase(unittest.TestCase):
     @staticmethod
     def GetFlags(script):
         """Parses comment flags from a JSDoc script snippet."""
-        _, flags = source._GetDescriptionAndFlags(script)
-        return flags
+        _, parsed_flags = source._GetDescriptionAndFlags(script)
+        return parsed_flags
 
     def testGetSymbolType(self):
         """Tests extracting symbol types from comment flags."""

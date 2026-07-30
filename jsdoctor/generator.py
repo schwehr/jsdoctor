@@ -108,8 +108,8 @@ def _MakeLink(text: str, href: str) -> minidom.Element:
     return a
 
 
-def _YieldParamFlags(flags: Iterable[Any]) -> Iterator[Any]:
-    for flag in flags:
+def _YieldParamFlags(comment_flags: Iterable[Any]) -> Iterator[Any]:
+    for flag in comment_flags:
         if flag.name == "@param":
             yield flag
 
@@ -120,8 +120,8 @@ def _GetParamString(flag: Any) -> str:
     return f"{{{type_str}}} {name}"
 
 
-def _GetReturnFlag(flags: Iterable[Any]) -> Any | None:
-    return_flags = list(filter(lambda flag: flag.name == "@return", flags))
+def _GetReturnFlag(comment_flags: Iterable[Any]) -> Any | None:
+    return_flags = list(filter(lambda flag: flag.name == "@return", comment_flags))
     assert len(return_flags) <= 1, "There should not be more than 1 @return flag."
 
     if not return_flags:
