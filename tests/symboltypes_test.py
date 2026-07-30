@@ -13,6 +13,8 @@ def _GetSymbols(script):
 
 
 class SymbolTypesTestCase(unittest.TestCase):
+    """Tests for determining JavaScript symbol types."""
+
     def assertSymbolType(self, type, script):
         symbol = _GetSymbols(script)[0]
         self.assertEqual(type, symboltypes.DetermineSymbolType(symbol))

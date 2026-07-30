@@ -6,6 +6,8 @@ from jsdoctor import linkify
 
 
 class LinkifyTestCase(unittest.TestCase):
+    """Tests for web URL and symbol linkification utilities."""
+
     def testWebRegEx(self):
         match = linkify._WEB_URL_RE.search("aaa http://google.com bbb")
         self.assertIsNotNone(match)

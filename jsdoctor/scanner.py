@@ -9,7 +9,7 @@ _REQUIRES_REGEX = re.compile(_BASE_REGEX_STRING % "require")
 
 
 class NoIdentifierFoundError(Exception):
-    pass
+    """Exception raised when no identifier target is found following a comment."""
 
 
 def YieldProvides(source: str) -> Iterator[str]:

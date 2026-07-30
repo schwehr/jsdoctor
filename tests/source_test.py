@@ -9,6 +9,8 @@ from jsdoctor import symboltypes
 
 
 class SourceTestCase(unittest.TestCase):
+    """Tests for JavaScript source scanning and symbol extraction."""
+
     def testScanSource(self):
         test_source = source.ScanScript(_TEST_SCRIPT)
         self.assertEqual({"goog.aaa", "goog.bbb"}, test_source.provides)

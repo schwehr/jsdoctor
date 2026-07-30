@@ -6,6 +6,8 @@ from jsdoctor import namespace
 
 
 class NamespaceTestCase(unittest.TestCase):
+    """Tests for namespace manipulation and checking helpers."""
+
     def testPrototypeProperty(self):
         self.assertTrue(namespace.IsPrototypeProperty("foo.prototype.yes"))
         self.assertFalse(namespace.IsPrototypeProperty("foo.prototype.yes.no"))

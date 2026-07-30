@@ -69,11 +69,11 @@ def _MakeSymbolMap(symbols):
 
 
 class JsDoctorError(Exception):
-    pass
+    """Base exception class for jsdoctor errors."""
 
 
 class DuplicateSymbolError(JsDoctorError):
-    pass
+    """Exception raised when a duplicate symbol identifier is encountered."""
 
 
 def _MakeNamespaceMap(symbols):

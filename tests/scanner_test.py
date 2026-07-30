@@ -6,6 +6,8 @@ from jsdoctor import scanner
 
 
 class ScannerTestCase(unittest.TestCase):
+    """Tests for regex scanners extracting Closure declarations and comments."""
+
     def testProvides(self):
         source = """
 goog.provide('goog.dom');

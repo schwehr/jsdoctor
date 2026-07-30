@@ -7,6 +7,8 @@ from jsdoctor import source
 
 
 class FlagTestCase(unittest.TestCase):
+    """Tests for parsing and handling JSDoc flags."""
+
     def testParseParamDescription(self):
         desc = "{!bbb|ccc?} aaa This \nis the desc.  "
         self.assertEqual(

@@ -14,6 +14,8 @@ from . import symboltypes
 
 
 class Source:
+    """Represents a parsed JavaScript source file and its extracted symbols."""
+
     script: str
     path: str | None
     provides: set[str]
@@ -40,6 +42,8 @@ class Source:
 
 
 class Symbol:
+    """Represents a documented JavaScript identifier target."""
+
     identifier: str
     start: int
     end: int
@@ -73,6 +77,8 @@ class Symbol:
 
 
 class Comment:
+    """Represents a parsed JSDoc comment block with description and flags."""
+
     text: str
     start: int
     end: int
@@ -90,6 +96,8 @@ class Comment:
 
 
 class Flag:
+    """Represents a JSDoc flag tag within a comment."""
+
     name: str
     text: str
 
@@ -129,7 +137,7 @@ def _IsIgnorableIdentifier(identifier_match: re.Match) -> bool:
 
 
 class NamespaceNotFoundError(Exception):
-    pass
+    """Exception raised when a symbol does not belong to any provided namespace."""
 
 
 # TODO(nanaze): In the future this could farm out to a formal parser like

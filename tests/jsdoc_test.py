@@ -6,6 +6,8 @@ from jsdoctor import jsdoc
 
 
 class JsDocTestCase(unittest.TestCase):
+    """Tests for JSDoc comment processing and section extraction."""
+
     def testProcessComment(self):
         descriptions, flags = jsdoc.ProcessComment(_SCRIPT)
 
