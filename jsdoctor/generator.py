@@ -274,11 +274,15 @@ def _generate_content(namespace: str, symbols: Iterable[Any]) -> minidom.NodeLis
             _add_symbol_description(node_list, interface)
 
     instance_methods = list(
-        filter(_is_not_static, _get_symbols_of_type(sorted_symbols, symboltypes.FUNCTION))
+        filter(
+            _is_not_static, _get_symbols_of_type(sorted_symbols, symboltypes.FUNCTION)
+        )
     )
 
     instance_properties = list(
-        filter(_is_not_static, _get_symbols_of_type(sorted_symbols, symboltypes.PROPERTY))
+        filter(
+            _is_not_static, _get_symbols_of_type(sorted_symbols, symboltypes.PROPERTY)
+        )
     )
 
     static_functions = list(
