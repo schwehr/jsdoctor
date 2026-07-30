@@ -10,6 +10,7 @@ class LinkifyTestCase(unittest.TestCase):
 
     def test_web_reg_ex(self):
         """Tests web URL regex search."""
+        # pylint: disable-next=protected-access
         match = linkify._WEB_URL_RE.search("aaa http://google.com bbb")
         self.assertIsNotNone(match)
         self.assertEqual("http://google.com", match.group(0))
@@ -23,6 +24,7 @@ class LinkifyTestCase(unittest.TestCase):
 
     def test_match_symbols(self):
         """Tests matching symbol regex patterns in text."""
+        # pylint: disable-next=protected-access
         matches = linkify._SYMBOL_RE.finditer("aaa goog.dom#cars bb.cc")
         match_strings = [match.group(0) for match in matches]
 

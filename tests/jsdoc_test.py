@@ -26,6 +26,7 @@ class JsDocTestCase(unittest.TestCase):
 
     def test_split_sections(self):
         """Tests splitting comment blocks into section strings."""
+        # pylint: disable-next=protected-access
         parts = list(jsdoc._yield_sections(_SCRIPT))
         self.assertEqual(
             [
@@ -39,6 +40,7 @@ class JsDocTestCase(unittest.TestCase):
 
     def test_match_flags(self):
         """Tests matching flag regex against comment text."""
+        # pylint: disable-next=protected-access
         matches = jsdoc._match_flags(_SCRIPT)
         flags = [match.group("flag") for match in matches]
         self.assertEqual(["@flag", "@flag2", "@flag3", "@flag4"], flags)
