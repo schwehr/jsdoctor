@@ -107,8 +107,10 @@ def _GetReturnFlag(flags: Iterable[Any]) -> Any | None:
     return_flags = list(filter(lambda flag: flag.name == "@return", flags))
     assert len(return_flags) <= 1, "There should not be more than 1 @return flag."
 
-    if return_flags:
-        return return_flags[0]
+    if not return_flags:
+        return None
+
+    return return_flags[0]
 
 
 def _GetReturnString(flag: Any) -> str:
