@@ -8,7 +8,7 @@ from jsdoctor import flags, source
 class FlagTestCase(unittest.TestCase):
     """Tests for parsing and handling JSDoc flags."""
 
-    def testParseParamDescription(self):
+    def test_parse_param_description(self):
         """Tests parsing of @param JSDoc descriptions."""
         desc = "{!bbb|ccc?} aaa This \nis the desc.  "
         self.assertEqual(
@@ -29,7 +29,7 @@ class FlagTestCase(unittest.TestCase):
             ValueError, lambda: flags.ParseParameterDescription("desc without type")
         )
 
-    def testParseReturnDescription(self):
+    def test_parse_return_description(self):
         """Tests parsing of @return JSDoc descriptions."""
         desc = "  {!bbb|ccc?} This \nis the desc.   "
         self.assertEqual(
@@ -40,30 +40,30 @@ class FlagTestCase(unittest.TestCase):
             ValueError, lambda: flags.ParseReturnDescription("desc without type")
         )
 
-    def testMabyeParseTypeFromDescription(self):
+    def test_maybe_parse_type_from_description(self):
         """Tests parsing type expressions enclosed in braces."""
         self.assertEqual("aaa", flags.MaybeParseTypeFromDescription("  {aaa} bbb ccc"))
 
         self.assertEqual(None, flags.MaybeParseTypeFromDescription("aaa bbb ccc"))
 
     @staticmethod
-    def GetFlags(script):
+    def get_flags(script):
         """Parses comment flags from a JSDoc script snippet."""
-        _, parsed_flags = source._GetDescriptionAndFlags(script)
+        _, parsed_flags = source._get_description_and_flags(script)
         return parsed_flags
 
-    def testGetSymbolType(self):
+    def test_get_symbol_type(self):
         """Tests extracting symbol types from comment flags."""
-        self.assertEqual("aaa", flags.GetSymbolType(self.GetFlags("""@const {aaa}""")))
+        self.assertEqual("aaa", flags.GetSymbolType(self.get_flags("""@const {aaa}""")))
         self.assertEqual(
-            "bbb", flags.GetSymbolType(self.GetFlags("""@private {bbb}"""))
+            "bbb", flags.GetSymbolType(self.get_flags("""@private {bbb}"""))
         )
         self.assertEqual(
-            "ccc", flags.GetSymbolType(self.GetFlags("""@protected {ccc}"""))
+            "ccc", flags.GetSymbolType(self.get_flags("""@protected {ccc}"""))
         )
-        self.assertEqual("ddd", flags.GetSymbolType(self.GetFlags("""@const {ddd}""")))
+        self.assertEqual("ddd", flags.GetSymbolType(self.get_flags("""@const {ddd}""")))
 
-    def testGetVisibility(self):
+    def test_get_visibility(self):
         """Tests determining symbol visibility from comment flags."""
         test_source = source.ScanScript("""\
 goog.provide('abc');

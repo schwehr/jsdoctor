@@ -8,7 +8,7 @@ from jsdoctor import jsdoc
 class JsDocTestCase(unittest.TestCase):
     """Tests for JSDoc comment processing and section extraction."""
 
-    def testProcessComment(self):
+    def test_process_comment(self):
         """Tests comment sectioning and flag parsing."""
         descriptions, flags = jsdoc.ProcessComment(_SCRIPT)
 
@@ -24,9 +24,9 @@ class JsDocTestCase(unittest.TestCase):
 
         self.assertEqual(["This is a comment.", "End of thing."], descriptions)
 
-    def testSplitSections(self):
+    def test_split_sections(self):
         """Tests splitting comment blocks into section strings."""
-        parts = list(jsdoc._YieldSections(_SCRIPT))
+        parts = list(jsdoc._yield_sections(_SCRIPT))
         self.assertEqual(
             [
                 "@flag Thing thing",
@@ -37,9 +37,9 @@ class JsDocTestCase(unittest.TestCase):
             parts,
         )
 
-    def testMatchFlags(self):
+    def test_match_flags(self):
         """Tests matching flag regex against comment text."""
-        matches = jsdoc._MatchFlags(_SCRIPT)
+        matches = jsdoc._match_flags(_SCRIPT)
         flags = [match.group("flag") for match in matches]
         self.assertEqual(["@flag", "@flag2", "@flag3", "@flag4"], flags)
 

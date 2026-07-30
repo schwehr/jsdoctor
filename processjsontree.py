@@ -9,6 +9,7 @@ import sys
 from jsdoctor import esprima
 
 
+# pylint: disable-next=invalid-name
 def ProcessJsonTree(json_obj):
     """Parses a dictionary of file paths to JavaScript sources into AST representations.
 

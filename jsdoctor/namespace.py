@@ -3,6 +3,7 @@
 from collections.abc import Iterable, Sequence
 
 
+# pylint: disable-next=invalid-name
 def IsPrototypeProperty(namespace: str) -> bool:
     """Checks if a namespace string represents a prototype property.
 
@@ -16,6 +17,7 @@ def IsPrototypeProperty(namespace: str) -> bool:
     return len(parts) >= 3 and parts[-2] == "prototype"
 
 
+# pylint: disable-next=invalid-name
 def GetNamespaceParts(namespace: str) -> list[str]:
     """Splits a dot-separated namespace string into its component parts.
 
@@ -28,6 +30,7 @@ def GetNamespaceParts(namespace: str) -> list[str]:
     return namespace.split(".")
 
 
+# pylint: disable-next=invalid-name
 def GetPrototypeProperty(namespace: str) -> str:
     """Extracts the property name from a prototype property namespace.
 
@@ -42,6 +45,7 @@ def GetPrototypeProperty(namespace: str) -> str:
     return parts[-1]
 
 
+# pylint: disable-next=invalid-name
 def IsSymbolPartOfNamespace(symbol: str, namespace: str) -> bool:
     """Determines whether a symbol belongs to a given namespace prefix.
 
@@ -58,7 +62,7 @@ def IsSymbolPartOfNamespace(symbol: str, namespace: str) -> bool:
     return namespace_parts == symbol_parts[0 : len(namespace_parts)]
 
 
-def _GetSymbolPartsInNamespace(
+def _get_symbol_parts_in_namespace(
     symbol_parts: Sequence[str], namespace_parts: Sequence[str]
 ) -> int:
     # A symbol can't be shorter than its namespace.
@@ -75,6 +79,7 @@ def _GetSymbolPartsInNamespace(
     return count
 
 
+# pylint: disable-next=invalid-name
 def GetClosestNamespaceForSymbol(
     symbol: str, candidate_namespaces: Iterable[str]
 ) -> str | None:
@@ -98,7 +103,7 @@ def GetClosestNamespaceForSymbol(
 
     for ns in valid_namespaces:
         namespace_parts = GetNamespaceParts(ns)
-        count = _GetSymbolPartsInNamespace(symbol_parts, namespace_parts)
+        count = _get_symbol_parts_in_namespace(symbol_parts, namespace_parts)
 
         if count > max_count:
             closest_namespace = ns

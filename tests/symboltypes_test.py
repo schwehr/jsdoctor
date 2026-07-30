@@ -5,22 +5,22 @@ import unittest
 from jsdoctor import scanner, source, symboltypes
 
 
-def _GetSymbols(script):
+def _get_symbols(script):
     match_pairs = scanner.ExtractDocumentedSymbols(script)
-    return list(source._YieldSymbols(match_pairs, {"goog"}))
+    return list(source._yield_symbols(match_pairs, {"goog"}))
 
 
 class SymbolTypesTestCase(unittest.TestCase):
     """Tests for determining JavaScript symbol types."""
 
-    def assertSymbolType(self, expected_type, script):
+    def assert_symbol_type(self, expected_type, script):
         """Asserts that a script snippet yields a symbol of expected type."""
-        symbol = _GetSymbols(script)[0]
+        symbol = _get_symbols(script)[0]
         self.assertEqual(expected_type, symboltypes.DetermineSymbolType(symbol))
 
-    def testDetermineSymbolType(self):
+    def test_determine_symbol_type(self):
         """Tests determining symbol types from JSDoc tags and identifiers."""
-        self.assertSymbolType(
+        self.assert_symbol_type(
             symboltypes.PROPERTY,
             """
 /**
@@ -30,7 +30,7 @@ goog.bar.baz
 """,
         )
 
-        self.assertSymbolType(
+        self.assert_symbol_type(
             symboltypes.FUNCTION,
             """
 /**
@@ -40,7 +40,7 @@ goog.bar.baz
 """,
         )
 
-        self.assertSymbolType(
+        self.assert_symbol_type(
             symboltypes.FUNCTION,
             """
 /**
@@ -50,7 +50,7 @@ goog.bar.baz
 """,
         )
 
-        self.assertSymbolType(
+        self.assert_symbol_type(
             symboltypes.ENUM,
             """
 /**
@@ -60,7 +60,7 @@ goog.bar.baz
 """,
         )
 
-        self.assertSymbolType(
+        self.assert_symbol_type(
             symboltypes.CONSTRUCTOR,
             """
 /**
@@ -70,7 +70,7 @@ goog.bar.baz
 """,
         )
 
-        self.assertSymbolType(
+        self.assert_symbol_type(
             symboltypes.INTERFACE,
             """
 /**

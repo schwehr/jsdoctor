@@ -27,7 +27,7 @@ import sys
 from collections.abc import Iterator
 
 
-def _YieldPaths(root: str) -> Iterator[tuple[str, str]]:
+def _yield_paths(root: str) -> Iterator[tuple[str, str]]:
     for dir_root, _, files in os.walk(root):
         for file_path in files:
             abspath = os.path.join(dir_root, file_path)
@@ -36,13 +36,14 @@ def _YieldPaths(root: str) -> Iterator[tuple[str, str]]:
             yield relpath, abspath
 
 
-def _YieldJsPaths(root: str) -> Iterator[tuple[str, str]]:
-    for relpath, abspath in _YieldPaths(root):
+def _yield_js_paths(root: str) -> Iterator[tuple[str, str]]:
+    for relpath, abspath in _yield_paths(root):
         _, ext = os.path.splitext(abspath)
         if ext == ".js":
             yield relpath, abspath
 
 
+# pylint: disable-next=invalid-name
 def ScanTree(tree_root: str) -> dict[str, str]:
     """Scans a directory tree for .js files and returns a map of relative paths to content.
 
@@ -54,7 +55,7 @@ def ScanTree(tree_root: str) -> dict[str, str]:
     """
     tree: dict[str, str] = {}
 
-    for relpath, abspath in _YieldJsPaths(tree_root):
+    for relpath, abspath in _yield_js_paths(tree_root):
         logging.info("Reading file: %s", relpath)
         with open(abspath) as f:
             tree[relpath] = f.read()

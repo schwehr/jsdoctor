@@ -95,7 +95,7 @@ class Comment:
     description_sections: list[str] = field(default_factory=list, init=False)
 
     def __post_init__(self) -> None:
-        description_sections, parsed_flags = _GetDescriptionAndFlags(self.text)
+        description_sections, parsed_flags = _get_description_and_flags(self.text)
         self.description_sections = description_sections
         self.flags = parsed_flags
 
@@ -116,13 +116,13 @@ class Flag:
         assert self.name in flags.ALL_FLAGS, f"Unrecognized flag: {self.name}"
 
 
-def _GetDescriptionAndFlags(text: str) -> tuple[list[str], list[Flag]]:
+def _get_description_and_flags(text: str) -> tuple[list[str], list[Flag]]:
     description_sections, flag_pairs = jsdoc.ProcessComment(text)
     parsed_flags = [Flag(name, text) for name, text in flag_pairs]
     return description_sections, parsed_flags
 
 
-def _IsSymbolPartOfProvidedNamespaces(
+def _is_symbol_part_of_provided_namespaces(
     symbol: str, provided_namespaces: set[str]
 ) -> bool:
     for ns in provided_namespaces:
@@ -131,7 +131,7 @@ def _IsSymbolPartOfProvidedNamespaces(
     return False
 
 
-def _IsIgnorableIdentifier(identifier_match: re.Match) -> bool:
+def _is_ignorable_identifier(identifier_match: re.Match) -> bool:
     # Find the first non-whitespace character after the identifier.
     regex = re.compile(r"[\S]")
     match = regex.search(identifier_match.string, pos=identifier_match.end())
@@ -150,7 +150,7 @@ class NamespaceNotFoundError(Exception):
 
 # TODO(nanaze): In the future this could farm out to a formal parser like
 # Esprima to correctly identify comments. Regexing seems to work OK for now.
-def _YieldSymbols(
+def _yield_symbols(
     match_pairs: Iterable[tuple[re.Match[str], re.Match[str] | None]],
     provided_namespaces: set[str],
 ) -> Iterator[Symbol]:
@@ -166,7 +166,7 @@ def _YieldSymbols(
         #   source.filecomment = comment
         #   continue
 
-        if _IsIgnorableIdentifier(identifier_match):
+        if _is_ignorable_identifier(identifier_match):
             # This is JsDoc on a method call, most likely a type cast of a return value.
             # Ignore.
             continue
@@ -187,7 +187,7 @@ def _YieldSymbols(
             continue
 
         # Ignore symbols that are not part of the provided namespace.
-        if not _IsSymbolPartOfProvidedNamespaces(identifier, provided_namespaces):
+        if not _is_symbol_part_of_provided_namespaces(identifier, provided_namespaces):
             logging.info(
                 "Skipping identifier. Not part of provided namespace. %s",
                 identifier,
@@ -220,6 +220,7 @@ def _YieldSymbols(
         yield symbol
 
 
+# pylint: disable-next=invalid-name
 def ScanScript(script: str, path: str | None = None) -> Source:
     """Parses JavaScript script text and returns a populated Source instance.
 
@@ -235,7 +236,7 @@ def ScanScript(script: str, path: str | None = None) -> Source:
     source.requires.update(set(scanner.YieldRequires(script)))
 
     match_pairs = scanner.ExtractDocumentedSymbols(script)
-    for symbol in _YieldSymbols(match_pairs, source.provides):
+    for symbol in _yield_symbols(match_pairs, source.provides):
         symbol.source = source
         source.symbols.add(symbol)
 
