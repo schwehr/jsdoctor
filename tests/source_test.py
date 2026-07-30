@@ -3,9 +3,7 @@
 import unittest
 import unittest.mock
 
-from jsdoctor import scanner
-from jsdoctor import source
-from jsdoctor import symboltypes
+from jsdoctor import scanner, source, symboltypes
 
 
 class SourceTestCase(unittest.TestCase):
@@ -68,11 +66,13 @@ abc.Def.prototype.ghi;
     def testNamespaceNotFoundError(self):
         """Tests raising NamespaceNotFoundError when no matching namespace is found."""
         match_pairs = scanner.ExtractDocumentedSymbols("/** Test. */\ngoog.aaa.bbb;")
-        with unittest.mock.patch.object(
-            source.namespace, "GetClosestNamespaceForSymbol", return_value=None
+        with (
+            unittest.mock.patch.object(
+                source.namespace, "GetClosestNamespaceForSymbol", return_value=None
+            ),
+            self.assertRaises(source.NamespaceNotFoundError),
         ):
-            with self.assertRaises(source.NamespaceNotFoundError):
-                list(source._YieldSymbols(match_pairs, {"goog.aaa"}))
+            list(source._YieldSymbols(match_pairs, {"goog.aaa"}))
 
     def testSkipSymbolNotPartOfProvidedNamespace(self):
         """Tests skipping symbols outside provided namespaces."""

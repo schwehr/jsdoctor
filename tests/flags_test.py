@@ -2,8 +2,7 @@
 
 import unittest
 
-from jsdoctor import flags
-from jsdoctor import source
+from jsdoctor import flags, source
 
 
 class FlagTestCase(unittest.TestCase):

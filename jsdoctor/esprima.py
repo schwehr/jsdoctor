@@ -5,7 +5,7 @@ import logging
 import multiprocessing
 import os
 import subprocess  # nosec B404
-from typing import Iterable
+from collections.abc import Iterable
 
 
 def GetParseInputPath() -> str:

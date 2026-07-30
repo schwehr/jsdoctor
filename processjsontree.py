@@ -5,6 +5,7 @@
 import json
 import logging
 import sys
+
 from jsdoctor import esprima
 
 

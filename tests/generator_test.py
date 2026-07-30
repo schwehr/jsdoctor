@@ -4,9 +4,7 @@ from xml.dom import minidom
 
 import pytest
 
-from jsdoctor import generator
-from jsdoctor import source
-from jsdoctor import symboltypes
+from jsdoctor import generator, source, symboltypes
 
 
 def test_make_text_node() -> None:

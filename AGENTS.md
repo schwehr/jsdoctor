@@ -29,10 +29,11 @@ The core architecture follows a pipeline:
 
 ## 2. Repository & File Layout
 
-- `jsdoctor.py`: Main CLI script for parallel source file scanning, symbol map
-  construction, and tar archive output generation.
-- `jsdoctor/`: Core package containing scanning, modeling, parsing, and
+- `jsdoctor/`: Core package containing CLI, scanning, modeling, parsing, and
   rendering modules:
+  - `cli.py`: Main CLI script for parallel source file scanning, symbol map
+    construction, and tar archive output generation.
+  - `__main__.py`: CLI entrypoint module allowing `python -m jsdoctor` execution.
   - `scanner.py`: Regex scanners for `goog.provide`, `goog.require`, JSDoc
     comments, and target identifier resolution.
   - `source.py`: Data structures (`Source`, `Symbol`, `Comment`, `Flag`) and

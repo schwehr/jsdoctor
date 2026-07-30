@@ -1,7 +1,8 @@
 """Regular expression scanners for JSDoc comments and Closure declarations."""
 
 import re
-from typing import Iterator, Match
+from collections.abc import Iterator
+from re import Match
 
 _BASE_REGEX_STRING = "^\\s*goog\\.%s\\(\\s*['\"](.+)['\"]\\s*\\)"
 _PROVIDE_REGEX = re.compile(_BASE_REGEX_STRING % "provide")

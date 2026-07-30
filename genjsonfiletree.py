@@ -20,11 +20,11 @@ Scans the given directory.
 
 from __future__ import annotations
 
-import os
 import json
 import logging
+import os
 import sys
-from typing import Iterator
+from collections.abc import Iterator
 
 
 def _YieldPaths(root: str) -> Iterator[tuple[str, str]]:

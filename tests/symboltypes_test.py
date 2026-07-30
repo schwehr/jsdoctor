@@ -2,9 +2,7 @@
 
 import unittest
 
-from jsdoctor import scanner
-from jsdoctor import source
-from jsdoctor import symboltypes
+from jsdoctor import scanner, source, symboltypes
 
 
 def _GetSymbols(script):

@@ -1,7 +1,7 @@
 """Parsing and sectioning logic for JSDoc comment blocks."""
 
 import re
-from typing import Iterator
+from collections.abc import Iterator
 
 
 def ProcessComment(comment_text: str) -> tuple[list[str], list[tuple[str, str]]]:
@@ -55,7 +55,6 @@ def _MatchFlags(text: str) -> Iterator[re.Match]:
 
 
 def _YieldSections(comment_text: str) -> Iterator[str]:
-    #
     assert "\r" not in comment_text, "Non-UNIX strings not supported for now"
     parts = comment_text.split("\n\n")
 

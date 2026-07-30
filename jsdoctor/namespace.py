@@ -1,6 +1,6 @@
 """Helper functions for namespace parsing and membership checks."""
 
-from typing import Iterable, Sequence
+from collections.abc import Iterable, Sequence
 
 
 def IsPrototypeProperty(namespace: str) -> bool:
