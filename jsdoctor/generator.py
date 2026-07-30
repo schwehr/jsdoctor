@@ -116,8 +116,8 @@ def _YieldParamFlags(flags: Iterable[Any]) -> Iterator[Any]:
 
 def _GetParamString(flag: Any) -> str:
     assert flag.name == "@param"
-    name, type, _ = flags.ParseParameterDescription(flag.text)
-    return f"{{{type}}} {name}"
+    name, type_str, _ = flags.ParseParameterDescription(flag.text)
+    return f"{{{type_str}}} {name}"
 
 
 def _GetReturnFlag(flags: Iterable[Any]) -> Any | None:
@@ -132,8 +132,8 @@ def _GetReturnFlag(flags: Iterable[Any]) -> Any | None:
 
 def _GetReturnString(flag: Any) -> str:
     assert flag.name == "@return"
-    type, _ = flags.ParseReturnDescription(flag.text)
-    return "{%s}" % type
+    type_str, _ = flags.ParseReturnDescription(flag.text)
+    return f"{{{type_str}}}"
 
 
 def _MakeFunctionCodeElement(name: str, function: Any) -> minidom.Element:
@@ -218,13 +218,13 @@ def _AddFunctionDescription(node_list: minidom.NodeList, function: Any) -> None:
         param_list = _MakeElement("dl")
         node_list.append(param_list)
         for flag in param_flags:
-            name, type, desc = flags.ParseParameterDescription(flag.text)
+            name, type_str, desc = flags.ParseParameterDescription(flag.text)
             term = _MakeElement("dt", name)
             param_list.appendChild(term)
 
             definition = _MakeElement("dd")
 
-            code_type = _MakeElement("code", "{%s}" % type)
+            code_type = _MakeElement("code", f"{{{type_str}}}")
             definition.appendChild(code_type)
             definition.appendChild(_MakeTextNode(" "))
             definition.appendChild(_ProcessString(desc))
@@ -235,8 +235,8 @@ def _AddFunctionDescription(node_list: minidom.NodeList, function: Any) -> None:
         return_paragraph = _MakeElement("p")
         node_list.append(return_paragraph)
 
-        type, desc = flags.ParseReturnDescription(return_flag.text)
-        code_type = _MakeElement("code", "{%s}" % type)
+        type_str, desc = flags.ParseReturnDescription(return_flag.text)
+        code_type = _MakeElement("code", f"{{{type_str}}}")
         return_paragraph.appendChild(code_type)
         return_paragraph.appendChild(_MakeTextNode(" "))
         return_paragraph.appendChild(_ProcessString(desc))
@@ -319,8 +319,8 @@ def _GenerateContent(namespace: str, symbols: Iterable[Any]) -> minidom.NodeList
 
     if instance_properties:
         node_list.append(_MakeElement("h2", "Instance properties"))
-        for property in instance_properties:
-            _AddSymbolDescription(node_list, property)
+        for prop in instance_properties:
+            _AddSymbolDescription(node_list, prop)
             node_list.append(_MakeElement("hr"))
 
     if static_functions:
@@ -335,8 +335,8 @@ def _GenerateContent(namespace: str, symbols: Iterable[Any]) -> minidom.NodeList
     )
     if static_properties:
         node_list.append(_MakeElement("h2", "Static properties"))
-        for property in static_properties:
-            _AddSymbolDescription(node_list, property)
+        for prop in static_properties:
+            _AddSymbolDescription(node_list, prop)
             node_list.append(_MakeElement("hr"))
 
     return node_list
