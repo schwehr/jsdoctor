@@ -86,9 +86,9 @@ class Comment:
         self.start = start
         self.end = end
 
-        description_sections, flags = _GetDescriptionAndFlags(text)
+        description_sections, parsed_flags = _GetDescriptionAndFlags(text)
         self.description_sections = description_sections
-        self.flags = flags
+        self.flags = parsed_flags
 
 
 class Flag:
@@ -106,8 +106,8 @@ class Flag:
 
 def _GetDescriptionAndFlags(text: str) -> tuple[list[str], list[Flag]]:
     description_sections, flag_pairs = jsdoc.ProcessComment(text)
-    flags = [Flag(name, text) for name, text in flag_pairs]
-    return description_sections, flags
+    parsed_flags = [Flag(name, text) for name, text in flag_pairs]
+    return description_sections, parsed_flags
 
 
 def _IsSymbolPartOfProvidedNamespaces(

@@ -73,7 +73,6 @@ disable = [
     "broad-exception-raised",
     "invalid-name",
     "protected-access",
-    "redefined-outer-name",
     "too-few-public-methods",
     "too-many-branches",
     "too-many-instance-attributes",
