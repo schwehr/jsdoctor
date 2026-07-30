@@ -5,28 +5,30 @@ from __future__ import annotations
 import logging
 import re
 from collections.abc import Iterable, Iterator
+from dataclasses import dataclass, field
 
 from . import flags, jsdoc, namespace, scanner, symboltypes
 
 
+@dataclass(eq=False)
 class Source:
-    """Represents a parsed JavaScript source file and its extracted symbols."""
+    """Represents a parsed JavaScript source file and its extracted symbols.
+
+    Attributes:
+        script: Raw JavaScript source code text.
+        path: Optional file path to the source file.
+        provides: Set of provided namespace strings.
+        requires: Set of required namespace strings.
+        symbols: Set of extracted Symbol objects.
+        filecomment: Optional top-level file JSDoc comment.
+    """
 
     script: str
-    path: str | None
-    provides: set[str]
-    requires: set[str]
-    symbols: set[Symbol]
-    filecomment: Comment | None
-
-    def __init__(self, script: str, path: str | None = None):
-        self.script = script
-        self.path = path
-
-        self.provides = set()
-        self.requires = set()
-        self.symbols = set()
-        self.filecomment = None
+    path: str | None = None
+    provides: set[str] = field(default_factory=set)
+    requires: set[str] = field(default_factory=set)
+    symbols: set[Symbol] = field(default_factory=set)
+    filecomment: Comment | None = None
 
     def __str__(self) -> str:
         source_string = super().__str__()
@@ -37,29 +39,31 @@ class Source:
         return source_string
 
 
+@dataclass(eq=False)
 class Symbol:
-    """Represents a documented JavaScript identifier target."""
+    """Represents a documented JavaScript identifier target.
+
+    Attributes:
+        identifier: JavaScript target identifier string.
+        start: Starting character position in source script.
+        end: Ending character position in source script.
+        source: Optional parent Source object.
+        comment: Optional associated Comment object.
+        namespace: Optional namespace name.
+        property: Optional property name.
+        type: Optional symbol classification type.
+        static: Optional flag indicating if symbol is static.
+    """
 
     identifier: str
     start: int
     end: int
-    source: Source | None
-    comment: Comment | None
-    namespace: str | None
-    property: str | None
-    type: str | None
-    static: bool | None
-
-    def __init__(self, identifier: str, start: int, end: int) -> None:
-        self.identifier = identifier
-        self.start = start
-        self.end = end
-        self.source = None
-        self.comment = None
-        self.namespace = None
-        self.property = None
-        self.type = None
-        self.static = None
+    source: Source | None = None
+    comment: Comment | None = None
+    namespace: str | None = None
+    property: str | None = None
+    type: str | None = None
+    static: bool | None = None
 
     def __str__(self) -> str:
         symbol_string = super().__str__()
@@ -72,36 +76,44 @@ class Symbol:
         return symbol_string
 
 
+@dataclass(eq=False)
 class Comment:
-    """Represents a parsed JSDoc comment block with description and flags."""
+    """Represents a parsed JSDoc comment block with description and flags.
+
+    Attributes:
+        text: Raw JSDoc comment block text.
+        start: Starting character index of comment in source.
+        end: Ending character index of comment in source.
+        flags: List of parsed Flag objects.
+        description_sections: List of parsed description text sections.
+    """
 
     text: str
     start: int
     end: int
-    flags: list[Flag]
-    description_sections: list[str]
+    flags: list[Flag] = field(default_factory=list, init=False)
+    description_sections: list[str] = field(default_factory=list, init=False)
 
-    def __init__(self, text: str, start: int, end: int) -> None:
-        self.text = text
-        self.start = start
-        self.end = end
-
-        description_sections, parsed_flags = _GetDescriptionAndFlags(text)
+    def __post_init__(self) -> None:
+        description_sections, parsed_flags = _GetDescriptionAndFlags(self.text)
         self.description_sections = description_sections
         self.flags = parsed_flags
 
 
+@dataclass
 class Flag:
-    """Represents a JSDoc flag tag within a comment."""
+    """Represents a JSDoc flag tag within a comment.
+
+    Attributes:
+        name: Flag tag name (e.g. '@param', '@return').
+        text: Associated text for the flag tag.
+    """
 
     name: str
     text: str
 
-    def __init__(self, name: str, text: str):
-        assert name in flags.ALL_FLAGS, "Unrecognized flag: " + name
-
-        self.name = name
-        self.text = text
+    def __post_init__(self) -> None:
+        assert self.name in flags.ALL_FLAGS, f"Unrecognized flag: {self.name}"
 
 
 def _GetDescriptionAndFlags(text: str) -> tuple[list[str], list[Flag]]:
