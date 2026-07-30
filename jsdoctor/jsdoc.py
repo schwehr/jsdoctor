@@ -1,8 +1,18 @@
+"""Parsing and sectioning logic for JSDoc comment blocks."""
+
 import re
 from typing import Iterator
 
 
 def ProcessComment(comment_text: str) -> tuple[list[str], list[tuple[str, str]]]:
+    """Parses a JSDoc comment text into description sections and raw flag tuples.
+
+    Args:
+        comment_text: Raw JSDoc comment text block.
+
+    Returns:
+        A tuple of (description_list, flag_tuples_list).
+    """
     descriptions = []
     flags = []
 

@@ -1,3 +1,5 @@
+"""Classification logic for determining JavaScript symbol types."""
+
 from __future__ import annotations
 import typing
 
@@ -20,6 +22,14 @@ def _CommentHasFlag(comment: source.Comment, flag_name: str) -> bool:
 
 
 def DetermineSymbolType(symbol: source.Symbol) -> str:
+    """Determines the symbol type (CONSTRUCTOR, INTERFACE, ENUM, FUNCTION, PROPERTY).
+
+    Args:
+        symbol: The Symbol instance to classify.
+
+    Returns:
+        The classified symbol type string constant.
+    """
     comment = symbol.comment
     assert comment, "Expected to have comment"
 

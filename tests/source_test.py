@@ -1,3 +1,5 @@
+"""Tests for the jsdoctor.source module."""
+
 import unittest
 import unittest.mock
 
@@ -7,7 +9,10 @@ from jsdoctor import symboltypes
 
 
 class SourceTestCase(unittest.TestCase):
+    """Tests for JavaScript source scanning and symbol extraction."""
+
     def testScanSource(self):
+        """Tests scanning a JavaScript source file into a Source object."""
         test_source = source.ScanScript(_TEST_SCRIPT)
         self.assertEqual({"goog.aaa", "goog.bbb"}, test_source.provides)
         self.assertEqual({"goog.ccc", "goog.ddd"}, test_source.requires)
@@ -33,6 +38,7 @@ class SourceTestCase(unittest.TestCase):
         self.assertEqual("{string} Dog.", flag.text)
 
     def testIsIgnorableIdentifier(self):
+        """Tests checking if an identifier match should be ignored."""
         match = scanner.FindCommentTarget("  aaa.bbb = 3")
         self.assertEqual("aaa.bbb", match.group())
         self.assertFalse(source._IsIgnorableIdentifier(match))
@@ -46,6 +52,7 @@ class SourceTestCase(unittest.TestCase):
         self.assertTrue(source._IsIgnorableIdentifier(match))
 
     def testScanPrototypeProperty(self):
+        """Tests scanning prototype property symbols."""
         test_source = source.ScanScript("""\
 goog.provide('abc.Def');
 
@@ -59,6 +66,7 @@ abc.Def.prototype.ghi;
         self.assertFalse(symbol.static)
 
     def testNamespaceNotFoundError(self):
+        """Tests raising NamespaceNotFoundError when no matching namespace is found."""
         match_pairs = scanner.ExtractDocumentedSymbols("/** Test. */\ngoog.aaa.bbb;")
         with unittest.mock.patch.object(
             source.namespace, "GetClosestNamespaceForSymbol", return_value=None
@@ -67,6 +75,7 @@ abc.Def.prototype.ghi;
                 list(source._YieldSymbols(match_pairs, {"goog.aaa"}))
 
     def testSkipSymbolNotPartOfProvidedNamespace(self):
+        """Tests skipping symbols outside provided namespaces."""
         test_source = source.ScanScript("""\
 goog.provide('goog.aaa');
 
@@ -85,6 +94,7 @@ goog.aaa.bbb;
         self.assertEqual("goog.aaa.bbb", symbol.identifier)
 
     def testSkipThisProperties(self):
+        """Tests skipping properties set on this."""
         test_source = source.ScanScript("""\
 goog.provide('goog.aaa');
 
@@ -103,6 +113,7 @@ goog.aaa.bbb;
         self.assertEqual("goog.aaa.bbb", symbol.identifier)
 
     def testSkipParenthetical(self):
+        """Tests skipping parenthetical expressions following JSDoc comments."""
         test_source = source.ScanScript("""\
 goog.provide('goog.aaa');
 
@@ -121,6 +132,7 @@ goog.aaa.bbb;
         self.assertEqual("goog.aaa.bbb", symbol.identifier)
 
     def testSkipIgnorableIdentifier(self):
+        """Tests skipping ignorable identifier calls following JSDoc comments."""
         test_source = source.ScanScript("""\
 goog.provide('goog.aaa');
 
@@ -139,6 +151,7 @@ goog.aaa.bbb;
         self.assertEqual("goog.aaa.bbb", symbol.identifier)
 
     def testSymbolStr(self):
+        """Tests string representation of Symbol objects."""
         sym = source.Symbol("foo.bar", 0, 10)
         self.assertIn("foo.bar", str(sym))
         src = source.Source("var x = 1;", path="path/to/file.js")
@@ -147,6 +160,7 @@ goog.aaa.bbb;
         self.assertIn("path/to/file.js", str(sym))
 
     def testSourceStr(self):
+        """Tests string representation of Source objects."""
         src = source.Source("var x = 1;", path="path/to/file.js")
         self.assertIn("path/to/file.js", str(src))
 

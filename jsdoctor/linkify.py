@@ -1,3 +1,5 @@
+"""Utility functions for linking URLs and symbol references in text."""
+
 import re
 from typing import Iterable
 
@@ -11,6 +13,14 @@ def _ReplaceWebUrl(url_match: re.Match) -> str:
 
 
 def LinkifyWebUrls(content: str) -> str:
+    """Replaces web URLs in text with HTML anchor elements.
+
+    Args:
+        content: Text containing potential URLs.
+
+    Returns:
+        Text with web URLs replaced by HTML links.
+    """
     return _WEB_URL_RE.sub(_ReplaceWebUrl, content)
 
 
@@ -35,4 +45,13 @@ def _ReplaceSymbol(match: re.Match[str], symbols: Iterable[str]) -> str:
 
 
 def LinkifySymbols(content: str, symbols: Iterable[str]) -> str:
+    """Replaces symbol references in text with HTML links to symbol documentation.
+
+    Args:
+        content: Text containing symbol names.
+        symbols: Collection of known symbol identifiers.
+
+    Returns:
+        Text with matched symbol references replaced by HTML links.
+    """
     return _SYMBOL_RE.sub(lambda match: _ReplaceSymbol(match, symbols), content)

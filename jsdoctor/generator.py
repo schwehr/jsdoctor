@@ -1,3 +1,5 @@
+"""HTML document generator for namespace API reference documentation."""
+
 from typing import Any, Iterable, Iterator
 
 from xml.dom import minidom
@@ -11,6 +13,14 @@ from . import symboltypes
 def GenerateHtmlDocs(
     namespace_map: dict[str, list[Any]],
 ) -> Iterator[tuple[str, bytes]]:
+    """Generates HTML document filename and bytes pairs for each namespace.
+
+    Args:
+        namespace_map: Mapping from namespace string to list of symbols.
+
+    Yields:
+        Tuples of (filename, html_bytes).
+    """
     for filepath, document in GenerateDocuments(namespace_map):
         assert document.documentElement is not None
         content = document.documentElement.toxml("utf-8")
@@ -20,6 +30,14 @@ def GenerateHtmlDocs(
 def GenerateDocuments(
     namespace_map: dict[str, list[Any]],
 ) -> Iterator[tuple[str, minidom.Document]]:
+    """Generates DOM documents for each namespace in namespace_map.
+
+    Args:
+        namespace_map: Mapping from namespace string to list of symbols.
+
+    Yields:
+        Tuples of (filename, minidom.Document).
+    """
     for namespace, symbols in namespace_map.items():
         filename = f"{namespace}.html"
         yield filename, _GenerateDocument(namespace, symbols)

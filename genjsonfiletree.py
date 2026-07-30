@@ -44,6 +44,14 @@ def _YieldJsPaths(root: str) -> Iterator[tuple[str, str]]:
 
 
 def ScanTree(tree_root: str) -> dict[str, str]:
+    """Scans a directory tree for .js files and returns a map of relative paths to content.
+
+    Args:
+        tree_root: Directory path to scan.
+
+    Returns:
+        A dictionary mapping relative file paths to their string contents.
+    """
     tree: dict[str, str] = {}
 
     for relpath, abspath in _YieldJsPaths(tree_root):
@@ -55,6 +63,7 @@ def ScanTree(tree_root: str) -> dict[str, str]:
 
 
 def main() -> None:
+    """Main entry point for scanning directory trees and writing JSON to stdout."""
     logging.basicConfig(level=logging.INFO)
 
     if len(sys.argv) == 1:

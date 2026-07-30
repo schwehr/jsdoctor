@@ -1,3 +1,5 @@
+"""Tests for the jsdoctor.flags module."""
+
 import unittest
 
 from jsdoctor import flags
@@ -5,7 +7,10 @@ from jsdoctor import source
 
 
 class FlagTestCase(unittest.TestCase):
+    """Tests for parsing and handling JSDoc flags."""
+
     def testParseParamDescription(self):
+        """Tests parsing of @param JSDoc descriptions."""
         desc = "{!bbb|ccc?} aaa This \nis the desc.  "
         self.assertEqual(
             ("aaa", "!bbb|ccc?", "This \nis the desc."),
@@ -26,6 +31,7 @@ class FlagTestCase(unittest.TestCase):
         )
 
     def testParseReturnDescription(self):
+        """Tests parsing of @return JSDoc descriptions."""
         desc = "  {!bbb|ccc?} This \nis the desc.   "
         self.assertEqual(
             ("!bbb|ccc?", "This \nis the desc."), flags.ParseReturnDescription(desc)
@@ -36,16 +42,19 @@ class FlagTestCase(unittest.TestCase):
         )
 
     def testMabyeParseTypeFromDescription(self):
+        """Tests parsing type expressions enclosed in braces."""
         self.assertEqual("aaa", flags.MaybeParseTypeFromDescription("  {aaa} bbb ccc"))
 
         self.assertEqual(None, flags.MaybeParseTypeFromDescription("aaa bbb ccc"))
 
     @staticmethod
     def GetFlags(script):
+        """Parses comment flags from a JSDoc script snippet."""
         _, flags = source._GetDescriptionAndFlags(script)
         return flags
 
     def testGetSymbolType(self):
+        """Tests extracting symbol types from comment flags."""
         self.assertEqual("aaa", flags.GetSymbolType(self.GetFlags("""@const {aaa}""")))
         self.assertEqual(
             "bbb", flags.GetSymbolType(self.GetFlags("""@private {bbb}"""))
@@ -56,6 +65,7 @@ class FlagTestCase(unittest.TestCase):
         self.assertEqual("ddd", flags.GetSymbolType(self.GetFlags("""@const {ddd}""")))
 
     def testGetVisibility(self):
+        """Tests determining symbol visibility from comment flags."""
         test_source = source.ScanScript("""\
 goog.provide('abc');
 

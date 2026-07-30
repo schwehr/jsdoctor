@@ -9,6 +9,14 @@ from jsdoctor import esprima
 
 
 def ProcessJsonTree(json_obj):
+    """Parses a dictionary of file paths to JavaScript sources into AST representations.
+
+    Args:
+        json_obj: Dictionary mapping file paths to JavaScript source strings.
+
+    Returns:
+        A dictionary mapping file paths to source and parsed AST dicts.
+    """
     items = json_obj.items()
     paths = [pair[0] for pair in items]
     sources = [pair[1] for pair in items]
@@ -33,6 +41,7 @@ def ProcessJsonTree(json_obj):
 
 
 def main():
+    """Reads JSON file tree from stdin, parses sources via Esprima, and writes JSON to stdout."""
     logging.basicConfig(level=logging.INFO)
     input = sys.stdin.read()
     obj = json.loads(input)

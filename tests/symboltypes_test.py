@@ -1,3 +1,5 @@
+"""Tests for the jsdoctor.symboltypes module."""
+
 import unittest
 
 from jsdoctor import scanner
@@ -11,11 +13,15 @@ def _GetSymbols(script):
 
 
 class SymbolTypesTestCase(unittest.TestCase):
+    """Tests for determining JavaScript symbol types."""
+
     def assertSymbolType(self, type, script):
+        """Asserts that a script snippet yields a symbol of expected type."""
         symbol = _GetSymbols(script)[0]
         self.assertEqual(type, symboltypes.DetermineSymbolType(symbol))
 
     def testDetermineSymbolType(self):
+        """Tests determining symbol types from JSDoc tags and identifiers."""
         self.assertSymbolType(
             symboltypes.PROPERTY,
             """

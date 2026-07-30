@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+"""Command-line interface for jsdoctor API documentation generator."""
 
 import argparse
 import collections
@@ -68,11 +69,11 @@ def _MakeSymbolMap(symbols):
 
 
 class JsDoctorError(Exception):
-    pass
+    """Base exception class for jsdoctor errors."""
 
 
 class DuplicateSymbolError(JsDoctorError):
-    pass
+    """Exception raised when a duplicate symbol identifier is encountered."""
 
 
 def _MakeNamespaceMap(symbols):
@@ -114,6 +115,7 @@ def _ParseArgs():
 
 
 def main():
+    """Parses command-line arguments and generates the documentation tar archive."""
     logging.basicConfig(
         level=logging.INFO, format="%(levelname)s:%(module)s:%(lineno)d: %(message)s"
     )
