@@ -95,7 +95,7 @@ def _make_content_map(paths):
         if path in content_map:
             raise JsDoctorError(f"Path already added: {path}")
 
-        with open(path) as f:
+        with open(path, encoding="utf-8") as f:
             content = f.read()
 
         content_map[path] = content

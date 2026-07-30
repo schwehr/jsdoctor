@@ -59,7 +59,7 @@ def ScanTree(tree_root: str) -> dict[str, str]:
 
     for relpath, abspath in _yield_js_paths(tree_root):
         logging.info("Reading file: %s", relpath)
-        with open(abspath) as f:
+        with open(abspath, encoding="utf-8") as f:
             tree[relpath] = f.read()
 
     return tree
