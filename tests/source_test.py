@@ -9,7 +9,7 @@ from jsdoctor import scanner, source, symboltypes
 class SourceTestCase(unittest.TestCase):
     """Tests for JavaScript source scanning and symbol extraction."""
 
-    def testScanSource(self):
+    def test_scan_source(self):
         """Tests scanning a JavaScript source file into a Source object."""
         test_source = source.ScanScript(_TEST_SCRIPT)
         self.assertEqual({"goog.aaa", "goog.bbb"}, test_source.provides)
@@ -35,21 +35,21 @@ class SourceTestCase(unittest.TestCase):
         self.assertEqual("@return", flag.name)
         self.assertEqual("{string} Dog.", flag.text)
 
-    def testIsIgnorableIdentifier(self):
+    def test_is_ignorable_identifier(self):
         """Tests checking if an identifier match should be ignored."""
         match = scanner.FindCommentTarget("  aaa.bbb = 3")
         self.assertEqual("aaa.bbb", match.group())
-        self.assertFalse(source._IsIgnorableIdentifier(match))
+        self.assertFalse(source._is_ignorable_identifier(match))
 
         match = scanner.FindCommentTarget("  aaa.bbb(3)")
         self.assertEqual("aaa.bbb", match.group())
-        self.assertTrue(source._IsIgnorableIdentifier(match))
+        self.assertTrue(source._is_ignorable_identifier(match))
 
         match = scanner.FindCommentTarget("  aaa.bbb[3])")
         self.assertEqual("aaa.bbb", match.group())
-        self.assertTrue(source._IsIgnorableIdentifier(match))
+        self.assertTrue(source._is_ignorable_identifier(match))
 
-    def testScanPrototypeProperty(self):
+    def test_scan_prototype_property(self):
         """Tests scanning prototype property symbols."""
         test_source = source.ScanScript("""\
 goog.provide('abc.Def');
@@ -63,7 +63,7 @@ abc.Def.prototype.ghi;
         self.assertEqual("ghi", symbol.property)
         self.assertFalse(symbol.static)
 
-    def testNamespaceNotFoundError(self):
+    def test_namespace_not_found_error(self):
         """Tests raising NamespaceNotFoundError when no matching namespace is found."""
         match_pairs = scanner.ExtractDocumentedSymbols("/** Test. */\ngoog.aaa.bbb;")
         with (
@@ -72,9 +72,9 @@ abc.Def.prototype.ghi;
             ),
             self.assertRaises(source.NamespaceNotFoundError),
         ):
-            list(source._YieldSymbols(match_pairs, {"goog.aaa"}))
+            list(source._yield_symbols(match_pairs, {"goog.aaa"}))
 
-    def testSkipSymbolNotPartOfProvidedNamespace(self):
+    def test_skip_symbol_not_part_of_provided_namespace(self):
         """Tests skipping symbols outside provided namespaces."""
         test_source = source.ScanScript("""\
 goog.provide('goog.aaa');
@@ -93,7 +93,7 @@ goog.aaa.bbb;
         symbol = list(test_source.symbols)[0]
         self.assertEqual("goog.aaa.bbb", symbol.identifier)
 
-    def testSkipThisProperties(self):
+    def test_skip_this_properties(self):
         """Tests skipping properties set on this."""
         test_source = source.ScanScript("""\
 goog.provide('goog.aaa');
@@ -112,7 +112,7 @@ goog.aaa.bbb;
         symbol = list(test_source.symbols)[0]
         self.assertEqual("goog.aaa.bbb", symbol.identifier)
 
-    def testSkipParenthetical(self):
+    def test_skip_parenthetical(self):
         """Tests skipping parenthetical expressions following JSDoc comments."""
         test_source = source.ScanScript("""\
 goog.provide('goog.aaa');
@@ -131,7 +131,7 @@ goog.aaa.bbb;
         symbol = list(test_source.symbols)[0]
         self.assertEqual("goog.aaa.bbb", symbol.identifier)
 
-    def testSkipIgnorableIdentifier(self):
+    def test_skip_ignorable_identifier(self):
         """Tests skipping ignorable identifier calls following JSDoc comments."""
         test_source = source.ScanScript("""\
 goog.provide('goog.aaa');
@@ -150,7 +150,7 @@ goog.aaa.bbb;
         symbol = list(test_source.symbols)[0]
         self.assertEqual("goog.aaa.bbb", symbol.identifier)
 
-    def testSymbolStr(self):
+    def test_symbol_str(self):
         """Tests string representation of Symbol objects."""
         sym = source.Symbol("foo.bar", 0, 10)
         self.assertIn("foo.bar", str(sym))
@@ -159,7 +159,7 @@ goog.aaa.bbb;
         self.assertIn("foo.bar", str(sym))
         self.assertIn("path/to/file.js", str(sym))
 
-    def testSourceStr(self):
+    def test_source_str(self):
         """Tests string representation of Source objects."""
         src = source.Source("var x = 1;", path="path/to/file.js")
         self.assertIn("path/to/file.js", str(src))

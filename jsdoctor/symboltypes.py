@@ -14,7 +14,7 @@ FUNCTION = "function"
 PROPERTY = "property"
 
 
-def _CommentHasFlag(comment: source.Comment, flag_name: str) -> bool:
+def _comment_has_flag(comment: source.Comment, flag_name: str) -> bool:
     assert flag_name.startswith("@"), "flag name should start with @"
     for flag in comment.flags:
         if flag.name == flag_name:
@@ -22,6 +22,7 @@ def _CommentHasFlag(comment: source.Comment, flag_name: str) -> bool:
     return False
 
 
+# pylint: disable-next=invalid-name
 def DetermineSymbolType(symbol: source.Symbol) -> str:
     """Determines the symbol type (CONSTRUCTOR, INTERFACE, ENUM, FUNCTION, PROPERTY).
 
@@ -34,16 +35,16 @@ def DetermineSymbolType(symbol: source.Symbol) -> str:
     comment = symbol.comment
     assert comment, "Expected to have comment"
 
-    if _CommentHasFlag(comment, "@constructor"):
+    if _comment_has_flag(comment, "@constructor"):
         return CONSTRUCTOR
 
-    if _CommentHasFlag(comment, "@interface"):
+    if _comment_has_flag(comment, "@interface"):
         return INTERFACE
 
-    if _CommentHasFlag(comment, "@enum"):
+    if _comment_has_flag(comment, "@enum"):
         return ENUM
 
-    if _CommentHasFlag(comment, "@param") or _CommentHasFlag(comment, "@return"):
+    if _comment_has_flag(comment, "@param") or _comment_has_flag(comment, "@return"):
         return FUNCTION
 
     # TODO(nnaze): Handle functions with no @param or @return.

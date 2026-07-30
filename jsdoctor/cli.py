@@ -12,7 +12,7 @@ import tarfile
 from jsdoctor import generator, source
 
 
-def _ShouldScanPath(path):
+def _should_scan_path(path):
     _, filename = os.path.split(path)
 
     if not filename.endswith(".js"):
@@ -30,7 +30,7 @@ def _ShouldScanPath(path):
 _IGNORED_IDENTIFIERS = frozenset(["goog.provide", "goog.require", "goog.setTestOnly"])
 
 
-def _GetSymbolsFromSources(sources):
+def _get_symbols_from_sources(sources):
     for s in sources:
         yield from s.symbols
 
@@ -39,7 +39,7 @@ def _GetSymbolsFromSources(sources):
 _DUPLICATE_SYMBOL_IS_ERROR = False
 
 
-def _MakeSymbolMap(symbols):
+def _make_symbol_map(symbols):
     symbol_map = {}
 
     for symbol in symbols:
@@ -75,24 +75,24 @@ class DuplicateSymbolError(JsDoctorError):
     """Exception raised when a duplicate symbol identifier is encountered."""
 
 
-def _MakeNamespaceMap(symbols):
+def _make_namespace_map(symbols):
     namespace_map = collections.defaultdict(set)
     for symbol in symbols:
         namespace_map[symbol.namespace].add(symbol)
     return namespace_map
 
 
-def _ScanContent(content_pair):
+def _scan_content(content_pair):
     path, content = content_pair
     return source.ScanScript(content, path)
 
 
-def _ScanContentInParallel(content_map):
+def _scan_content_in_parallel(content_map):
     with multiprocessing.Pool(20 * multiprocessing.cpu_count()) as pool:
-        return list(pool.imap(_ScanContent, content_map.items()))
+        return list(pool.imap(_scan_content, content_map.items()))
 
 
-def _MakeContentMap(paths):
+def _make_content_map(paths):
     content_map = {}
     for path in paths:
         if path in content_map:
@@ -106,7 +106,7 @@ def _MakeContentMap(paths):
     return content_map
 
 
-def _ParseArgs():
+def _parse_args():
     parser = argparse.ArgumentParser(description="Generates HTML docs for JsDoc")
     parser.add_argument("--tar", help="Path to tar file", required=True)
     parser.add_argument("files", help="Paths to files", nargs="*")
@@ -119,25 +119,25 @@ def main():
         level=logging.INFO, format="%(levelname)s:%(module)s:%(lineno)d: %(message)s"
     )
 
-    result = _ParseArgs()
+    result = _parse_args()
     tar_path = result.tar
 
     paths = result.files
-    paths = [path for path in paths if _ShouldScanPath(path)]
+    paths = [path for path in paths if _should_scan_path(path)]
 
     logging.info("Found %s paths.", len(paths))
     logging.info("Reading file contents.")
-    content_map = _MakeContentMap(paths)
+    content_map = _make_content_map(paths)
 
-    sources = _ScanContentInParallel(content_map)
-    symbols = _GetSymbolsFromSources(sources)
+    sources = _scan_content_in_parallel(content_map)
+    symbols = _get_symbols_from_sources(sources)
 
     # This could instead be just a dupe check
-    symbol_map = _MakeSymbolMap(symbols)
+    symbol_map = _make_symbol_map(symbols)
 
     symbols = symbol_map.values()
 
-    namespace_map = _MakeNamespaceMap(symbols)
+    namespace_map = _make_namespace_map(symbols)
 
     logging.info("Writing to tar: %s", tar_path)
     with tarfile.open(name=tar_path, mode="w") as tar:

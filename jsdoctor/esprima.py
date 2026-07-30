@@ -8,6 +8,7 @@ import subprocess  # nosec B404
 from collections.abc import Iterable
 
 
+# pylint: disable-next=invalid-name
 def GetParseInputPath() -> str:
     """Returns the absolute file path to the Node.js parseinput script.
 
@@ -18,6 +19,7 @@ def GetParseInputPath() -> str:
     return os.path.join(module_dir, "node/parseinput.js")
 
 
+# pylint: disable-next=invalid-name
 def MultiParse(sources: Iterable[str]) -> list[bytes]:
     """Parses multiple JavaScript source strings concurrently using Node/Esprima.
 

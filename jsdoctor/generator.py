@@ -9,6 +9,7 @@ import html5lib
 from . import flags, linkify, symboltypes
 
 
+# pylint: disable-next=invalid-name
 def GenerateHtmlDocs(
     namespace_map: Mapping[str, Iterable[Any]],
 ) -> Iterator[tuple[str, bytes]]:
@@ -26,6 +27,7 @@ def GenerateHtmlDocs(
         yield filepath, content
 
 
+# pylint: disable-next=invalid-name
 def GenerateDocuments(
     namespace_map: Mapping[str, Iterable[Any]],
 ) -> Iterator[tuple[str, minidom.Document]]:
@@ -39,46 +41,46 @@ def GenerateDocuments(
     """
     for namespace, symbols in namespace_map.items():
         filename = f"{namespace}.html"
-        yield filename, _GenerateDocument(namespace, symbols)
+        yield filename, _generate_document(namespace, symbols)
 
 
-def _ProcessString(content: str) -> minidom.DocumentFragment:
+def _process_string(content: str) -> minidom.DocumentFragment:
     content = linkify.LinkifyWebUrls(content)
     return html5lib.parseFragment(content, treebuilder="dom")
 
 
-def _MakeTextNode(content: str) -> minidom.Text:
+def _make_text_node(content: str) -> minidom.Text:
     text = minidom.Text()
     text.data = content
     return text
 
 
-def _MakeHeader(content: str | None = None) -> minidom.Element:
-    return _MakeElement("h2", content)
+def _make_header(content: str | None = None) -> minidom.Element:
+    return _make_element("h2", content)
 
 
-def _MakeElement(tagname: str, content: str | None = None) -> minidom.Element:
+def _make_element(tagname: str, content: str | None = None) -> minidom.Element:
     element = minidom.Element(tagname)
 
     if content:
-        element.appendChild(_MakeTextNode(content))
+        element.appendChild(_make_text_node(content))
 
     return element
 
 
-def _IsStatic(symbol: Any) -> bool:
+def _is_static(symbol: Any) -> bool:
     return bool(symbol.static)
 
 
-def _IsNotStatic(symbol: Any) -> bool:
-    return not _IsStatic(symbol)
+def _is_not_static(symbol: Any) -> bool:
+    return not _is_static(symbol)
 
 
-def _GetSymbolsOfType(symbols: Iterable[Any], symbol_type: Any) -> list[Any]:
+def _get_symbols_of_type(symbols: Iterable[Any], symbol_type: Any) -> list[Any]:
     return [symbol for symbol in symbols if symbol.type == symbol_type]
 
 
-def _GenerateDocument(namespace: str, symbols: Iterable[Any]) -> minidom.Document:
+def _generate_document(namespace: str, symbols: Iterable[Any]) -> minidom.Document:
     dom = minidom.getDOMImplementation()
     assert dom is not None  # For pytype.
     doc = dom.createDocument(None, "html", None)
@@ -87,40 +89,40 @@ def _GenerateDocument(namespace: str, symbols: Iterable[Any]) -> minidom.Documen
     assert doc.documentElement is not None
     doc.documentElement.appendChild(body)
 
-    for elem in _GenerateContent(namespace, symbols):
+    for elem in _generate_content(namespace, symbols):
         body.appendChild(elem)
 
     return doc
 
 
-def _AddSymbolDescription(node_list: minidom.NodeList, symbol: Any) -> None:
-    node_list.append(_MakeElement("h3", symbol.identifier))
+def _add_symbol_description(node_list: minidom.NodeList, symbol: Any) -> None:
+    node_list.append(_make_element("h3", symbol.identifier))
     for section in symbol.comment.description_sections:
-        elem = _ProcessString(section)
-        p = _MakeElement("p")
+        elem = _process_string(section)
+        p = _make_element("p")
         node_list.append(p)
         p.appendChild(elem)
 
 
-def _MakeLink(text: str, href: str) -> minidom.Element:
-    a = _MakeElement("a", text)
+def _make_link(text: str, href: str) -> minidom.Element:
+    a = _make_element("a", text)
     a.setAttribute("href", href)
     return a
 
 
-def _YieldParamFlags(comment_flags: Iterable[Any]) -> Iterator[Any]:
+def _yield_param_flags(comment_flags: Iterable[Any]) -> Iterator[Any]:
     for flag in comment_flags:
         if flag.name == "@param":
             yield flag
 
 
-def _GetParamString(flag: Any) -> str:
+def _get_param_string(flag: Any) -> str:
     assert flag.name == "@param"
     name, type_str, _ = flags.ParseParameterDescription(flag.text)
     return f"{{{type_str}}} {name}"
 
 
-def _GetReturnFlag(comment_flags: Iterable[Any]) -> Any | None:
+def _get_return_flag(comment_flags: Iterable[Any]) -> Any | None:
     return_flags = list(filter(lambda flag: flag.name == "@return", comment_flags))
     assert len(return_flags) <= 1, "There should not be more than 1 @return flag."
 
@@ -130,62 +132,62 @@ def _GetReturnFlag(comment_flags: Iterable[Any]) -> Any | None:
     return return_flags[0]
 
 
-def _GetReturnString(flag: Any) -> str:
+def _get_return_string(flag: Any) -> str:
     assert flag.name == "@return"
     type_str, _ = flags.ParseReturnDescription(flag.text)
     return f"{{{type_str}}}"
 
 
-def _MakeFunctionCodeElement(name: str, function: Any) -> minidom.Element:
-    code = _MakeElement("code")
-    code.appendChild(_MakeLink(name, "#" + name))
+def _make_function_code_element(name: str, function: Any) -> minidom.Element:
+    code = _make_element("code")
+    code.appendChild(_make_link(name, "#" + name))
 
-    param_flags = list(_YieldParamFlags(function.comment.flags))
-    param_strings = [_GetParamString(flag) for flag in param_flags]
+    param_flags = list(_yield_param_flags(function.comment.flags))
+    param_strings = [_get_param_string(flag) for flag in param_flags]
     param_line = ", ".join(param_strings)
 
-    text_node = _MakeTextNode(f"({param_line})")
+    text_node = _make_text_node(f"({param_line})")
     code.appendChild(text_node)
 
-    return_flag = _GetReturnFlag(function.comment.flags)
+    return_flag = _get_return_flag(function.comment.flags)
     if return_flag:
-        code.appendChild(_MakeTextNode(" : "))
-        code.appendChild(_MakeTextNode(_GetReturnString(return_flag)))
+        code.appendChild(_make_text_node(" : "))
+        code.appendChild(_make_text_node(_get_return_string(return_flag)))
     return code
 
 
-def _MakeFunctionSummaryList(functions: Iterable[Any]) -> minidom.Element:
-    summary_list = _MakeElement("dl")
+def _make_function_summary_list(functions: Iterable[Any]) -> minidom.Element:
+    summary_list = _make_element("dl")
 
     for function in functions:
-        summary_term = _MakeElement("dt")
+        summary_term = _make_element("dt")
         summary_list.appendChild(summary_term)
 
-        if _IsStatic(function):
+        if _is_static(function):
             name = function.identifier
         else:
             name = function.property
 
-        code = _MakeFunctionCodeElement(name, function)
+        code = _make_function_code_element(name, function)
         summary_term.appendChild(code)
 
-        summary_definition = _MakeElement("dd")
+        summary_definition = _make_element("dd")
         summary_term.appendChild(summary_definition)
 
         if function.comment.description_sections:
             desc = function.comment.description_sections[0]
-            summary_definition.appendChild(_ProcessString(desc))
+            summary_definition.appendChild(_process_string(desc))
 
     return summary_list
 
 
-def _AddFunctionDescription(node_list: minidom.NodeList, function: Any) -> None:
-    header = _MakeElement("h3", function.identifier)
+def _add_function_description(node_list: minidom.NodeList, function: Any) -> None:
+    header = _make_element("h3", function.identifier)
     header.setAttribute("id", function.identifier)
     node_list.append(header)
 
     # Draw function signature.
-    param_flags = list(_YieldParamFlags(function.comment.flags))
+    param_flags = list(_yield_param_flags(function.comment.flags))
 
     function_interface = ""
     function_interface += flags.GetVisibility(function.comment.flags) + " "
@@ -194,7 +196,7 @@ def _AddFunctionDescription(node_list: minidom.NodeList, function: Any) -> None:
     # Draw parameters.
     if param_flags:
         for index, flag in enumerate(param_flags):
-            function_interface += f"\n  {_GetParamString(flag)}"
+            function_interface += f"\n  {_get_param_string(flag)}"
 
             # If this is not the last parameter, draw a comma.
             if index != (len(param_flags) - 1):
@@ -205,82 +207,82 @@ def _AddFunctionDescription(node_list: minidom.NodeList, function: Any) -> None:
     function_interface += ")"
 
     # Draw return.
-    return_flag = _GetReturnFlag(function.comment.flags)
+    return_flag = _get_return_flag(function.comment.flags)
     if return_flag:
-        function_interface += " : " + _GetReturnString(return_flag)
+        function_interface += " : " + _get_return_string(return_flag)
 
-    node_list.append(_MakeElement("pre", function_interface))
+    node_list.append(_make_element("pre", function_interface))
 
     # Parameter list.
     if param_flags:
-        node_list.append(_MakeElement("h4", "Parameters:"))
+        node_list.append(_make_element("h4", "Parameters:"))
 
-        param_list = _MakeElement("dl")
+        param_list = _make_element("dl")
         node_list.append(param_list)
         for flag in param_flags:
             name, type_str, desc = flags.ParseParameterDescription(flag.text)
-            term = _MakeElement("dt", name)
+            term = _make_element("dt", name)
             param_list.appendChild(term)
 
-            definition = _MakeElement("dd")
+            definition = _make_element("dd")
 
-            code_type = _MakeElement("code", f"{{{type_str}}}")
+            code_type = _make_element("code", f"{{{type_str}}}")
             definition.appendChild(code_type)
-            definition.appendChild(_MakeTextNode(" "))
-            definition.appendChild(_ProcessString(desc))
+            definition.appendChild(_make_text_node(" "))
+            definition.appendChild(_process_string(desc))
             term.appendChild(definition)
 
     if return_flag:
-        node_list.append(_MakeElement("h4", "Returns:"))
-        return_paragraph = _MakeElement("p")
+        node_list.append(_make_element("h4", "Returns:"))
+        return_paragraph = _make_element("p")
         node_list.append(return_paragraph)
 
         type_str, desc = flags.ParseReturnDescription(return_flag.text)
-        code_type = _MakeElement("code", f"{{{type_str}}}")
+        code_type = _make_element("code", f"{{{type_str}}}")
         return_paragraph.appendChild(code_type)
-        return_paragraph.appendChild(_MakeTextNode(" "))
-        return_paragraph.appendChild(_ProcessString(desc))
+        return_paragraph.appendChild(_make_text_node(" "))
+        return_paragraph.appendChild(_process_string(desc))
 
     # Add description paragraphs.
     for section in function.comment.description_sections:
-        section_paragraph = _MakeElement("p")
-        section_paragraph.appendChild(_ProcessString(section))
+        section_paragraph = _make_element("p")
+        section_paragraph.appendChild(_process_string(section))
         node_list.append(section_paragraph)
 
 
-def _GenerateContent(namespace: str, symbols: Iterable[Any]) -> minidom.NodeList:
+def _generate_content(namespace: str, symbols: Iterable[Any]) -> minidom.NodeList:
     node_list = minidom.NodeList()
 
-    node_list.append(_MakeElement("h1", namespace))
+    node_list.append(_make_element("h1", namespace))
 
     sorted_symbols = sorted(symbols, key=lambda symbol: symbol.identifier)
 
     # Constructor.
-    constructor_symbols = _GetSymbolsOfType(sorted_symbols, symboltypes.CONSTRUCTOR)
+    constructor_symbols = _get_symbols_of_type(sorted_symbols, symboltypes.CONSTRUCTOR)
 
     if constructor_symbols:
-        node_list.append(_MakeElement("h2", "Constructor"))
+        node_list.append(_make_element("h2", "Constructor"))
         for constructor in constructor_symbols:
-            _AddSymbolDescription(node_list, constructor)
+            _add_symbol_description(node_list, constructor)
 
     # Interface.
-    interface_symbols = _GetSymbolsOfType(sorted_symbols, symboltypes.INTERFACE)
+    interface_symbols = _get_symbols_of_type(sorted_symbols, symboltypes.INTERFACE)
 
     if interface_symbols:
-        node_list.append(_MakeElement("h2", "Interface"))
+        node_list.append(_make_element("h2", "Interface"))
         for interface in interface_symbols:
-            _AddSymbolDescription(node_list, interface)
+            _add_symbol_description(node_list, interface)
 
     instance_methods = list(
-        filter(_IsNotStatic, _GetSymbolsOfType(sorted_symbols, symboltypes.FUNCTION))
+        filter(_is_not_static, _get_symbols_of_type(sorted_symbols, symboltypes.FUNCTION))
     )
 
     instance_properties = list(
-        filter(_IsNotStatic, _GetSymbolsOfType(sorted_symbols, symboltypes.PROPERTY))
+        filter(_is_not_static, _get_symbols_of_type(sorted_symbols, symboltypes.PROPERTY))
     )
 
     static_functions = list(
-        filter(_IsStatic, _GetSymbolsOfType(sorted_symbols, symboltypes.FUNCTION))
+        filter(_is_static, _get_symbols_of_type(sorted_symbols, symboltypes.FUNCTION))
     )
 
     public_instance_methods = list(
@@ -290,8 +292,8 @@ def _GenerateContent(namespace: str, symbols: Iterable[Any]) -> minidom.NodeList
         )
     )
     if public_instance_methods:
-        node_list.append(_MakeElement("h2", "Public instance method summary"))
-        node_list.append(_MakeFunctionSummaryList(public_instance_methods))
+        node_list.append(_make_element("h2", "Public instance method summary"))
+        node_list.append(_make_function_summary_list(public_instance_methods))
 
     public_static_methods = list(
         filter(
@@ -300,43 +302,43 @@ def _GenerateContent(namespace: str, symbols: Iterable[Any]) -> minidom.NodeList
         )
     )
     if static_functions:
-        node_list.append(_MakeElement("h2", "Public static method summary"))
-        node_list.append(_MakeFunctionSummaryList(public_static_methods))
+        node_list.append(_make_element("h2", "Public static method summary"))
+        node_list.append(_make_function_summary_list(public_static_methods))
 
     # Enumerations.
-    enum_symbols = _GetSymbolsOfType(sorted_symbols, symboltypes.ENUM)
+    enum_symbols = _get_symbols_of_type(sorted_symbols, symboltypes.ENUM)
 
     if enum_symbols:
-        node_list.append(_MakeElement("h2", "Enumerations"))
+        node_list.append(_make_element("h2", "Enumerations"))
         for enum_symbol in enum_symbols:
-            _AddSymbolDescription(node_list, enum_symbol)
+            _add_symbol_description(node_list, enum_symbol)
 
     if instance_methods:
-        node_list.append(_MakeElement("h2", "Instance methods"))
+        node_list.append(_make_element("h2", "Instance methods"))
         for method in instance_methods:
-            _AddFunctionDescription(node_list, method)
-            node_list.append(_MakeElement("hr"))
+            _add_function_description(node_list, method)
+            node_list.append(_make_element("hr"))
 
     if instance_properties:
-        node_list.append(_MakeElement("h2", "Instance properties"))
+        node_list.append(_make_element("h2", "Instance properties"))
         for prop in instance_properties:
-            _AddSymbolDescription(node_list, prop)
-            node_list.append(_MakeElement("hr"))
+            _add_symbol_description(node_list, prop)
+            node_list.append(_make_element("hr"))
 
     if static_functions:
-        node_list.append(_MakeElement("h2", "Static methods"))
-        node_list.append(_MakeElement("hr"))
+        node_list.append(_make_element("h2", "Static methods"))
+        node_list.append(_make_element("hr"))
         for function in static_functions:
-            _AddFunctionDescription(node_list, function)
-            node_list.append(_MakeElement("hr"))
+            _add_function_description(node_list, function)
+            node_list.append(_make_element("hr"))
 
     static_properties = list(
-        filter(_IsStatic, _GetSymbolsOfType(sorted_symbols, symboltypes.PROPERTY))
+        filter(_is_static, _get_symbols_of_type(sorted_symbols, symboltypes.PROPERTY))
     )
     if static_properties:
-        node_list.append(_MakeElement("h2", "Static properties"))
+        node_list.append(_make_element("h2", "Static properties"))
         for prop in static_properties:
-            _AddSymbolDescription(node_list, prop)
-            node_list.append(_MakeElement("hr"))
+            _add_symbol_description(node_list, prop)
+            node_list.append(_make_element("hr"))
 
     return node_list

@@ -76,6 +76,7 @@ all_flags: frozenset[str] = frozenset(
 ALL_FLAGS = frozenset(all_flags)
 
 
+# pylint: disable-next=invalid-name
 def ParseParameterDescription(desc: str) -> tuple[str, str, str]:
     """Parses a JSDoc @param flag description into name, type, and text.
 
@@ -102,6 +103,7 @@ def ParseParameterDescription(desc: str) -> tuple[str, str, str]:
     )
 
 
+# pylint: disable-next=invalid-name
 def ParseReturnDescription(desc: str) -> tuple[str, str]:
     """Parses a JSDoc @return flag description into type and text.
 
@@ -127,6 +129,7 @@ PROTECTED = "protected"
 PRIVATE = "private"
 
 
+# pylint: disable-next=invalid-name
 def GetVisibility(flags: Iterable[Any]) -> str:
     """Returns one of PUBLIC, PROTECTED, or PRIVATE."""
 
@@ -140,6 +143,7 @@ def GetVisibility(flags: Iterable[Any]) -> str:
     return PUBLIC
 
 
+# pylint: disable-next=invalid-name
 def GetSymbolType(flags: Iterable[Any]) -> str | None:
     """Extracts the symbol data type from a collection of flags if present.
 
@@ -158,6 +162,7 @@ def GetSymbolType(flags: Iterable[Any]) -> str | None:
     return None
 
 
+# pylint: disable-next=invalid-name
 def MaybeParseTypeFromDescription(desc: str) -> str | None:
     """Extracts a type string enclosed in curly braces from a flag description.
 

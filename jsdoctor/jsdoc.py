@@ -4,6 +4,7 @@ import re
 from collections.abc import Iterator
 
 
+# pylint: disable-next=invalid-name
 def ProcessComment(comment_text: str) -> tuple[list[str], list[tuple[str, str]]]:
     """Parses a JSDoc comment text into description sections and raw flag tuples.
 
@@ -16,8 +17,8 @@ def ProcessComment(comment_text: str) -> tuple[list[str], list[tuple[str, str]]]
     descriptions = []
     flags = []
 
-    for section_text in _YieldSections(comment_text):
-        description, section_flags = _ProcessCommentSection(section_text)
+    for section_text in _yield_sections(comment_text):
+        description, section_flags = _process_comment_section(section_text)
 
         if description:
             descriptions.append(description)
@@ -27,11 +28,11 @@ def ProcessComment(comment_text: str) -> tuple[list[str], list[tuple[str, str]]]
     return descriptions, flags
 
 
-def _ProcessCommentSection(section_text: str) -> tuple[str, list[tuple[str, str]]]:
+def _process_comment_section(section_text: str) -> tuple[str, list[tuple[str, str]]]:
     remaining_text = section_text
     flags: list[tuple[str, str]] = []
 
-    matches = list(_MatchFlags(section_text))
+    matches = list(_match_flags(section_text))
     matches.reverse()
 
     # A flag is itself and whatever text appears behind it (until the next flag
@@ -50,11 +51,11 @@ def _ProcessCommentSection(section_text: str) -> tuple[str, list[tuple[str, str]
     return description, flags
 
 
-def _MatchFlags(text: str) -> Iterator[re.Match]:
+def _match_flags(text: str) -> Iterator[re.Match]:
     return re.finditer(r"(?:\s|\A)(?P<flag>@\w+)\b", text)
 
 
-def _YieldSections(comment_text: str) -> Iterator[str]:
+def _yield_sections(comment_text: str) -> Iterator[str]:
     assert "\r" not in comment_text, "Non-UNIX strings not supported for now"
     parts = comment_text.split("\n\n")
 
