@@ -69,11 +69,6 @@ ignore-missing-imports = ["*"]
 [tool.pylint.main]
 init-hook = "import sys; sys.path.append('.')"
 
-[tool.pylint.messages_control]
-disable = [
-    "too-many-locals",
-]
-
 [tool.codespell]
 ignore-words-list = "astroid"
 
