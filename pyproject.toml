@@ -70,7 +70,6 @@ init-hook = "import sys; sys.path.append('.')"
 
 [tool.pylint.messages_control]
 disable = [
-    "broad-exception-raised",
     "too-many-branches",
     "too-many-instance-attributes",
     "too-many-locals",
