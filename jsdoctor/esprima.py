@@ -55,6 +55,6 @@ def parse(source: str) -> bytes:
         if proc.returncode != 0:
             logging.error("Error while parsing.")
             logging.error(err)
-            raise Exception("Esprima parsing failed.")
+            raise RuntimeError("Esprima parsing failed.")
 
         return out
