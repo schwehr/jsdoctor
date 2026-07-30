@@ -59,8 +59,8 @@ def _MakeSymbolMap(symbols):
 
             if _DUPLICATE_SYMBOL_IS_ERROR:
                 raise DuplicateSymbolError(msg)
-            else:
-                logging.warning(msg)
+
+            logging.warning(msg)
             continue
 
         symbol_map[identifier] = symbol
