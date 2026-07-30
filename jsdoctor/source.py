@@ -213,6 +213,15 @@ def _YieldSymbols(
 
 
 def ScanScript(script: str, path: str | None = None) -> Source:
+    """Parses JavaScript script text and returns a populated Source instance.
+
+    Args:
+        script: JavaScript source code text.
+        path: Optional file path of the source file.
+
+    Returns:
+        A Source instance with populated provides, requires, and symbols.
+    """
     source = Source(script, path)
     source.provides.update(set(scanner.YieldProvides(script)))
     source.requires.update(set(scanner.YieldRequires(script)))

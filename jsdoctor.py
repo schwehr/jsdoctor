@@ -115,6 +115,7 @@ def _ParseArgs():
 
 
 def main():
+    """Parses command-line arguments and generates the documentation tar archive."""
     logging.basicConfig(
         level=logging.INFO, format="%(levelname)s:%(module)s:%(lineno)d: %(message)s"
     )

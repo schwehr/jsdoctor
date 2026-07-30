@@ -4,21 +4,54 @@ from typing import Iterable, Sequence
 
 
 def IsPrototypeProperty(namespace: str) -> bool:
+    """Checks if a namespace string represents a prototype property.
+
+    Args:
+        namespace: Dot-separated namespace string.
+
+    Returns:
+        True if the namespace represents a prototype property, False otherwise.
+    """
     parts = GetNamespaceParts(namespace)
     return len(parts) >= 3 and parts[-2] == "prototype"
 
 
 def GetNamespaceParts(namespace: str) -> list[str]:
+    """Splits a dot-separated namespace string into its component parts.
+
+    Args:
+        namespace: Dot-separated namespace string.
+
+    Returns:
+        List of component strings.
+    """
     return namespace.split(".")
 
 
 def GetPrototypeProperty(namespace: str) -> str:
+    """Extracts the property name from a prototype property namespace.
+
+    Args:
+        namespace: Dot-separated prototype property namespace.
+
+    Returns:
+        The trailing property name string.
+    """
     assert IsPrototypeProperty(namespace)
     parts = namespace.split(".")
     return parts[-1]
 
 
 def IsSymbolPartOfNamespace(symbol: str, namespace: str) -> bool:
+    """Determines whether a symbol belongs to a given namespace prefix.
+
+    Args:
+        symbol: Dot-separated symbol identifier string.
+        namespace: Dot-separated namespace string.
+
+    Returns:
+        True if the symbol belongs to the namespace prefix, False otherwise.
+    """
     namespace_parts = GetNamespaceParts(namespace)
     symbol_parts = GetNamespaceParts(symbol)
 
@@ -45,6 +78,15 @@ def _GetSymbolPartsInNamespace(
 def GetClosestNamespaceForSymbol(
     symbol: str, candidate_namespaces: Iterable[str]
 ) -> str | None:
+    """Finds the most specific candidate namespace that contains the symbol.
+
+    Args:
+        symbol: Dot-separated symbol identifier string.
+        candidate_namespaces: Collection of namespace strings to check against.
+
+    Returns:
+        The closest matching namespace string, or None if no candidate matches.
+    """
     closest_namespace = None
     symbol_parts = GetNamespaceParts(symbol)
 

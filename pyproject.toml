@@ -69,7 +69,6 @@ init-hook = "import sys; sys.path.append('.')"
 disable = [
     "broad-exception-raised",
     "invalid-name",
-    "missing-function-docstring",
     "no-name-in-module",
     "protected-access",
     "raising-format-tuple",

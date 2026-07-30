@@ -9,6 +9,7 @@ class JsDocTestCase(unittest.TestCase):
     """Tests for JSDoc comment processing and section extraction."""
 
     def testProcessComment(self):
+        """Tests comment sectioning and flag parsing."""
         descriptions, flags = jsdoc.ProcessComment(_SCRIPT)
 
         self.assertEqual(
@@ -24,6 +25,7 @@ class JsDocTestCase(unittest.TestCase):
         self.assertEqual(["This is a comment.", "End of thing."], descriptions)
 
     def testSplitSections(self):
+        """Tests splitting comment blocks into section strings."""
         parts = list(jsdoc._YieldSections(_SCRIPT))
         self.assertEqual(
             [
@@ -36,6 +38,7 @@ class JsDocTestCase(unittest.TestCase):
         )
 
     def testMatchFlags(self):
+        """Tests matching flag regex against comment text."""
         matches = jsdoc._MatchFlags(_SCRIPT)
         flags = [match.group("flag") for match in matches]
         self.assertEqual(["@flag", "@flag2", "@flag3", "@flag4"], flags)

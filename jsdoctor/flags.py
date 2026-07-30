@@ -76,6 +76,17 @@ ALL_FLAGS = frozenset(all_flags)
 
 
 def ParseParameterDescription(desc: str) -> tuple[str, str, str]:
+    """Parses a JSDoc @param flag description into name, type, and text.
+
+    Args:
+        desc: The raw text following @param.
+
+    Returns:
+        A tuple of (name, type, text).
+
+    Raises:
+        ValueError: If the description cannot be parsed into a parameter.
+    """
     match = re.match(
         r"^\s*\{(?P<type>.*?)\}\s+(?P<name>\w+)(?P<desc>.*)$",
         desc,
@@ -91,6 +102,17 @@ def ParseParameterDescription(desc: str) -> tuple[str, str, str]:
 
 
 def ParseReturnDescription(desc: str) -> tuple[str, str]:
+    """Parses a JSDoc @return flag description into type and text.
+
+    Args:
+        desc: The raw text following @return.
+
+    Returns:
+        A tuple of (type, text).
+
+    Raises:
+        ValueError: If the description cannot be parsed into a return declaration.
+    """
     match = re.match(
         r"^\s*{(?P<type>.*?)\}(?P<desc>.*)$", desc, re.DOTALL | re.MULTILINE
     )
@@ -118,6 +140,14 @@ def GetVisibility(flags: Iterable[Any]) -> str:
 
 
 def GetSymbolType(flags: Iterable[Any]) -> str | None:
+    """Extracts the symbol data type from a collection of flags if present.
+
+    Args:
+        flags: Collection of Flag objects.
+
+    Returns:
+        The extracted type string, or None if no type is found.
+    """
     for flag in flags:
         if flag.name in ["@type", "@const", "@protected", "@private"]:
             flag_type = MaybeParseTypeFromDescription(flag.text)
@@ -128,6 +158,14 @@ def GetSymbolType(flags: Iterable[Any]) -> str | None:
 
 
 def MaybeParseTypeFromDescription(desc: str) -> str | None:
+    """Extracts a type string enclosed in curly braces from a flag description.
+
+    Args:
+        desc: The flag description text.
+
+    Returns:
+        The extracted type string, or None if no type braces are matched.
+    """
     match = re.match(r"^\s*{(?P<type>.*?)}", desc, re.DOTALL | re.MULTILINE)
     if not match:
         return None

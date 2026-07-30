@@ -13,6 +13,14 @@ class NoIdentifierFoundError(Exception):
 
 
 def YieldProvides(source: str) -> Iterator[str]:
+    """Yields namespace strings provided by goog.provide calls in source.
+
+    Args:
+        source: JavaScript source code text.
+
+    Yields:
+        Provided namespace strings.
+    """
     for line in source.splitlines():
         match = _PROVIDE_REGEX.match(line)
         if match:
@@ -20,6 +28,14 @@ def YieldProvides(source: str) -> Iterator[str]:
 
 
 def YieldRequires(source: str) -> Iterator[str]:
+    """Yields namespace strings required by goog.require calls in source.
+
+    Args:
+        source: JavaScript source code text.
+
+    Yields:
+        Required namespace strings.
+    """
     for line in source.splitlines():
         match = _REQUIRES_REGEX.match(line)
         if match:
@@ -29,6 +45,17 @@ def YieldRequires(source: str) -> Iterator[str]:
 def ExtractDocumentedSymbols(
     script: str,
 ) -> Iterator[tuple[Match[str], Match[str] | None]]:
+    """Yields pairs of JSDoc comment match and identifier target match.
+
+    Args:
+        script: JavaScript source code text.
+
+    Yields:
+        Tuples of (comment_match, target_identifier_match).
+
+    Raises:
+        NoIdentifierFoundError: If a comment block has no target identifier.
+    """
     for comment_match in FindJsDocComments(script):
         identifier_match = None
 
@@ -47,10 +74,27 @@ def ExtractDocumentedSymbols(
 
 
 def FindJsDocComments(script: str) -> Iterator[Match[str]]:
+    """Finds all JSDoc comment matches in JavaScript source code.
+
+    Args:
+        script: JavaScript source code text.
+
+    Returns:
+        An iterator of regex Match objects for JSDoc comments.
+    """
     return re.finditer(r"/\*\*.*?\*/", script, re.DOTALL)
 
 
 def FindCommentTarget(script: str, pos: int = 0) -> Match[str] | None:
+    """Finds the identifier target immediately following a JSDoc comment.
+
+    Args:
+        script: JavaScript source code text.
+        pos: Character offset in script to start searching.
+
+    Returns:
+        Regex match for the identifier target, or None if not found.
+    """
     # Find an opening parenthesis or an identifier.
     # \w and $ should cover all valid identifiers.
     identifier_regex = re.compile(r"\(|(?:[$\w]+\s*\.\s*)*[$\w]+")
@@ -58,10 +102,26 @@ def FindCommentTarget(script: str, pos: int = 0) -> Match[str] | None:
 
 
 def StripWhitespace(original_string: str) -> str:
+    """Strips all whitespace characters from a string.
+
+    Args:
+        original_string: The string to strip whitespace from.
+
+    Returns:
+        String with all whitespace characters removed.
+    """
     return re.sub(r"\s*", "", original_string)
 
 
 def ExtractTextFromJsDocComment(comment: str) -> str:
+    """Strips JSDoc comment formatting markers (/**, */, leading asterisks).
+
+    Args:
+        comment: Raw JSDoc comment text.
+
+    Returns:
+        Cleaned text content of the JSDoc comment block.
+    """
     comment = comment.strip()
 
     # Strip the leading "/**"
