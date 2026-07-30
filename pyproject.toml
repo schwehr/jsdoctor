@@ -68,7 +68,6 @@ init-hook = "import sys; sys.path.append('.')"
 [tool.pylint.messages_control]
 disable = [
     "broad-exception-raised",
-    "inconsistent-return-statements",
     "invalid-name",
     "logging-not-lazy",
     "missing-class-docstring",

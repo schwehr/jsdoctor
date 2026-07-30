@@ -122,8 +122,12 @@ def GetSymbolType(flags: Iterable[Any]) -> str | None:
             if flag_type:
                 return flag_type
 
+    return None
+
 
 def MaybeParseTypeFromDescription(desc: str) -> str | None:
     match = re.match(r"^\s*{(?P<type>.*?)}", desc, re.DOTALL | re.MULTILINE)
-    if match:
-        return match.group("type")
+    if not match:
+        return None
+
+    return match.group("type")
