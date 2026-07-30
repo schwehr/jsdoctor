@@ -34,7 +34,7 @@ goog.require('goog.string');
 
     def test_find_identifier(self):
         """Tests finding the identifier target following a JSDoc comment."""
-        match = list(scanner.FindJsDocComments(_TEST_SCRIPT))[0]
+        match = next(iter(scanner.FindJsDocComments(_TEST_SCRIPT)))
         identifier_match = scanner.FindCommentTarget(match.string, match.end())
         self.assertEqual("goog.bar.baz", identifier_match.group())
 
@@ -54,7 +54,7 @@ goog.require('goog.string');
  */
 """
 
-        match = list(scanner.FindJsDocComments(script))[0]
+        match = next(iter(scanner.FindJsDocComments(script)))
         comment = match.group()
         text = scanner.ExtractTextFromJsDocComment(comment)
         self.assertEqual(
@@ -119,7 +119,7 @@ baz   .
 qux =
 """
 
-        match = list(scanner.FindJsDocComments(test_script))[0]
+        match = next(iter(scanner.FindJsDocComments(test_script)))
         identifier_match = scanner.FindCommentTarget(match.string, match.end())
         symbol = scanner.StripWhitespace(identifier_match.group())
         self.assertEqual("goog.bar.baz.qux", symbol)

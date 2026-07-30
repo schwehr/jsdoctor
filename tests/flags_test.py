@@ -74,7 +74,7 @@ goog.provide('abc');
  */
 abc.def;
 """)
-        symbol = list(test_source.symbols)[0]
+        symbol = next(iter(test_source.symbols))
         comment = symbol.comment
         assert comment is not None  # For pytype.
         self.assertEqual(flags.PRIVATE, flags.GetVisibility(comment.flags))
@@ -87,7 +87,7 @@ goog.provide('abc');
  */
 abc.def;
 """)
-        symbol = list(test_source.symbols)[0]
+        symbol = next(iter(test_source.symbols))
         self.assertEqual(flags.PROTECTED, flags.GetVisibility(symbol.comment.flags))
 
         test_source = source.ScanScript("""\
@@ -97,5 +97,5 @@ goog.provide('abc');
  */
 abc.def;
 """)
-        symbol = list(test_source.symbols)[0]
+        symbol = next(iter(test_source.symbols))
         self.assertEqual(flags.PUBLIC, flags.GetVisibility(symbol.comment.flags))

@@ -21,10 +21,7 @@ def _should_scan_path(path):
     if filename == "deps.js":
         return False
 
-    if filename.endswith("_test.js"):
-        return False
-
-    return True
+    return not filename.endswith("_test.js")
 
 
 _IGNORED_IDENTIFIERS = frozenset(["goog.provide", "goog.require", "goog.setTestOnly"])

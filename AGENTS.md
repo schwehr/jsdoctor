@@ -112,7 +112,7 @@ static analysis:
   ```bash
   uv run ruff check --fix
   uv run ruff format
-  uv run pylint BitVector tests
+  uv run pylint *.py jsdoctor tests
   ```
 - **Static Type Checking (`ty`, `mypy`, `pyrefly`, & `pyright`)**: Enforces
   strict type annotations across all modules.

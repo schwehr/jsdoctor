@@ -45,7 +45,9 @@ def _yield_js_paths(root: str) -> Iterator[tuple[str, str]]:
 
 # pylint: disable-next=invalid-name
 def ScanTree(tree_root: str) -> dict[str, str]:
-    """Scans a directory tree for .js files and returns a map of relative paths to content.
+    """Scans a directory tree for .js files.
+
+    Returns a map of relative paths to content.
 
     Args:
         tree_root: Directory path to scan.

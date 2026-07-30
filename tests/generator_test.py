@@ -147,7 +147,7 @@ def test_get_return_flag_duplicate_raises() -> None:
     flag1 = source.Flag("@return", "{string}")
     flag2 = source.Flag("@return", "{number}")
     with pytest.raises(
-        AssertionError, match="There should not be more than 1 @return flag."
+        AssertionError, match=r"There should not be more than 1 @return flag\."
     ):
         # pylint: disable-next=protected-access
         generator._get_return_flag([flag1, flag2])

@@ -17,7 +17,7 @@ class SourceTestCase(unittest.TestCase):
 
         self.assertEqual(1, len(test_source.symbols))
 
-        symbol = list(test_source.symbols)[0]
+        symbol = next(iter(test_source.symbols))
         self.assertEqual("goog.aaa.bbb", symbol.identifier)
         self.assertTrue(symbol.static)
         self.assertEqual("goog.aaa", symbol.namespace)
@@ -62,7 +62,7 @@ goog.provide('abc.Def');
  */
 abc.Def.prototype.ghi;
 """)
-        symbol = list(test_source.symbols)[0]
+        symbol = next(iter(test_source.symbols))
         self.assertEqual("ghi", symbol.property)
         self.assertFalse(symbol.static)
 
@@ -94,7 +94,7 @@ other.namespace.Symbol;
 goog.aaa.bbb;
 """)
         self.assertEqual(1, len(test_source.symbols))
-        symbol = list(test_source.symbols)[0]
+        symbol = next(iter(test_source.symbols))
         self.assertEqual("goog.aaa.bbb", symbol.identifier)
 
     def test_skip_this_properties(self):
@@ -113,7 +113,7 @@ this.foo = 1;
 goog.aaa.bbb;
 """)
         self.assertEqual(1, len(test_source.symbols))
-        symbol = list(test_source.symbols)[0]
+        symbol = next(iter(test_source.symbols))
         self.assertEqual("goog.aaa.bbb", symbol.identifier)
 
     def test_skip_parenthetical(self):
@@ -132,7 +132,7 @@ goog.provide('goog.aaa');
 goog.aaa.bbb;
 """)
         self.assertEqual(1, len(test_source.symbols))
-        symbol = list(test_source.symbols)[0]
+        symbol = next(iter(test_source.symbols))
         self.assertEqual("goog.aaa.bbb", symbol.identifier)
 
     def test_skip_ignorable_identifier(self):
@@ -151,7 +151,7 @@ goog.aaa.ccc(3);
 goog.aaa.bbb;
 """)
         self.assertEqual(1, len(test_source.symbols))
-        symbol = list(test_source.symbols)[0]
+        symbol = next(iter(test_source.symbols))
         self.assertEqual("goog.aaa.bbb", symbol.identifier)
 
     def test_symbol_str(self):
