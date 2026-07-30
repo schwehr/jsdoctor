@@ -250,6 +250,7 @@ def _add_function_description(node_list: minidom.NodeList, function: Any) -> Non
         node_list.append(section_paragraph)
 
 
+# pylint: disable=too-many-branches
 def _generate_content(namespace: str, symbols: Iterable[Any]) -> minidom.NodeList:
     node_list = minidom.NodeList()
 
@@ -346,3 +347,6 @@ def _generate_content(namespace: str, symbols: Iterable[Any]) -> minidom.NodeLis
             node_list.append(_make_element("hr"))
 
     return node_list
+
+
+# pylint: enable=too-many-branches
