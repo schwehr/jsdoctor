@@ -49,6 +49,7 @@ class FlagTestCase(unittest.TestCase):
     @staticmethod
     def get_flags(script):
         """Parses comment flags from a JSDoc script snippet."""
+        # pylint: disable-next=protected-access
         _, parsed_flags = source._get_description_and_flags(script)
         return parsed_flags
 

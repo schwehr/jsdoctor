@@ -7,6 +7,7 @@ from jsdoctor import scanner, source, symboltypes
 
 def _get_symbols(script):
     match_pairs = scanner.ExtractDocumentedSymbols(script)
+    # pylint: disable-next=protected-access
     return list(source._yield_symbols(match_pairs, {"goog"}))
 
 

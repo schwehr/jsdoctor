@@ -59,8 +59,12 @@ class NamespaceTestCase(unittest.TestCase):
     def test_get_symbol_parts_in_namespace(self):
         """Tests counting shared namespace prefix components."""
         self.assertEqual(
-            0, namespace._get_symbol_parts_in_namespace(["aaa"], ["aaa", "bbb"])
+            0,
+            # pylint: disable-next=protected-access
+            namespace._get_symbol_parts_in_namespace(["aaa"], ["aaa", "bbb"]),
         )
         self.assertEqual(
-            1, namespace._get_symbol_parts_in_namespace(["aaa", "bbb"], ["aaa", "ccc"])
+            1,
+            # pylint: disable-next=protected-access
+            namespace._get_symbol_parts_in_namespace(["aaa", "bbb"], ["aaa", "ccc"]),
         )

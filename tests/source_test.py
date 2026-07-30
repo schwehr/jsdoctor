@@ -39,14 +39,17 @@ class SourceTestCase(unittest.TestCase):
         """Tests checking if an identifier match should be ignored."""
         match = scanner.FindCommentTarget("  aaa.bbb = 3")
         self.assertEqual("aaa.bbb", match.group())
+        # pylint: disable-next=protected-access
         self.assertFalse(source._is_ignorable_identifier(match))
 
         match = scanner.FindCommentTarget("  aaa.bbb(3)")
         self.assertEqual("aaa.bbb", match.group())
+        # pylint: disable-next=protected-access
         self.assertTrue(source._is_ignorable_identifier(match))
 
         match = scanner.FindCommentTarget("  aaa.bbb[3])")
         self.assertEqual("aaa.bbb", match.group())
+        # pylint: disable-next=protected-access
         self.assertTrue(source._is_ignorable_identifier(match))
 
     def test_scan_prototype_property(self):
@@ -72,6 +75,7 @@ abc.Def.prototype.ghi;
             ),
             self.assertRaises(source.NamespaceNotFoundError),
         ):
+            # pylint: disable-next=protected-access
             list(source._yield_symbols(match_pairs, {"goog.aaa"}))
 
     def test_skip_symbol_not_part_of_provided_namespace(self):
