@@ -46,7 +46,7 @@ def test_maybe_parse_type_from_description() -> None:
     assert flags.MaybeParseTypeFromDescription("aaa bbb ccc") is None
 
 
-def _get_flags(script: str):
+def _get_flags(script: str) -> list[source.Flag]:
     """Parses comment flags from a JSDoc script snippet."""
     # pylint: disable-next=protected-access
     _, parsed_flags = source._get_description_and_flags(script)

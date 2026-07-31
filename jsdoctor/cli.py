@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 """Command-line interface for jsdoctor API documentation generator."""
 
+from __future__ import annotations
+
 import argparse
 import collections
 import io
@@ -8,11 +10,12 @@ import logging
 import multiprocessing
 import os
 import tarfile
+from collections.abc import Iterable, Iterator, Mapping
 
 from jsdoctor import generator, source
 
 
-def _should_scan_path(path):
+def _should_scan_path(path: str) -> bool:
     _, filename = os.path.split(path)
 
     if not filename.endswith(".js"):
@@ -27,7 +30,9 @@ def _should_scan_path(path):
 _IGNORED_IDENTIFIERS = frozenset(["goog.provide", "goog.require", "goog.setTestOnly"])
 
 
-def _get_symbols_from_sources(sources):
+def _get_symbols_from_sources(
+    sources: Iterable[source.Source],
+) -> Iterator[source.Symbol]:
     for s in sources:
         yield from s.symbols
 
@@ -36,8 +41,8 @@ def _get_symbols_from_sources(sources):
 _DUPLICATE_SYMBOL_IS_ERROR = False
 
 
-def _make_symbol_map(symbols):
-    symbol_map = {}
+def _make_symbol_map(symbols: Iterable[source.Symbol]) -> dict[str, source.Symbol]:
+    symbol_map: dict[str, source.Symbol] = {}
 
     for symbol in symbols:
         identifier = symbol.identifier
@@ -72,24 +77,29 @@ class DuplicateSymbolError(JsDoctorError):
     """Exception raised when a duplicate symbol identifier is encountered."""
 
 
-def _make_namespace_map(symbols):
-    namespace_map = collections.defaultdict(set)
+def _make_namespace_map(
+    symbols: Iterable[source.Symbol],
+) -> dict[str, set[source.Symbol]]:
+    namespace_map: dict[str, set[source.Symbol]] = collections.defaultdict(set)
     for symbol in symbols:
+        assert symbol.namespace is not None
         namespace_map[symbol.namespace].add(symbol)
     return namespace_map
 
 
-def _scan_content(content_pair):
+def _scan_content(content_pair: tuple[str, str]) -> source.Source:
     path, content = content_pair
     return source.ScanScript(content, path)
 
 
-def _scan_content_in_parallel(content_map):
+def _scan_content_in_parallel(
+    content_map: Mapping[str, str],
+) -> list[source.Source]:
     with multiprocessing.Pool(20 * multiprocessing.cpu_count()) as pool:
         return list(pool.imap(_scan_content, content_map.items()))
 
 
-def _make_content_map(paths):
+def _make_content_map(paths: Iterable[str]) -> dict[str, str]:
     content_map = {}
     for path in paths:
         if path in content_map:
@@ -103,14 +113,14 @@ def _make_content_map(paths):
     return content_map
 
 
-def _parse_args():
+def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Generates HTML docs for JsDoc")
     parser.add_argument("--tar", help="Path to tar file", required=True)
     parser.add_argument("files", help="Paths to files", nargs="*")
     return parser.parse_args()
 
 
-def main():
+def main() -> None:
     """Parses command-line arguments and generates the documentation tar archive."""
     logging.basicConfig(
         level=logging.INFO, format="%(levelname)s:%(module)s:%(lineno)d: %(message)s"

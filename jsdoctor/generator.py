@@ -1,17 +1,22 @@
 """HTML document generator for namespace API reference documentation."""
 
+from __future__ import annotations
+
 from collections.abc import Iterable, Iterator, Mapping
-from typing import Any
+from typing import TYPE_CHECKING
 from xml.dom import minidom
 
 import html5lib
 
 from . import flags, linkify, symboltypes
 
+if TYPE_CHECKING:
+    from .source import Flag, Symbol
+
 
 # pylint: disable-next=invalid-name
 def GenerateHtmlDocs(
-    namespace_map: Mapping[str, Iterable[Any]],
+    namespace_map: Mapping[str, Iterable[Symbol]],
 ) -> Iterator[tuple[str, bytes]]:
     """Generates HTML document filename and bytes pairs for each namespace.
 
@@ -29,7 +34,7 @@ def GenerateHtmlDocs(
 
 # pylint: disable-next=invalid-name
 def GenerateDocuments(
-    namespace_map: Mapping[str, Iterable[Any]],
+    namespace_map: Mapping[str, Iterable[Symbol]],
 ) -> Iterator[tuple[str, minidom.Document]]:
     """Generates DOM documents for each namespace in namespace_map.
 
@@ -68,19 +73,19 @@ def _make_element(tagname: str, content: str | None = None) -> minidom.Element:
     return element
 
 
-def _is_static(symbol: Any) -> bool:
+def _is_static(symbol: Symbol) -> bool:
     return bool(symbol.static)
 
 
-def _is_not_static(symbol: Any) -> bool:
+def _is_not_static(symbol: Symbol) -> bool:
     return not _is_static(symbol)
 
 
-def _get_symbols_of_type(symbols: Iterable[Any], symbol_type: Any) -> list[Any]:
+def _get_symbols_of_type(symbols: Iterable[Symbol], symbol_type: str) -> list[Symbol]:
     return [symbol for symbol in symbols if symbol.type == symbol_type]
 
 
-def _generate_document(namespace: str, symbols: Iterable[Any]) -> minidom.Document:
+def _generate_document(namespace: str, symbols: Iterable[Symbol]) -> minidom.Document:
     dom = minidom.getDOMImplementation()
     assert dom is not None  # For pytype.
     doc = dom.createDocument(None, "html", None)
@@ -95,7 +100,8 @@ def _generate_document(namespace: str, symbols: Iterable[Any]) -> minidom.Docume
     return doc
 
 
-def _add_symbol_description(node_list: minidom.NodeList, symbol: Any) -> None:
+def _add_symbol_description(node_list: minidom.NodeList, symbol: Symbol) -> None:
+    assert symbol.comment is not None
     node_list.append(_make_element("h3", symbol.identifier))
     for section in symbol.comment.description_sections:
         elem = _process_string(section)
@@ -110,19 +116,19 @@ def _make_link(text: str, href: str) -> minidom.Element:
     return a
 
 
-def _yield_param_flags(comment_flags: Iterable[Any]) -> Iterator[Any]:
+def _yield_param_flags(comment_flags: Iterable[Flag]) -> Iterator[Flag]:
     for flag in comment_flags:
         if flag.name == "@param":
             yield flag
 
 
-def _get_param_string(flag: Any) -> str:
+def _get_param_string(flag: Flag) -> str:
     assert flag.name == "@param"
     name, type_str, _ = flags.ParseParameterDescription(flag.text)
     return f"{{{type_str}}} {name}"
 
 
-def _get_return_flag(comment_flags: Iterable[Any]) -> Any | None:
+def _get_return_flag(comment_flags: Iterable[Flag]) -> Flag | None:
     return_flags = list(filter(lambda flag: flag.name == "@return", comment_flags))
     assert len(return_flags) <= 1, "There should not be more than 1 @return flag."
 
@@ -132,13 +138,14 @@ def _get_return_flag(comment_flags: Iterable[Any]) -> Any | None:
     return return_flags[0]
 
 
-def _get_return_string(flag: Any) -> str:
+def _get_return_string(flag: Flag) -> str:
     assert flag.name == "@return"
     type_str, _ = flags.ParseReturnDescription(flag.text)
     return f"{{{type_str}}}"
 
 
-def _make_function_code_element(name: str, function: Any) -> minidom.Element:
+def _make_function_code_element(name: str, function: Symbol) -> minidom.Element:
+    assert function.comment is not None
     code = _make_element("code")
     code.appendChild(_make_link(name, "#" + name))
 
@@ -156,16 +163,18 @@ def _make_function_code_element(name: str, function: Any) -> minidom.Element:
     return code
 
 
-def _make_function_summary_list(functions: Iterable[Any]) -> minidom.Element:
+def _make_function_summary_list(functions: Iterable[Symbol]) -> minidom.Element:
     summary_list = _make_element("dl")
 
     for function in functions:
+        assert function.comment is not None
         summary_term = _make_element("dt")
         summary_list.appendChild(summary_term)
 
         if _is_static(function):
             name = function.identifier
         else:
+            assert function.property is not None
             name = function.property
 
         code = _make_function_code_element(name, function)
@@ -182,7 +191,8 @@ def _make_function_summary_list(functions: Iterable[Any]) -> minidom.Element:
 
 
 # pylint: disable=too-many-locals
-def _add_function_description(node_list: minidom.NodeList, function: Any) -> None:
+def _add_function_description(node_list: minidom.NodeList, function: Symbol) -> None:
+    assert function.comment is not None
     header = _make_element("h3", function.identifier)
     header.setAttribute("id", function.identifier)
     node_list.append(header)
@@ -255,7 +265,7 @@ def _add_function_description(node_list: minidom.NodeList, function: Any) -> Non
 
 
 # pylint: disable=too-many-branches,too-many-locals
-def _generate_content(namespace: str, symbols: Iterable[Any]) -> minidom.NodeList:
+def _generate_content(namespace: str, symbols: Iterable[Symbol]) -> minidom.NodeList:
     node_list = minidom.NodeList()
 
     node_list.append(_make_element("h1", namespace))

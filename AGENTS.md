@@ -92,7 +92,7 @@ The core architecture follows a pipeline:
   - `IsSymbolPartOfNamespace(symbol: str, namespace: str) -> bool`: Determines
     namespace membership.
 - **`jsdoctor.generator`**:
-  - `GenerateHtmlDocs(namespace_map: dict[str, list[Any]]) -> Iterator[tuple[str, bytes]]`:
+  - `GenerateHtmlDocs(namespace_map: Mapping[str, Iterable[Symbol]]) -> Iterator[tuple[str, bytes]]`:
     Generates `(filename, html_bytes)` pairs for all namespaces.
 - **`jsdoctor.linkify`**:
   - `LinkifyWebUrls(content: str) -> str`: Replaces `http(s)://` URLs with HTML

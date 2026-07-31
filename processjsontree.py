@@ -2,15 +2,20 @@
 
 """Process a JSON file tree."""
 
+from __future__ import annotations
+
 import json
 import logging
 import sys
+from collections.abc import Mapping
 
 from jsdoctor import esprima
 
 
 # pylint: disable-next=invalid-name
-def ProcessJsonTree(json_obj):
+def ProcessJsonTree(
+    json_obj: Mapping[str, str],
+) -> dict[str, dict[str, str | bytes]]:
     """Parses a dictionary of file paths to JavaScript sources into AST representations.
 
     Args:
@@ -42,7 +47,7 @@ def ProcessJsonTree(json_obj):
     return result
 
 
-def main():
+def main() -> None:
     """Reads JSON file tree from stdin, parses sources via Esprima,
 
     and writes JSON to stdout.
