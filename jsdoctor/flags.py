@@ -1,8 +1,13 @@
 """Definitions and sets for supported JSDoc flags."""
 
+from __future__ import annotations
+
 import re
 from collections.abc import Iterable
-from typing import Any
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .source import Flag
 
 BASE_FLAGS = frozenset(["@provideGoog"])
 
@@ -130,7 +135,7 @@ PRIVATE = "private"
 
 
 # pylint: disable-next=invalid-name
-def GetVisibility(flags: Iterable[Any]) -> str:
+def GetVisibility(flags: Iterable[Flag]) -> str:
     """Returns one of PUBLIC, PROTECTED, or PRIVATE."""
 
     flag_names = [flag.name for flag in flags]
@@ -144,7 +149,7 @@ def GetVisibility(flags: Iterable[Any]) -> str:
 
 
 # pylint: disable-next=invalid-name
-def GetSymbolType(flags: Iterable[Any]) -> str | None:
+def GetSymbolType(flags: Iterable[Flag]) -> str | None:
     """Extracts the symbol data type from a collection of flags if present.
 
     Args:
