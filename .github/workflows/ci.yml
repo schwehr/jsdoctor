@@ -42,6 +42,6 @@ jobs:
           UV_PYTHON: ${{ matrix.python-version }}
       - name: Test
         run: |
-          uv run python -m unittest discover -v --pattern="*test.py" --start-directory tests
+          uv run pytest
         env:
           UV_PYTHON: ${{ matrix.python-version }}
