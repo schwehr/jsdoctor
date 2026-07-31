@@ -1,72 +1,69 @@
 """Tests for the jsdoctor.flags module."""
 
-import unittest
+import pytest
 
 from jsdoctor import flags, source
 
 
-class FlagTestCase(unittest.TestCase):
-    """Tests for parsing and handling JSDoc flags."""
+def test_parse_param_description() -> None:
+    """Tests parsing of @param JSDoc descriptions."""
+    desc = "{!bbb|ccc?} aaa This \nis the desc.  "
+    assert flags.ParseParameterDescription(desc) == (
+        "aaa",
+        "!bbb|ccc?",
+        "This \nis the desc.",
+    )
 
-    def test_parse_param_description(self):
-        """Tests parsing of @param JSDoc descriptions."""
-        desc = "{!bbb|ccc?} aaa This \nis the desc.  "
-        self.assertEqual(
-            ("aaa", "!bbb|ccc?", "This \nis the desc."),
-            flags.ParseParameterDescription(desc),
-        )
+    desc = "{...*} var_args The items to substitute into the pattern."
+    assert flags.ParseParameterDescription(desc) == (
+        "var_args",
+        "...*",
+        "The items to substitute into the pattern.",
+    )
 
-        desc = "{...*} var_args The items to substitute into the pattern."
-        self.assertEqual(
-            ("var_args", "...*", "The items to substitute into the pattern."),
-            flags.ParseParameterDescription(desc),
-        )
+    desc = "{string} aaa"
+    assert flags.ParseParameterDescription(desc) == ("aaa", "string", "")
 
-        desc = "{string} aaa"
-        self.assertEqual(("aaa", "string", ""), flags.ParseParameterDescription(desc))
+    with pytest.raises(ValueError):
+        flags.ParseParameterDescription("desc without type")
 
-        self.assertRaises(
-            ValueError, lambda: flags.ParseParameterDescription("desc without type")
-        )
 
-    def test_parse_return_description(self):
-        """Tests parsing of @return JSDoc descriptions."""
-        desc = "  {!bbb|ccc?} This \nis the desc.   "
-        self.assertEqual(
-            ("!bbb|ccc?", "This \nis the desc."), flags.ParseReturnDescription(desc)
-        )
+def test_parse_return_description() -> None:
+    """Tests parsing of @return JSDoc descriptions."""
+    desc = "  {!bbb|ccc?} This \nis the desc.   "
+    assert flags.ParseReturnDescription(desc) == (
+        "!bbb|ccc?",
+        "This \nis the desc.",
+    )
 
-        self.assertRaises(
-            ValueError, lambda: flags.ParseReturnDescription("desc without type")
-        )
+    with pytest.raises(ValueError):
+        flags.ParseReturnDescription("desc without type")
 
-    def test_maybe_parse_type_from_description(self):
-        """Tests parsing type expressions enclosed in braces."""
-        self.assertEqual("aaa", flags.MaybeParseTypeFromDescription("  {aaa} bbb ccc"))
 
-        self.assertEqual(None, flags.MaybeParseTypeFromDescription("aaa bbb ccc"))
+def test_maybe_parse_type_from_description() -> None:
+    """Tests parsing type expressions enclosed in braces."""
+    assert flags.MaybeParseTypeFromDescription("  {aaa} bbb ccc") == "aaa"
+    assert flags.MaybeParseTypeFromDescription("aaa bbb ccc") is None
 
-    @staticmethod
-    def get_flags(script):
-        """Parses comment flags from a JSDoc script snippet."""
-        # pylint: disable-next=protected-access
-        _, parsed_flags = source._get_description_and_flags(script)
-        return parsed_flags
 
-    def test_get_symbol_type(self):
-        """Tests extracting symbol types from comment flags."""
-        self.assertEqual("aaa", flags.GetSymbolType(self.get_flags("""@const {aaa}""")))
-        self.assertEqual(
-            "bbb", flags.GetSymbolType(self.get_flags("""@private {bbb}"""))
-        )
-        self.assertEqual(
-            "ccc", flags.GetSymbolType(self.get_flags("""@protected {ccc}"""))
-        )
-        self.assertEqual("ddd", flags.GetSymbolType(self.get_flags("""@const {ddd}""")))
+def _get_flags(script: str):
+    """Parses comment flags from a JSDoc script snippet."""
+    # pylint: disable-next=protected-access
+    _, parsed_flags = source._get_description_and_flags(script)
+    return parsed_flags
 
-    def test_get_visibility(self):
-        """Tests determining symbol visibility from comment flags."""
-        test_source = source.ScanScript("""\
+
+def test_get_symbol_type() -> None:
+    """Tests extracting symbol types from comment flags."""
+    assert flags.GetSymbolType(_get_flags("""@const {aaa}""")) == "aaa"
+    assert flags.GetSymbolType(_get_flags("""@private {bbb}""")) == "bbb"
+    assert flags.GetSymbolType(_get_flags("""@protected {ccc}""")) == "ccc"
+    assert flags.GetSymbolType(_get_flags("""@const {ddd}""")) == "ddd"
+
+
+def test_get_visibility() -> None:
+    """Tests determining symbol visibility from comment flags."""
+    test_source = source.ScanScript("""\
 goog.provide('abc');
 
 /**
@@ -74,12 +71,12 @@ goog.provide('abc');
  */
 abc.def;
 """)
-        symbol = next(iter(test_source.symbols))
-        comment = symbol.comment
-        assert comment is not None  # For pytype.
-        self.assertEqual(flags.PRIVATE, flags.GetVisibility(comment.flags))
+    symbol = next(iter(test_source.symbols))
+    comment = symbol.comment
+    assert comment is not None  # For pytype.
+    assert flags.GetVisibility(comment.flags) == flags.PRIVATE
 
-        test_source = source.ScanScript("""\
+    test_source = source.ScanScript("""\
 goog.provide('abc');
 
 /**
@@ -87,15 +84,17 @@ goog.provide('abc');
  */
 abc.def;
 """)
-        symbol = next(iter(test_source.symbols))
-        self.assertEqual(flags.PROTECTED, flags.GetVisibility(symbol.comment.flags))
+    symbol = next(iter(test_source.symbols))
+    assert symbol.comment is not None
+    assert flags.GetVisibility(symbol.comment.flags) == flags.PROTECTED
 
-        test_source = source.ScanScript("""\
+    test_source = source.ScanScript("""\
 goog.provide('abc');
 
 /**
  */
 abc.def;
 """)
-        symbol = next(iter(test_source.symbols))
-        self.assertEqual(flags.PUBLIC, flags.GetVisibility(symbol.comment.flags))
+    symbol = next(iter(test_source.symbols))
+    assert symbol.comment is not None
+    assert flags.GetVisibility(symbol.comment.flags) == flags.PUBLIC
