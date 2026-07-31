@@ -33,7 +33,8 @@ The core architecture follows a pipeline:
   rendering modules:
   - `cli.py`: Main CLI script for parallel source file scanning, symbol map
     construction, and tar archive output generation.
-  - `__main__.py`: CLI entrypoint module allowing `python -m jsdoctor` execution.
+  - `__main__.py`: CLI entrypoint module allowing `python -m jsdoctor`
+    execution.
   - `scanner.py`: Regex scanners for `goog.provide`, `goog.require`, JSDoc
     comments, and target identifier resolution.
   - `source.py`: Data structures (`Source`, `Symbol`, `Comment`, `Flag`) and
@@ -54,8 +55,8 @@ The core architecture follows a pipeline:
 - `tests/`: Comprehensive `pytest` test suite (`jsdoc_test.py`,
   `scanner_test.py`, `source_test.py`, `namespace_test.py`, `flags_test.py`,
   `linkify_test.py`, `symboltypes_test.py`).
-- `.github/workflows/ci.yml`: GitHub Actions CI pipeline running unit tests,
-  `ty` type checking, and `pre-commit` checks on Python 3.13 and 3.14.
+- `.github/workflows/ci.yml` / `.github/dependabot.yml`: GitHub Actions CI
+  pipeline and Dependabot automated dependency update configuration.
 - `pyproject.toml` / `uv.lock`: Project metadata, dependencies (`html5lib`), and
   configuration for `uv`, `pytest`, `pylint`, `ty`, `pyrefly`, and `codespell`.
 
