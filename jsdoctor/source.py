@@ -1,7 +1,5 @@
 """Data structures and source parsing orchestration for JavaScript files."""
 
-from __future__ import annotations
-
 import logging
 import re
 from collections.abc import Iterable, Iterator
@@ -27,8 +25,8 @@ class Source:
     path: str | None = None
     provides: set[str] = field(default_factory=set)
     requires: set[str] = field(default_factory=set)
-    symbols: set[Symbol] = field(default_factory=set)
-    filecomment: Comment | None = None
+    symbols: set[Symbol] = field(default_factory=set)  # pyrefly: ignore[unbound-name]
+    filecomment: Comment | None = None  # pyrefly: ignore[unbound-name]
 
     def __str__(self) -> str:
         source_string = super().__str__()
@@ -76,6 +74,22 @@ class Symbol:
         return symbol_string
 
 
+@dataclass
+class Flag:
+    """Represents a JSDoc flag tag within a comment.
+
+    Attributes:
+        name: Flag tag name (e.g. '@param', '@return').
+        text: Associated text for the flag tag.
+    """
+
+    name: str
+    text: str
+
+    def __post_init__(self) -> None:
+        assert self.name in flags.ALL_FLAGS, f"Unrecognized flag: {self.name}"
+
+
 @dataclass(eq=False)
 class Comment:
     """Represents a parsed JSDoc comment block with description and flags.
@@ -98,22 +112,6 @@ class Comment:
         description_sections, parsed_flags = _get_description_and_flags(self.text)
         self.description_sections = description_sections
         self.flags = parsed_flags
-
-
-@dataclass
-class Flag:
-    """Represents a JSDoc flag tag within a comment.
-
-    Attributes:
-        name: Flag tag name (e.g. '@param', '@return').
-        text: Associated text for the flag tag.
-    """
-
-    name: str
-    text: str
-
-    def __post_init__(self) -> None:
-        assert self.name in flags.ALL_FLAGS, f"Unrecognized flag: {self.name}"
 
 
 def _get_description_and_flags(text: str) -> tuple[list[str], list[Flag]]:
