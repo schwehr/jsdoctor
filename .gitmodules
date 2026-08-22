@@ -1,3 +1,0 @@
-[submodule "third_party/esprima"]
-	path = third_party/esprima
-	url = http://github.com/ariya/esprima.git

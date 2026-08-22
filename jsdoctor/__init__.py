@@ -1,7 +1,6 @@
 """Core JSDoc extraction and HTML documentation generation library."""
 
 from . import (
-    esprima,
     flags,
     generator,
     jsdoc,
@@ -13,7 +12,6 @@ from . import (
 )
 
 __all__ = [
-    "esprima",
     "flags",
     "generator",
     "jsdoc",

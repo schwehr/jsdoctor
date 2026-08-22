@@ -49,9 +49,6 @@ The core architecture follows a pipeline:
     in text.
   - `generator.py`: DOM-based HTML document generator for namespace
     documentation.
-  - `esprima.py`: Prototype AST-based parsing integration using Esprima.
-- `genjsonfiletree.py` / `processjsontree.py` / `node/`: Experimental AST/JSON
-  file tree processing utilities and Node.js helpers.
 - `tests/`: Comprehensive `pytest` test suite (`jsdoc_test.py`,
   `scanner_test.py`, `source_test.py`, `namespace_test.py`, `flags_test.py`,
   `linkify_test.py`, `symboltypes_test.py`).
@@ -113,7 +110,7 @@ static analysis:
   ```bash
   uv run ruff check --fix
   uv run ruff format
-  uv run pylint *.py jsdoctor tests
+  uv run pylint jsdoctor tests
   ```
 - **Static Type Checking (`ty`, `mypy`, `pyrefly`, & `pyright`)**: Enforces
   strict type annotations across all modules.
