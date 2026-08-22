@@ -1,7 +1,5 @@
 """HTML document generator for namespace API reference documentation."""
 
-from __future__ import annotations
-
 from collections.abc import Iterable, Iterator, Mapping
 from typing import TYPE_CHECKING
 from xml.dom import minidom

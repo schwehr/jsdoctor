@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 """Command-line interface for jsdoctor API documentation generator."""
 
-from __future__ import annotations
-
 import argparse
 import collections
 import io

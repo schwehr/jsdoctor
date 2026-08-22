@@ -37,6 +37,7 @@ repos:
     rev: v4.0.6
     hooks:
       - id: pylint
+        args: ["--rcfile=pyproject.toml"]
         additional_dependencies:
           - "."
           - esprima
