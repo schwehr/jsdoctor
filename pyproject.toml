@@ -14,7 +14,7 @@ jsdoctor = "jsdoctor.cli:main"
 [tool.ty]
 
 [[tool.ty.overrides]]
-include = ["jsdoctor/cli.py", "processjsontree.py"]
+include = ["jsdoctor/cli.py"]
 [tool.ty.overrides.rules]
 unresolved-import = "ignore"
 
@@ -24,7 +24,7 @@ include = ["jsdoctor/cli.py"]
 invalid-argument-type = "ignore"
 
 [[tool.ty.overrides]]
-include = ["jsdoctor/generator.py", "processjsontree.py", "tests/flags_test.py", "tests/linkify_test.py"]
+include = ["jsdoctor/generator.py", "tests/flags_test.py", "tests/linkify_test.py"]
 [tool.ty.overrides.rules]
 unresolved-attribute = "ignore"
 
@@ -63,7 +63,7 @@ default = true
 
 [tool.pyrefly]
 project-includes = ["jsdoctor"]
-project-excludes = ["jsdoctor/cli.py", "processjsontree.py"]
+project-excludes = ["jsdoctor/cli.py"]
 ignore-missing-imports = ["*"]
 
 [tool.pylint.main]

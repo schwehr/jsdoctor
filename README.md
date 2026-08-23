@@ -25,9 +25,7 @@ I, [nanaze](https://github.com/nanaze), wanted to take a shot at doing this in a
 more lo-fi manner, possibly repurposing an existing parser like
 [Esprima](https://esprima.org/). But quick prototyping led me to extract JsDoc
 with regular expressions in Python which, though duct-tape-like, works
-surprisingly well and quickly. <em>Update: I have begun migrating over to
-esprima and pulling symbol/JSDoc info from the resulting AST. This work is in
-esprima.py, genfiletree.py, processfiletree.py</em>
+surprisingly well and quickly.
 
 ## Design Goals and Guidelines
 
