@@ -31,14 +31,9 @@ _SYMBOL_RE = re.compile(r"(\w+(?:\.\w+)*)(#\w+)?")
 def _replace_symbol(match: re.Match[str], symbols: Iterable[str]) -> str:
     full_match = match.group(0)
     symbol_portion = match.group(1)
-    # hash_portion = match.group(2)
 
     if symbol_portion in symbols:
         href = f"{symbol_portion}.html"
-
-        # TODO(schwehr): This did not do anything..
-        # if hash_portion:
-        #   href + hash_portion
 
         return f'<a href="{href}">{full_match}</a>'
 
