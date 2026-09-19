@@ -8,6 +8,9 @@ _BASE_REGEX_STRING = "^\\s*goog\\.%s\\(\\s*['\"](.+)['\"]\\s*\\)"
 _PROVIDE_REGEX = re.compile(_BASE_REGEX_STRING % "provide")
 _REQUIRES_REGEX = re.compile(_BASE_REGEX_STRING % "require")
 
+# \w and $ should cover all valid identifiers.
+_IDENTIFIER_REGEX = re.compile(r"\(|(?:[$\w]+\s*\.\s*)*[$\w]+")
+
 
 class NoIdentifierFoundError(Exception):
     """Exception raised when no identifier target is found following a comment."""
@@ -102,9 +105,7 @@ def FindCommentTarget(script: str, pos: int = 0) -> Match[str] | None:
         Regex match for the identifier target, or None if not found.
     """
     # Find an opening parenthesis or an identifier.
-    # \w and $ should cover all valid identifiers.
-    identifier_regex = re.compile(r"\(|(?:[$\w]+\s*\.\s*)*[$\w]+")
-    return identifier_regex.search(script, pos=pos)
+    return _IDENTIFIER_REGEX.search(script, pos=pos)
 
 
 # pylint: disable-next=invalid-name

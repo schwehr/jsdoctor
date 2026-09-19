@@ -158,12 +158,6 @@ def _yield_symbols(
         comment_text = scanner.ExtractTextFromJsDocComment(comment_match.group())
         comment = Comment(comment_text, comment_match.start(), comment_match.end())
 
-        # TODO(schwehr): What was this supposed to do?
-        # if not identifier_match:
-        #   assert not source.filecomment, '@fileoverview comment made more than once'
-        #   source.filecomment = comment
-        #   continue
-
         if _is_ignorable_identifier(identifier_match):
             # This is JsDoc on a method call, most likely a type cast of a return value.
             # Ignore.
