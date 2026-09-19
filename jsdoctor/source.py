@@ -7,6 +7,8 @@ from dataclasses import dataclass, field
 
 from . import flags, jsdoc, namespace, scanner, symboltypes
 
+_LOG = logging.getLogger(__name__)
+
 
 @dataclass(eq=False)
 class Source:
@@ -172,7 +174,7 @@ def _yield_symbols(
 
         # TODO(nanaze): catch this. properties, make sure not static
         if identifier.startswith("this."):
-            logging.info(
+            _LOG.info(
                 'Skipping identifier. Ignoring "this." properties for now. %s',
                 identifier,
             )
@@ -180,7 +182,7 @@ def _yield_symbols(
 
         # Ignore symbols that are not part of the provided namespace.
         if not _is_symbol_part_of_provided_namespaces(identifier, provided_namespaces):
-            logging.info(
+            _LOG.info(
                 "Skipping identifier. Not part of provided namespace. %s",
                 identifier,
             )

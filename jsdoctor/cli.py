@@ -12,6 +12,8 @@ from collections.abc import Iterable, Iterator, Mapping
 
 from jsdoctor import generator, source
 
+_LOG = logging.getLogger(__name__)
+
 
 def _should_scan_path(path: str) -> bool:
     _, filename = os.path.split(path)
@@ -49,7 +51,7 @@ def _make_symbol_map(symbols: Iterable[source.Symbol]) -> dict[str, source.Symbo
             continue
 
         if identifier.startswith("this."):
-            logging.info('Skipping "this" identifier %s', identifier)
+            _LOG.info('Skipping "this" identifier %s', identifier)
             continue
 
         if identifier in symbol_map:
@@ -59,7 +61,7 @@ def _make_symbol_map(symbols: Iterable[source.Symbol]) -> dict[str, source.Symbo
             if _DUPLICATE_SYMBOL_IS_ERROR:
                 raise DuplicateSymbolError(msg)
 
-            logging.warning(msg)
+            _LOG.warning(msg)
             continue
 
         symbol_map[identifier] = symbol
@@ -130,8 +132,8 @@ def main() -> None:
     paths = result.files
     paths = [path for path in paths if _should_scan_path(path)]
 
-    logging.info("Found %s paths.", len(paths))
-    logging.info("Reading file contents.")
+    _LOG.info("Found %s paths.", len(paths))
+    _LOG.info("Reading file contents.")
     content_map = _make_content_map(paths)
 
     sources = _scan_content_in_parallel(content_map)
@@ -144,16 +146,16 @@ def main() -> None:
 
     namespace_map = _make_namespace_map(symbols)
 
-    logging.info("Writing to tar: %s", tar_path)
+    _LOG.info("Writing to tar: %s", tar_path)
     with tarfile.open(name=tar_path, mode="w") as tar:
         for path, content in generator.GenerateHtmlDocs(namespace_map):
-            logging.info("Writing doc to tar: %s", path)
+            _LOG.info("Writing doc to tar: %s", path)
             # Add each path to the tar
             info = tarfile.TarInfo(name=path)
             info.size = len(content)
             buf = io.BytesIO(content)
             tar.addfile(info, buf)
-    logging.info("Tar written to %s", tar_path)
+    _LOG.info("Tar written to %s", tar_path)
 
 
 if __name__ == "__main__":
