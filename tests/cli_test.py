@@ -34,9 +34,11 @@ def test_parse_args() -> None:
 
 def test_parse_args_missing_tar() -> None:
     """Tests that missing --tar causes a SystemExit."""
-    with mock.patch.object(sys, "argv", ["jsdoctor", "a.js"]):
-        with pytest.raises(SystemExit):
-            cli._parse_args()
+    with (
+        mock.patch.object(sys, "argv", ["jsdoctor", "a.js"]),
+        pytest.raises(SystemExit),
+    ):
+        cli._parse_args()
 
 
 def test_scan_content() -> None:
@@ -56,9 +58,11 @@ def test_make_content_map() -> None:
 
 def test_make_content_map_duplicate_path() -> None:
     """Tests that duplicate paths raise an error."""
-    with mock.patch("builtins.open", mock.mock_open(read_data="var a = 1;")):
-        with pytest.raises(cli.JsDoctorError, match=r"Path already added: a\.js"):
-            cli._make_content_map(["a.js", "a.js"])
+    with (
+        mock.patch("builtins.open", mock.mock_open(read_data="var a = 1;")),
+        pytest.raises(cli.JsDoctorError, match=r"Path already added: a\.js"),
+    ):
+        cli._make_content_map(["a.js", "a.js"])
 
 
 def test_scan_content_in_parallel() -> None:
@@ -118,16 +122,18 @@ def test_make_symbol_map_duplicate() -> None:
     sym2.identifier = "my.foo"
 
     # By default, duplicates log a warning and the first is kept.
-    with mock.patch.object(cli.logging, "warning") as mock_warning:
+    with mock.patch.object(cli._LOG, "warning") as mock_warning:
         symbol_map = cli._make_symbol_map([sym1, sym2])
         assert len(symbol_map) == 1
         assert symbol_map["my.foo"] == sym1
         mock_warning.assert_called_once()
 
     # If we set _DUPLICATE_SYMBOL_IS_ERROR, it raises
-    with mock.patch.object(cli, "_DUPLICATE_SYMBOL_IS_ERROR", True):
-        with pytest.raises(cli.DuplicateSymbolError):
-            cli._make_symbol_map([sym1, sym2])
+    with (
+        mock.patch.object(cli, "_DUPLICATE_SYMBOL_IS_ERROR", True),
+        pytest.raises(cli.DuplicateSymbolError),
+    ):
+        cli._make_symbol_map([sym1, sym2])
 
 
 def test_make_namespace_map() -> None:
