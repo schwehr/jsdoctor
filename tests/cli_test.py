@@ -15,11 +15,19 @@ def test_should_scan_path() -> None:
     """Tests that we correctly decide which files to scan."""
     assert cli._should_scan_path("foo.js") is True
     assert cli._should_scan_path("foo/bar.js") is True
+    assert cli._should_scan_path("/absolute/path/bar.js") is True
     assert cli._should_scan_path("deps.js") is False
     assert cli._should_scan_path("foo/deps.js") is False
     assert cli._should_scan_path("foo_test.js") is False
     assert cli._should_scan_path("foo/bar_test.js") is False
     assert cli._should_scan_path("foo.txt") is False
+    assert cli._should_scan_path("foo.js.txt") is False
+    assert cli._should_scan_path("foo.json") is False
+    assert cli._should_scan_path("no_extension") is False
+    assert cli._should_scan_path("deps_foo.js") is True
+    assert cli._should_scan_path("test.js") is True
+    assert cli._should_scan_path("foo-test.js") is True
+    assert cli._should_scan_path(".js") is True
 
 
 def test_parse_args() -> None:
