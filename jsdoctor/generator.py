@@ -1,5 +1,6 @@
 """HTML document generator for namespace API reference documentation."""
 
+from collections import defaultdict
 from collections.abc import Iterable, Iterator, Mapping
 from typing import TYPE_CHECKING
 from xml.dom import minidom
@@ -270,8 +271,12 @@ def _generate_content(namespace: str, symbols: Iterable[Symbol]) -> minidom.Node
 
     sorted_symbols = sorted(symbols, key=lambda symbol: symbol.identifier)
 
+    symbols_by_type: dict[str | None, list[Symbol]] = defaultdict(list)
+    for symbol in sorted_symbols:
+        symbols_by_type[symbol.type].append(symbol)
+
     # Constructor.
-    constructor_symbols = _get_symbols_of_type(sorted_symbols, symboltypes.CONSTRUCTOR)
+    constructor_symbols = symbols_by_type[symboltypes.CONSTRUCTOR]
 
     if constructor_symbols:
         node_list.append(_make_element("h2", "Constructor"))
@@ -279,28 +284,19 @@ def _generate_content(namespace: str, symbols: Iterable[Symbol]) -> minidom.Node
             _add_symbol_description(node_list, constructor)
 
     # Interface.
-    interface_symbols = _get_symbols_of_type(sorted_symbols, symboltypes.INTERFACE)
+    interface_symbols = symbols_by_type[symboltypes.INTERFACE]
 
     if interface_symbols:
         node_list.append(_make_element("h2", "Interface"))
         for interface in interface_symbols:
             _add_symbol_description(node_list, interface)
 
-    instance_methods = list(
-        filter(
-            _is_not_static, _get_symbols_of_type(sorted_symbols, symboltypes.FUNCTION)
-        )
-    )
+    functions = symbols_by_type[symboltypes.FUNCTION]
+    properties = symbols_by_type[symboltypes.PROPERTY]
 
-    instance_properties = list(
-        filter(
-            _is_not_static, _get_symbols_of_type(sorted_symbols, symboltypes.PROPERTY)
-        )
-    )
-
-    static_functions = list(
-        filter(_is_static, _get_symbols_of_type(sorted_symbols, symboltypes.FUNCTION))
-    )
+    instance_methods = list(filter(_is_not_static, functions))
+    instance_properties = list(filter(_is_not_static, properties))
+    static_functions = list(filter(_is_static, functions))
 
     public_instance_methods = list(
         filter(
@@ -323,7 +319,7 @@ def _generate_content(namespace: str, symbols: Iterable[Symbol]) -> minidom.Node
         node_list.append(_make_function_summary_list(public_static_methods))
 
     # Enumerations.
-    enum_symbols = _get_symbols_of_type(sorted_symbols, symboltypes.ENUM)
+    enum_symbols = symbols_by_type[symboltypes.ENUM]
 
     if enum_symbols:
         node_list.append(_make_element("h2", "Enumerations"))
@@ -349,9 +345,7 @@ def _generate_content(namespace: str, symbols: Iterable[Symbol]) -> minidom.Node
             _add_function_description(node_list, function)
             node_list.append(_make_element("hr"))
 
-    static_properties = list(
-        filter(_is_static, _get_symbols_of_type(sorted_symbols, symboltypes.PROPERTY))
-    )
+    static_properties = list(filter(_is_static, properties))
     if static_properties:
         node_list.append(_make_element("h2", "Static properties"))
         for prop in static_properties:
