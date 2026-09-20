@@ -5,8 +5,8 @@ from collections.abc import Iterator
 from re import Match
 
 _BASE_REGEX_STRING = "^\\s*goog\\.%s\\(\\s*['\"](.+)['\"]\\s*\\)"
-_PROVIDE_REGEX = re.compile(_BASE_REGEX_STRING % "provide")
-_REQUIRES_REGEX = re.compile(_BASE_REGEX_STRING % "require")
+_PROVIDE_REGEX = re.compile(_BASE_REGEX_STRING % "provide", re.MULTILINE)
+_REQUIRES_REGEX = re.compile(_BASE_REGEX_STRING % "require", re.MULTILINE)
 
 # \w and $ should cover all valid identifiers.
 _IDENTIFIER_REGEX = re.compile(r"\(|(?:[$\w]+\s*\.\s*)*[$\w]+")
@@ -26,10 +26,8 @@ def YieldProvides(source: str) -> Iterator[str]:
     Yields:
         Provided namespace strings.
     """
-    for line in source.splitlines():
-        match = _PROVIDE_REGEX.match(line)
-        if match:
-            yield match.group(1)
+    for match in _PROVIDE_REGEX.finditer(source):
+        yield match.group(1)
 
 
 # pylint: disable-next=invalid-name
@@ -42,10 +40,8 @@ def YieldRequires(source: str) -> Iterator[str]:
     Yields:
         Required namespace strings.
     """
-    for line in source.splitlines():
-        match = _REQUIRES_REGEX.match(line)
-        if match:
-            yield match.group(1)
+    for match in _REQUIRES_REGEX.finditer(source):
+        yield match.group(1)
 
 
 # pylint: disable-next=invalid-name
