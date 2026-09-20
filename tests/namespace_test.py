@@ -55,6 +55,8 @@ def test_get_prototype_property() -> None:
     assert namespace.GetPrototypeProperty("bar.prototype.foo") == "foo"
     with pytest.raises(AssertionError):
         namespace.GetPrototypeProperty("bar")
+    with pytest.raises(AssertionError):
+        namespace.GetPrototypeProperty("foo.bar.baz")
 
 
 def test_get_symbol_parts_in_namespace() -> None:
