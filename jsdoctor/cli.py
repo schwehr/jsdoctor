@@ -37,11 +37,9 @@ def _get_symbols_from_sources(
         yield from s.symbols
 
 
-# TODO(nanaze): Make this a flag
-_DUPLICATE_SYMBOL_IS_ERROR = False
-
-
-def _make_symbol_map(symbols: Iterable[source.Symbol]) -> dict[str, source.Symbol]:
+def _make_symbol_map(
+    symbols: Iterable[source.Symbol], duplicate_symbol_is_error: bool = False
+) -> dict[str, source.Symbol]:
     symbol_map: dict[str, source.Symbol] = {}
 
     for symbol in symbols:
@@ -58,7 +56,7 @@ def _make_symbol_map(symbols: Iterable[source.Symbol]) -> dict[str, source.Symbo
             duplicate_symbol = symbol_map[identifier]
             msg = f"Symbol duplicated\n{symbol}\n{duplicate_symbol}"
 
-            if _DUPLICATE_SYMBOL_IS_ERROR:
+            if duplicate_symbol_is_error:
                 raise DuplicateSymbolError(msg)
 
             _LOG.warning(msg)
@@ -116,6 +114,11 @@ def _make_content_map(paths: Iterable[str]) -> dict[str, str]:
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Generates HTML docs for JsDoc")
     parser.add_argument("--tar", help="Path to tar file", required=True)
+    parser.add_argument(
+        "--duplicate-symbol-is-error",
+        action="store_true",
+        help="Raise an error when duplicate symbols are encountered",
+    )
     parser.add_argument("files", help="Paths to files", nargs="*")
     return parser.parse_args()
 
@@ -140,7 +143,9 @@ def main() -> None:
     symbols = _get_symbols_from_sources(sources)
 
     # This could instead be just a dupe check
-    symbol_map = _make_symbol_map(symbols)
+    symbol_map = _make_symbol_map(
+        symbols, duplicate_symbol_is_error=result.duplicate_symbol_is_error
+    )
 
     symbols = symbol_map.values()
 

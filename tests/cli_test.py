@@ -25,10 +25,20 @@ def test_should_scan_path() -> None:
 def test_parse_args() -> None:
     """Tests parsing of command line arguments."""
     with mock.patch.object(
-        sys, "argv", ["jsdoctor", "--tar", "out.tar", "a.js", "b.js"]
+        sys,
+        "argv",
+        [
+            "jsdoctor",
+            "--tar",
+            "out.tar",
+            "--duplicate-symbol-is-error",
+            "a.js",
+            "b.js",
+        ],
     ):
         args = cli._parse_args()
         assert args.tar == "out.tar"
+        assert args.duplicate_symbol_is_error is True
         assert args.files == ["a.js", "b.js"]
 
 
@@ -128,12 +138,9 @@ def test_make_symbol_map_duplicate() -> None:
         assert symbol_map["my.foo"] == sym1
         mock_warning.assert_called_once()
 
-    # If we set _DUPLICATE_SYMBOL_IS_ERROR, it raises
-    with (
-        mock.patch.object(cli, "_DUPLICATE_SYMBOL_IS_ERROR", True),
-        pytest.raises(cli.DuplicateSymbolError),
-    ):
-        cli._make_symbol_map([sym1, sym2])
+    # If duplicate_symbol_is_error is True, it raises DuplicateSymbolError.
+    with pytest.raises(cli.DuplicateSymbolError):
+        cli._make_symbol_map([sym1, sym2], duplicate_symbol_is_error=True)
 
 
 def test_make_namespace_map() -> None:
