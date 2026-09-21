@@ -21,6 +21,7 @@ class Source:
         requires: Set of required namespace strings.
         symbols: Set of extracted Symbol objects.
         filecomment: Optional top-level file JSDoc comment.
+
     """
 
     script: str
@@ -53,6 +54,7 @@ class Symbol:
         property: Optional property name.
         type: Optional symbol classification type.
         static: Optional flag indicating if symbol is static.
+
     """
 
     identifier: str
@@ -83,6 +85,7 @@ class Flag:
     Attributes:
         name: Flag tag name (e.g. '@param', '@return').
         text: Associated text for the flag tag.
+
     """
 
     name: str
@@ -102,6 +105,7 @@ class Comment:
         end: Ending character index of comment in source.
         flags: List of parsed Flag objects.
         description_sections: List of parsed description text sections.
+
     """
 
     text: str
@@ -123,7 +127,8 @@ def _get_description_and_flags(text: str) -> tuple[list[str], list[Flag]]:
 
 
 def _is_symbol_part_of_provided_namespaces(
-    symbol: str, provided_namespaces: set[str]
+    symbol: str,
+    provided_namespaces: set[str],
 ) -> bool:
     for ns in provided_namespaces:
         if namespace.IsSymbolPartOfNamespace(symbol, ns):
@@ -196,7 +201,8 @@ def _yield_symbols(
 
         # Identify the namespace for this symbol.
         closest_namespace = namespace.GetClosestNamespaceForSymbol(
-            identifier, provided_namespaces
+            identifier,
+            provided_namespaces,
         )
 
         if not closest_namespace:
@@ -224,6 +230,7 @@ def ScanScript(script: str, path: str | None = None) -> Source:
 
     Returns:
         A Source instance with populated provides, requires, and symbols.
+
     """
     source = Source(script, path)
     source.provides.update(set(scanner.YieldProvides(script)))

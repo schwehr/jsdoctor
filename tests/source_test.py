@@ -75,7 +75,9 @@ def test_namespace_not_found_error() -> None:
     match_pairs = scanner.ExtractDocumentedSymbols("/** Test. */\ngoog.aaa.bbb;")
     with (
         mock.patch.object(
-            source.namespace, "GetClosestNamespaceForSymbol", return_value=None
+            source.namespace,
+            "GetClosestNamespaceForSymbol",
+            return_value=None,
         ),
         pytest.raises(source.NamespaceNotFoundError),
     ):

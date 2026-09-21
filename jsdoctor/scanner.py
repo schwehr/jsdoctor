@@ -25,6 +25,7 @@ def YieldProvides(source: str) -> Iterator[str]:
 
     Yields:
         Provided namespace strings.
+
     """
     for match in _PROVIDE_REGEX.finditer(source):
         yield match.group(1)
@@ -39,6 +40,7 @@ def YieldRequires(source: str) -> Iterator[str]:
 
     Yields:
         Required namespace strings.
+
     """
     for match in _REQUIRES_REGEX.finditer(source):
         yield match.group(1)
@@ -58,6 +60,7 @@ def ExtractDocumentedSymbols(
 
     Raises:
         NoIdentifierFoundError: If a comment block has no target identifier.
+
     """
     for comment_match in FindJsDocComments(script):
         identifier_match = None
@@ -70,7 +73,7 @@ def ExtractDocumentedSymbols(
             identifier_match = FindCommentTarget(script, comment_match.end())
             if not identifier_match:
                 raise NoIdentifierFoundError(
-                    "Found no identifier for comment: " + comment_match.group()
+                    "Found no identifier for comment: " + comment_match.group(),
                 )
 
         yield comment_match, identifier_match
@@ -85,6 +88,7 @@ def FindJsDocComments(script: str) -> Iterator[Match[str]]:
 
     Returns:
         An iterator of regex Match objects for JSDoc comments.
+
     """
     return re.finditer(r"/\*\*.*?\*/", script, re.DOTALL)
 
@@ -99,6 +103,7 @@ def FindCommentTarget(script: str, pos: int = 0) -> Match[str] | None:
 
     Returns:
         Regex match for the identifier target, or None if not found.
+
     """
     # Find an opening parenthesis or an identifier.
     return _IDENTIFIER_REGEX.search(script, pos=pos)
@@ -113,6 +118,7 @@ def StripWhitespace(original_string: str) -> str:
 
     Returns:
         String with all whitespace characters removed.
+
     """
     return re.sub(r"\s*", "", original_string)
 
@@ -126,6 +132,7 @@ def ExtractTextFromJsDocComment(comment: str) -> str:
 
     Returns:
         Cleaned text content of the JSDoc comment block.
+
     """
     comment = comment.strip()
 

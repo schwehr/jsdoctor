@@ -38,7 +38,8 @@ def _get_symbols_from_sources(
 
 
 def _make_symbol_map(
-    symbols: Iterable[source.Symbol], duplicate_symbol_is_error: bool = False
+    symbols: Iterable[source.Symbol],
+    duplicate_symbol_is_error: bool = False,
 ) -> dict[str, source.Symbol]:
     symbol_map: dict[str, source.Symbol] = {}
 
@@ -126,7 +127,8 @@ def _parse_args() -> argparse.Namespace:
 def main() -> None:
     """Parses command-line arguments and generates the documentation tar archive."""
     logging.basicConfig(
-        level=logging.INFO, format="%(levelname)s:%(module)s:%(lineno)d: %(message)s"
+        level=logging.INFO,
+        format="%(levelname)s:%(module)s:%(lineno)d: %(message)s",
     )
 
     result = _parse_args()
@@ -144,7 +146,8 @@ def main() -> None:
 
     # This could instead be just a dupe check
     symbol_map = _make_symbol_map(
-        symbols, duplicate_symbol_is_error=result.duplicate_symbol_is_error
+        symbols,
+        duplicate_symbol_is_error=result.duplicate_symbol_is_error,
     )
 
     symbols = symbol_map.values()

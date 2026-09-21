@@ -15,17 +15,20 @@ def test_prototype_property() -> None:
 def test_nearest_namespace() -> None:
     """Tests finding closest matching namespace for symbols."""
     closest = namespace.GetClosestNamespaceForSymbol(
-        "aaa.bbb.ccc", {"aaa.bbb.ccc.ddd", "aaa.bbb.ccc.eee"}
+        "aaa.bbb.ccc",
+        {"aaa.bbb.ccc.ddd", "aaa.bbb.ccc.eee"},
     )
     assert closest is None
 
     closest = namespace.GetClosestNamespaceForSymbol(
-        "aaa.bbb.ccc", {"aaa.bbb", "aaa.bbb.ccc.ddd"}
+        "aaa.bbb.ccc",
+        {"aaa.bbb", "aaa.bbb.ccc.ddd"},
     )
     assert closest == "aaa.bbb"
 
     closest = namespace.GetClosestNamespaceForSymbol(
-        "goog.string.startsWith", {"goog.string", "goog.string.Unicode"}
+        "goog.string.startsWith",
+        {"goog.string", "goog.string.Unicode"},
     )
     assert closest == "goog.string"
 
@@ -44,7 +47,8 @@ def test_is_symbol_part_of_namespace() -> None:
     assert namespace.IsSymbolPartOfNamespace("goog.string.startsWith", "goog.string")
 
     assert not namespace.IsSymbolPartOfNamespace(
-        "goog.string", "goog.string.startsWith"
+        "goog.string",
+        "goog.string.startsWith",
     )
 
     assert namespace.IsSymbolPartOfNamespace("aaa.bbb.foo", "aaa.bbb.foo")

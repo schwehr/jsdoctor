@@ -21,6 +21,7 @@ def LinkifyWebUrls(content: str) -> str:
 
     Returns:
         Text with web URLs replaced by HTML links.
+
     """
     return _WEB_URL_RE.sub(_replace_web_url, content)
 
@@ -50,5 +51,6 @@ def LinkifySymbols(content: str, symbols: Iterable[str]) -> str:
 
     Returns:
         Text with matched symbol references replaced by HTML links.
+
     """
     return _SYMBOL_RE.sub(lambda match: _replace_symbol(match, symbols), content)

@@ -14,10 +14,7 @@ PROPERTY = "property"
 
 def _comment_has_flag(comment: source.Comment, flag_name: str) -> bool:
     assert flag_name.startswith("@"), "flag name should start with @"
-    for flag in comment.flags:
-        if flag.name == flag_name:
-            return True
-    return False
+    return any(flag.name == flag_name for flag in comment.flags)
 
 
 # pylint: disable-next=invalid-name
@@ -29,6 +26,7 @@ def DetermineSymbolType(symbol: source.Symbol) -> str:
 
     Returns:
         The classified symbol type string constant.
+
     """
     comment = symbol.comment
     assert comment, "Expected to have comment"

@@ -22,7 +22,7 @@ FUNCTION_FLAGS = frozenset(
         "@throws",
         "@see",
         "@override",
-    ]
+    ],
 )
 
 VISIBILITY_FLAGS = frozenset(
@@ -30,7 +30,7 @@ VISIBILITY_FLAGS = frozenset(
         # Everything public by default
         "@protected",
         "@private",
-    ]
+    ],
 )
 
 INSTANTIABLE_FLAGS = frozenset(
@@ -39,13 +39,13 @@ INSTANTIABLE_FLAGS = frozenset(
         "@extends",
         "@implements",
         "@see",
-    ]
+    ],
 )
 
 TYPEDEF_FLAGS = frozenset(["@typedef"])
 
 PROPERTY_FLAGS = frozenset(
-    ["@const", "@define", "@enum", "@struct", "@type", "@inheritDoc", "@export"]
+    ["@const", "@define", "@enum", "@struct", "@type", "@inheritDoc", "@export"],
 )
 
 INTERFACE_FLAGS = frozenset(["@interface", "@extends"])
@@ -54,12 +54,12 @@ COMPILER_FLAGS = frozenset(
     [
         "@nocompile",
         "@preserveTry",
-    ]
+    ],
 )
 
 # TODO(nanaze): File.
 MISC_FLAGS = frozenset(
-    ["@desc", "@supported", "@hidden", "@final", "@idGenerator", "@this"]
+    ["@desc", "@supported", "@hidden", "@final", "@idGenerator", "@this"],
 )
 
 all_flags: frozenset[str] = frozenset(
@@ -73,7 +73,7 @@ all_flags: frozenset[str] = frozenset(
     | INSTANTIABLE_FLAGS
     | PROPERTY_FLAGS
     | TYPEDEF_FLAGS
-    | VISIBILITY_FLAGS
+    | VISIBILITY_FLAGS,
 )
 
 ALL_FLAGS = frozenset(all_flags)
@@ -91,6 +91,7 @@ def ParseParameterDescription(desc: str) -> tuple[str, str, str]:
 
     Raises:
         ValueError: If the description cannot be parsed into a parameter.
+
     """
     match = re.match(
         r"^\s*\{(?P<type>.*?)\}\s+(?P<name>\w+)(?P<desc>.*)$",
@@ -118,9 +119,12 @@ def ParseReturnDescription(desc: str) -> tuple[str, str]:
 
     Raises:
         ValueError: If the description cannot be parsed into a return declaration.
+
     """
     match = re.match(
-        r"^\s*{(?P<type>.*?)\}(?P<desc>.*)$", desc, re.DOTALL | re.MULTILINE
+        r"^\s*{(?P<type>.*?)\}(?P<desc>.*)$",
+        desc,
+        re.DOTALL | re.MULTILINE,
     )
     if not match:
         raise ValueError(f"Could not parse flag description: {desc}")
@@ -135,7 +139,6 @@ PRIVATE = "private"
 # pylint: disable-next=invalid-name
 def GetVisibility(flags: Iterable[Flag]) -> str:
     """Returns one of PUBLIC, PROTECTED, or PRIVATE."""
-
     flag_names = [flag.name for flag in flags]
     if "@private" in flag_names:
         return PRIVATE
@@ -155,6 +158,7 @@ def GetSymbolType(flags: Iterable[Flag]) -> str | None:
 
     Returns:
         The extracted type string, or None if no type is found.
+
     """
     for flag in flags:
         if flag.name in ["@type", "@const", "@protected", "@private"]:
@@ -174,6 +178,7 @@ def MaybeParseTypeFromDescription(desc: str) -> str | None:
 
     Returns:
         The extracted type string, or None if no type braces are matched.
+
     """
     match = re.match(r"^\s*{(?P<type>.*?)}", desc, re.DOTALL | re.MULTILINE)
     if not match:
