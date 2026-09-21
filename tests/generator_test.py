@@ -111,7 +111,7 @@ def test_yield_param_flags() -> None:
 
     param_flags = list(
         # pylint: disable-next=protected-access
-        generator._yield_param_flags([flag_param, flag_return, flag_private])
+        generator._yield_param_flags([flag_param, flag_return, flag_private]),
     )
     assert param_flags == [flag_param]
 
@@ -147,7 +147,8 @@ def test_get_return_flag_duplicate_raises() -> None:
     flag1 = source.Flag("@return", "{string}")
     flag2 = source.Flag("@return", "{number}")
     with pytest.raises(
-        AssertionError, match=r"There should not be more than 1 @return flag\."
+        AssertionError,
+        match=r"There should not be more than 1 @return flag\.",
     ):
         # pylint: disable-next=protected-access
         generator._get_return_flag([flag1, flag2])

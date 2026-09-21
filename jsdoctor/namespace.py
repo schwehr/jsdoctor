@@ -12,6 +12,7 @@ def IsPrototypeProperty(namespace: str) -> bool:
 
     Returns:
         True if the namespace represents a prototype property, False otherwise.
+
     """
     parts = GetNamespaceParts(namespace)
     return len(parts) >= 3 and parts[-2] == "prototype"
@@ -26,6 +27,7 @@ def GetNamespaceParts(namespace: str) -> list[str]:
 
     Returns:
         List of component strings.
+
     """
     return namespace.split(".")
 
@@ -39,6 +41,7 @@ def GetPrototypeProperty(namespace: str) -> str:
 
     Returns:
         The trailing property name string.
+
     """
     assert IsPrototypeProperty(namespace)
     parts = namespace.split(".")
@@ -55,6 +58,7 @@ def IsSymbolPartOfNamespace(symbol: str, namespace: str) -> bool:
 
     Returns:
         True if the symbol belongs to the namespace prefix, False otherwise.
+
     """
     namespace_parts = GetNamespaceParts(namespace)
     symbol_parts = GetNamespaceParts(symbol)
@@ -63,7 +67,8 @@ def IsSymbolPartOfNamespace(symbol: str, namespace: str) -> bool:
 
 
 def _get_symbol_parts_in_namespace(
-    symbol_parts: Sequence[str], namespace_parts: Sequence[str]
+    symbol_parts: Sequence[str],
+    namespace_parts: Sequence[str],
 ) -> int:
     # A symbol can't be shorter than its namespace.
     if len(symbol_parts) < len(namespace_parts):
@@ -81,7 +86,8 @@ def _get_symbol_parts_in_namespace(
 
 # pylint: disable-next=invalid-name
 def GetClosestNamespaceForSymbol(
-    symbol: str, candidate_namespaces: Iterable[str]
+    symbol: str,
+    candidate_namespaces: Iterable[str],
 ) -> str | None:
     """Finds the most specific candidate namespace that contains the symbol.
 
@@ -91,6 +97,7 @@ def GetClosestNamespaceForSymbol(
 
     Returns:
         The closest matching namespace string, or None if no candidate matches.
+
     """
     closest_namespace = None
     symbol_parts = GetNamespaceParts(symbol)
@@ -98,7 +105,7 @@ def GetClosestNamespaceForSymbol(
     max_count = 0
 
     valid_namespaces = list(
-        filter(lambda ns: IsSymbolPartOfNamespace(symbol, ns), candidate_namespaces)
+        filter(lambda ns: IsSymbolPartOfNamespace(symbol, ns), candidate_namespaces),
     )
 
     for ns in valid_namespaces:

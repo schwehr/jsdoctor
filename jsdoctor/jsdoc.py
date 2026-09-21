@@ -13,6 +13,7 @@ def ProcessComment(comment_text: str) -> tuple[list[str], list[tuple[str, str]]]
 
     Returns:
         A tuple of (description_list, flag_tuples_list).
+
     """
     descriptions = []
     flags = []

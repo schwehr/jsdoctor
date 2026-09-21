@@ -24,6 +24,7 @@ def GenerateHtmlDocs(
 
     Yields:
         Tuples of (filename, html_bytes).
+
     """
     for filepath, document in GenerateDocuments(namespace_map):
         assert document.documentElement is not None
@@ -42,6 +43,7 @@ def GenerateDocuments(
 
     Yields:
         Tuples of (filename, minidom.Document).
+
     """
     for namespace, symbols in namespace_map.items():
         filename = f"{namespace}.html"
@@ -302,7 +304,7 @@ def _generate_content(namespace: str, symbols: Iterable[Symbol]) -> minidom.Node
         filter(
             lambda m: flags.GetVisibility(m.comment.flags) == flags.PUBLIC,
             instance_methods,
-        )
+        ),
     )
     if public_instance_methods:
         node_list.append(_make_element("h2", "Public instance method summary"))
@@ -312,7 +314,7 @@ def _generate_content(namespace: str, symbols: Iterable[Symbol]) -> minidom.Node
         filter(
             lambda m: flags.GetVisibility(m.comment.flags) == flags.PUBLIC,
             static_functions,
-        )
+        ),
     )
     if static_functions:
         node_list.append(_make_element("h2", "Public static method summary"))
