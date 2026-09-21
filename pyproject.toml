@@ -89,20 +89,27 @@ target-version = "py314"
 line-length = 88
 
 [tool.ruff.lint]
-# select = ["ALL"]
-# Add rules on top of the defaults
-extend-select = [
-    "I",      # isort (import sorting)
-    "B",      # flake8-bugbear (common design pitfalls & bugs)
-    "UP",     # pyupgrade (modernize Python syntax)
-    "SIM",    # flake8-simplify (simplifies nested logic)
-    "S",      # flake8-bandit (security checks)
-    "A",      # flake8-builtins (shadowing built-in names)
-    "RUF",    # Ruff-specific rules (unused no-qa, string formats, etc.)
-    "T20",    # flake8-print (flags print statements in production code)
-    "C4",     # flake8-comprehensions (better list/dict comprehensions)
-    "PTH",    # flake8-use-pathlib (suggests pathlib over os.path)
-]
+select = ["ALL"]
 ignore = [
-    "S101",  # Use of `assert` detected
+    "C901",    # Function is too complex
+    "CPY001",  # Missing copyright notice at top of file
+    "D105",    # Missing docstring in magic method
+    "D401",    # First line of docstring should be in imperative mood
+    "EM102",   # Exception must not use an f-string literal, assign to variable first
+    "FBT001",  # Boolean-typed positional argument in function definition
+    "FBT002",  # Boolean default positional argument in function definition
+    "FBT003",  # Boolean positional value in function call
+    "FIX002",  # Line contains TODO, consider resolving the issue
+    "INP001",  # File is part of an implicit namespace package
+    "N802",    # Function name should be lowercase
+    "PLR0912", # Too many branches
+    "PLR2004", # Magic value used in comparison
+    "PLW2901", # `for` loop variable overwritten by assignment target
+    "PT011",   # `pytest.raises()` is too broad
+    "RET504",  # Unnecessary assignment before `return` statement
+    "S101",    # Use of `assert` detected
+    "SLF001",  # Private member accessed
+    "TC003",   # Move standard library import into a type-checking block
+    "TD003",   # Missing issue link for this TODO
+    "TRY003",  # Avoid specifying long messages outside the exception class
 ]
