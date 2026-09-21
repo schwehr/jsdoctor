@@ -2,6 +2,7 @@
 # pylint: disable=protected-access
 
 import multiprocessing
+import pathlib
 import sys
 import tarfile
 from unittest import mock
@@ -61,7 +62,7 @@ def test_scan_content() -> None:
 
 def test_make_content_map() -> None:
     """Tests creating a map of file paths to their content."""
-    with mock.patch("builtins.open", mock.mock_open(read_data="var a = 1;")):
+    with mock.patch.object(pathlib.Path, "read_text", return_value="var a = 1;"):
         content_map = cli._make_content_map(["a.js", "b.js"])
         assert content_map == {"a.js": "var a = 1;", "b.js": "var a = 1;"}
 
@@ -69,7 +70,7 @@ def test_make_content_map() -> None:
 def test_make_content_map_duplicate_path() -> None:
     """Tests that duplicate paths raise an error."""
     with (
-        mock.patch("builtins.open", mock.mock_open(read_data="var a = 1;")),
+        mock.patch.object(pathlib.Path, "read_text", return_value="var a = 1;"),
         pytest.raises(cli.JsDoctorError, match=r"Path already added: a\.js"),
     ):
         cli._make_content_map(["a.js", "a.js"])

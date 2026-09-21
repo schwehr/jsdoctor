@@ -7,6 +7,7 @@ import io
 import logging
 import multiprocessing
 import os
+import pathlib
 import tarfile
 from collections.abc import Iterable, Iterator, Mapping
 
@@ -104,8 +105,7 @@ def _make_content_map(paths: Iterable[str]) -> dict[str, str]:
         if path in content_map:
             raise JsDoctorError(f"Path already added: {path}")
 
-        with open(path, encoding="utf-8") as f:
-            content = f.read()
+        content = pathlib.Path(path).read_text(encoding="utf-8")
 
         content_map[path] = content
 
