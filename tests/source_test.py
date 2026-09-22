@@ -181,6 +181,55 @@ def test_source_str() -> None:
     assert "path/to/file.js" in str(src)
 
 
+def test_get_description_and_flags() -> None:
+    """Tests parsing comment text into descriptions and Flag objects."""
+    comment_text = (
+        "Description line 1.\n"
+        "Description line 2.\n"
+        "@param {string} name User name.\n"
+        "@return {boolean} Success status."
+    )
+    # pylint: disable-next=protected-access
+    descriptions, flags = source._get_description_and_flags(comment_text)
+
+    assert descriptions == ["Description line 1.\nDescription line 2."]
+    assert len(flags) == 2
+
+    assert flags[0].name == "@param"
+    assert flags[0].text == "{string} name User name."
+
+    assert flags[1].name == "@return"
+    assert flags[1].text == "{boolean} Success status."
+
+
+def test_get_description_and_flags_description_only() -> None:
+    """Tests description-only text in _get_description_and_flags."""
+    # pylint: disable-next=protected-access
+    descriptions, flags = source._get_description_and_flags("Just a description.")
+    assert descriptions == ["Just a description."]
+    assert not flags
+
+
+def test_get_description_and_flags_flags_only() -> None:
+    """Tests flags-only text in _get_description_and_flags."""
+    # pylint: disable-next=protected-access
+    descriptions, flags = source._get_description_and_flags("@private\n@const")
+    assert not descriptions
+    assert len(flags) == 2
+    assert flags[0].name == "@private"
+    assert flags[0].text == ""
+    assert flags[1].name == "@const"
+    assert flags[1].text == ""
+
+
+def test_get_description_and_flags_empty() -> None:
+    """Tests empty comment text in _get_description_and_flags."""
+    # pylint: disable-next=protected-access
+    descriptions, flags = source._get_description_and_flags("")
+    assert not descriptions
+    assert not flags
+
+
 _TEST_SCRIPT = """
 goog.provide('goog.aaa');
 goog.provide('goog.bbb');
