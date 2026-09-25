@@ -21,7 +21,7 @@ repos:
       - id: ruff-format
 
   - repo: https://github.com/allganize/ty-pre-commit
-    rev: v0.0.80
+    rev: v0.0.82
     hooks:
       - id: ty-check
         additional_dependencies:
