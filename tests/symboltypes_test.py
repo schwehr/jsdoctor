@@ -1,5 +1,7 @@
 """Tests for the jsdoctor.symboltypes module."""
 
+import pytest
+
 from jsdoctor import scanner, source, symboltypes
 
 
@@ -76,3 +78,26 @@ goog.bar.baz
 goog.bar.baz
 """,
     )
+
+
+def test_comment_has_flag() -> None:
+    """Tests private _comment_has_flag helper in symboltypes."""
+    comment = source.Comment("/** @param {string} foo */", 0, 24)
+
+    # Matching flag exists
+    # pylint: disable-next=protected-access
+    assert symboltypes._comment_has_flag(comment, "@param")
+
+    # Flag does not exist on comment
+    # pylint: disable-next=protected-access
+    assert not symboltypes._comment_has_flag(comment, "@return")
+
+    # Comment with no flags
+    empty_comment = source.Comment("/** Description without flags. */", 0, 32)
+    # pylint: disable-next=protected-access
+    assert not symboltypes._comment_has_flag(empty_comment, "@param")
+
+    # Flag name without leading '@' raises AssertionError
+    with pytest.raises(AssertionError, match="flag name should start with @"):
+        # pylint: disable-next=protected-access
+        symboltypes._comment_has_flag(comment, "param")
