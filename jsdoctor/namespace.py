@@ -60,10 +60,7 @@ def IsSymbolPartOfNamespace(symbol: str, namespace: str) -> bool:
         True if the symbol belongs to the namespace prefix, False otherwise.
 
     """
-    namespace_parts = GetNamespaceParts(namespace)
-    symbol_parts = GetNamespaceParts(symbol)
-
-    return namespace_parts == symbol_parts[0 : len(namespace_parts)]
+    return symbol == namespace or symbol.startswith(f"{namespace}.")
 
 
 def _get_symbol_parts_in_namespace(
