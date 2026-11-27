@@ -16,7 +16,7 @@ jsdoctor = "jsdoctor.cli:main"
 [[tool.ty.overrides]]
 include = ["jsdoctor/cli.py"]
 [tool.ty.overrides.rules]
-unresolved-import = "ignore"
+import-not-found = "ignore"
 
 [[tool.ty.overrides]]
 include = ["jsdoctor/cli.py"]
@@ -26,18 +26,18 @@ invalid-argument-type = "ignore"
 [[tool.ty.overrides]]
 include = ["jsdoctor/generator.py", "tests/flags_test.py", "tests/linkify_test.py"]
 [tool.ty.overrides.rules]
-unresolved-attribute = "ignore"
+missing-attribute = "ignore"
 
 [[tool.ty.overrides]]
 include = ["jsdoctor/generator.py"]
 [tool.ty.overrides.rules]
-unresolved-import = "ignore"
+import-not-found = "ignore"
 
 [[tool.ty.overrides]]
 include = ["jsdoctor/source.py", "tests/scanner_test.py", "tests/source_test.py", "tests/symboltypes_test.py"]
 [tool.ty.overrides.rules]
 invalid-argument-type = "ignore"
-unresolved-attribute = "ignore"
+missing-attribute = "ignore"
 
 [dependency-groups]
 dev = [
