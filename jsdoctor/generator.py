@@ -74,6 +74,14 @@ def _make_element(tagname: str, content: str | None = None) -> minidom.Element:
     return element
 
 
+def _is_public(symbol: Symbol) -> bool:
+    """Returns whether the symbol has a comment marking it public."""
+    return (
+        symbol.comment is not None
+        and flags.GetVisibility(symbol.comment.flags) == flags.PUBLIC
+    )
+
+
 def _is_static(symbol: Symbol) -> bool:
     return bool(symbol.static)
 
@@ -302,8 +310,7 @@ def _generate_content(namespace: str, symbols: Iterable[Symbol]) -> minidom.Node
 
     public_instance_methods = list(
         filter(
-            # pyrefly: ignore[missing-attribute]
-            lambda m: flags.GetVisibility(m.comment.flags) == flags.PUBLIC,
+            _is_public,
             instance_methods,
         ),
     )
@@ -313,8 +320,7 @@ def _generate_content(namespace: str, symbols: Iterable[Symbol]) -> minidom.Node
 
     public_static_methods = list(
         filter(
-            # pyrefly: ignore[missing-attribute]
-            lambda m: flags.GetVisibility(m.comment.flags) == flags.PUBLIC,
+            _is_public,
             static_functions,
         ),
     )
