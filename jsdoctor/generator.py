@@ -303,7 +303,7 @@ def _generate_content(namespace: str, symbols: Iterable[Symbol]) -> minidom.Node
     public_instance_methods = list(
         filter(
             # pyrefly: ignore[missing-attribute]
-            lambda m: flags.GetVisibility(m.comment.flags) == flags.PUBLIC,
+            lambda m: flags.GetVisibility(m.comment.flags) == flags.PUBLIC,  # ty: ignore[missing-union-attribute]
             instance_methods,
         ),
     )
@@ -314,7 +314,7 @@ def _generate_content(namespace: str, symbols: Iterable[Symbol]) -> minidom.Node
     public_static_methods = list(
         filter(
             # pyrefly: ignore[missing-attribute]
-            lambda m: flags.GetVisibility(m.comment.flags) == flags.PUBLIC,
+            lambda m: flags.GetVisibility(m.comment.flags) == flags.PUBLIC,  # ty: ignore[missing-union-attribute]
             static_functions,
         ),
     )
